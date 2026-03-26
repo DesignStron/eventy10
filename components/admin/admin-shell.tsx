@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const NAV = [
-  { href: "/admin", label: "Pulpit", icon: "📊" },
-  { href: "/admin/oferta", label: "Oferta", icon: "📋" },
-  { href: "/admin/galeria", label: "Galeria", icon: "🖼️" },
-  { href: "/admin/wiadomosci", label: "Formularze", icon: "✉️" },
+  { href: "/admin", label: "Pulpit", icon: "◈" },
+  { href: "/admin/oferta", label: "Oferta", icon: "✦" },
+  { href: "/admin/galeria", label: "Galeria", icon: "◻" },
+  { href: "/admin/wiadomosci", label: "Formularze", icon: "◎" },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -25,147 +26,233 @@ export default function AdminShell({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div style={{ background: "#f5f3f8", minHeight: "100vh" }}>
+    <div style={{ background: "#060508", minHeight: "100vh" }}>
+      <style>{`
+        .as-topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          margin-bottom: 2rem;
+          flex-wrap: wrap;
+        }
+        .as-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.3rem 0.875rem;
+          border-radius: 9999px;
+          background: rgba(240,23,122,0.1);
+          border: 1px solid rgba(240,23,122,0.2);
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #ff4fa3;
+          margin-bottom: 0.75rem;
+        }
+        .as-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #f0177a;
+          box-shadow: 0 0 6px #f0177a;
+        }
+        .as-page-title {
+          font-family: var(--font-display);
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #fff;
+          letter-spacing: -0.02em;
+          margin: 0;
+        }
+        .as-page-desc {
+          margin-top: 0.375rem;
+          font-size: 0.8rem;
+          color: rgba(255,255,255,0.4);
+          line-height: 1.65;
+          max-width: 36rem;
+        }
+        .as-back-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.5rem 1.1rem;
+          border-radius: 9999px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.6);
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 200ms ease;
+          white-space: nowrap;
+          flex-shrink: 0;
+        }
+        .as-back-btn:hover {
+          background: rgba(255,255,255,0.09);
+          color: #fff;
+        }
+
+        /* mobile nav toggle */
+        .as-mobile-toggle {
+          display: none;
+          align-items: center;
+          justify-content: center;
+          width: 2.25rem;
+          height: 2.25rem;
+          border-radius: 0.625rem;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.7);
+          font-size: 1.1rem;
+          cursor: pointer;
+          transition: all 200ms ease;
+          flex-shrink: 0;
+        }
+        @media (max-width: 767px) {
+          .as-mobile-toggle { display: flex; }
+        }
+
+        /* layout */
+        .as-body {
+          display: grid;
+          grid-template-columns: 200px 1fr;
+          gap: 1.25rem;
+          align-items: start;
+        }
+        @media (max-width: 767px) {
+          .as-body { grid-template-columns: 1fr; }
+          .as-sidebar { display: none; }
+          .as-sidebar.open { display: block; }
+        }
+
+        /* sidebar */
+        .as-sidebar {
+          border-radius: 1.25rem;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.08);
+          padding: 0.875rem;
+          position: sticky;
+          top: 6rem;
+        }
+        .as-nav-label {
+          font-size: 0.6rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.25);
+          padding: 0.25rem 0.5rem;
+          margin-bottom: 0.5rem;
+        }
+        .as-nav-link {
+          display: flex;
+          align-items: center;
+          gap: 0.625rem;
+          padding: 0.625rem 0.875rem;
+          border-radius: 0.75rem;
+          font-size: 0.825rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: all 180ms ease;
+          color: rgba(255,255,255,0.55);
+          border: 1px solid transparent;
+          margin-bottom: 0.2rem;
+        }
+        .as-nav-link:hover {
+          background: rgba(255,255,255,0.06);
+          color: rgba(255,255,255,0.85);
+        }
+        .as-nav-link.active {
+          background: rgba(240,23,122,0.12);
+          border-color: rgba(240,23,122,0.25);
+          color: #ff4fa3;
+          font-weight: 700;
+        }
+        .as-nav-icon {
+          font-size: 0.875rem;
+          flex-shrink: 0;
+          opacity: 0.7;
+        }
+        .as-nav-link.active .as-nav-icon { opacity: 1; }
+        .as-nav-arrow {
+          margin-left: auto;
+          font-size: 0.7rem;
+          opacity: 0.4;
+        }
+        .as-nav-tip {
+          margin-top: 0.75rem;
+          padding: 0.75rem;
+          border-radius: 0.75rem;
+          background: rgba(240,23,122,0.05);
+          border: 1px solid rgba(240,23,122,0.12);
+          font-size: 0.7rem;
+          color: rgba(255,255,255,0.35);
+          line-height: 1.6;
+        }
+      `}</style>
+
       <div style={{ maxWidth: "75rem", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
 
-        {/* Top bar */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "2rem", marginBottom: "2.5rem", flexWrap: "wrap" }}>
+        {/* ── TOP BAR ── */}
+        <div className="as-topbar">
           <div>
-            <div
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.375rem 0.875rem",
-                borderRadius: "9999px",
-                background: "rgba(240,23,122,0.1)",
-                border: "1px solid rgba(240,23,122,0.2)",
-                fontSize: "0.7rem",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "#c0075a",
-                marginBottom: "0.875rem",
-              }}
-            >
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#f0177a", boxShadow: "0 0 6px #f0177a" }} />
+            <div className="as-badge">
+              <span className="as-dot" />
               Panel admina · Demo
             </div>
-            <h1
-              style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
-                fontWeight: 700,
-                color: "#060508",
-                lineHeight: 1.15,
-                letterSpacing: "-0.015em",
-              }}
-            >
-              {title}
-            </h1>
-            {description && (
-              <p style={{ marginTop: "0.5rem", fontSize: "0.875rem", color: "rgba(6,5,8,0.55)", lineHeight: 1.65, maxWidth: "38rem" }}>
-                {description}
-              </p>
-            )}
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <h1 className="as-page-title">{title}</h1>
+              {/* mobile nav toggle */}
+              <button
+                className="as-mobile-toggle"
+                onClick={() => setMobileNavOpen((v) => !v)}
+                aria-label="Menu nawigacji"
+              >
+                {mobileNavOpen ? "✕" : "☰"}
+              </button>
+            </div>
+            {description && <p className="as-page-desc">{description}</p>}
           </div>
 
-          <Link
-            href="/"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.4rem",
-              padding: "0.625rem 1.25rem",
-              borderRadius: "9999px",
-              background: "#fff",
-              border: "1.5px solid rgba(0,0,0,0.08)",
-              color: "#060508",
-              fontSize: "0.825rem",
-              fontWeight: 600,
-              textDecoration: "none",
-              transition: "all 200ms",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-            }}
-            className="hover:border-pink-400 hover:text-pink-500"
-          >
+          <Link href="/" className="as-back-btn">
             ← Wróć do strony
           </Link>
         </div>
 
-        {/* Body */}
-        <div style={{ display: "grid", gridTemplateColumns: "220px 1fr", gap: "1.5rem", alignItems: "start" }} className="md:grid-cols-[220px_1fr]">
+        {/* ── BODY ── */}
+        <div className="as-body">
 
           {/* Sidebar */}
-          <aside
-            style={{
-              borderRadius: "1.5rem",
-              background: "#fff",
-              border: "1px solid rgba(0,0,0,0.07)",
-              padding: "1rem",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
-              position: "sticky",
-              top: "6rem",
-            }}
-          >
-            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(6,5,8,0.35)", padding: "0.25rem 0.5rem", marginBottom: "0.5rem" }}>
-              Nawigacja
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+          <aside className={`as-sidebar${mobileNavOpen ? " open" : ""}`}>
+            <div className="as-nav-label">Nawigacja</div>
+            <nav>
               {NAV.map((n) => {
                 const active = isActive(pathname, n.href);
                 return (
                   <Link
                     key={n.href}
                     href={n.href}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      padding: "0.75rem 1rem",
-                      borderRadius: "0.875rem",
-                      fontSize: "0.875rem",
-                      fontWeight: active ? 700 : 500,
-                      textDecoration: "none",
-                      transition: "all 180ms ease",
-                      background: active ? "#060508" : "transparent",
-                      color: active ? "#fff" : "rgba(6,5,8,0.65)",
-                      border: active ? "none" : "1px solid transparent",
-                    }}
-                    className={
-                      active
-                        ? ""
-                        : "hover:bg-pink-500/10 hover:text-pink-500 hover:border-pink-500/15"
-                    }
+                    className={`as-nav-link${active ? " active" : ""}`}
+                    onClick={() => setMobileNavOpen(false)}
                   >
-                    <span style={{ fontSize: "1rem" }}>{n.icon}</span>
+                    <span className="as-nav-icon">{n.icon}</span>
                     {n.label}
-                    {active && <span style={{ marginLeft: "auto", opacity: 0.5, fontSize: "0.75rem" }}>→</span>}
+                    {active && <span className="as-nav-arrow">›</span>}
                   </Link>
                 );
               })}
-            </div>
-
-            <div
-              style={{
-                marginTop: "1rem",
-                padding: "0.875rem 1rem",
-                borderRadius: "0.875rem",
-                background: "rgba(240,23,122,0.07)",
-                border: "1px solid rgba(240,23,122,0.15)",
-                fontSize: "0.75rem",
-                color: "rgba(6,5,8,0.55)",
-                lineHeight: 1.6,
-              }}
-            >
-              💾 Dane zapisywane lokalnie (JSON). Zmiany widoczne na stronie publicznej.
+            </nav>
+            <div className="as-nav-tip">
+              Dane zapisywane lokalnie w <code style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "rgba(255,255,255,0.5)" }}>data/</code>. Zmiany widoczne na stronie publicznej.
             </div>
           </aside>
 
           {/* Content */}
-          <div className="min-w-0">{children}</div>
+          <div style={{ minWidth: 0 }}>{children}</div>
         </div>
       </div>
     </div>

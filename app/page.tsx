@@ -6,13 +6,12 @@ export default function Home() {
         style={{
           maxWidth: "75rem",
           margin: "0 auto",
-          padding: "6rem 1.5rem 4rem",
+          padding: "4rem 1rem 3rem",
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "4rem",
+          gap: "2rem",
           alignItems: "center",
         }}
-        className="md:grid-cols-2"
+        className="grid-cols-1 lg:grid-cols-2"
       >
         {/* Left */}
         <div>
@@ -23,7 +22,7 @@ export default function Home() {
 
           <h1
             className="heading-xl animate-fade-up delay-100"
-            style={{ color: "#fff", marginBottom: "1.5rem" }}
+            style={{ color: "#fff", marginBottom: "1.5rem", fontSize: "clamp(2rem, 5vw, 4rem)" }}
           >
             Organizujemy imprezy,{" "}
             <span
@@ -43,10 +42,10 @@ export default function Home() {
             className="animate-fade-up delay-200"
             style={{
               color: "rgba(255,255,255,0.65)",
-              fontSize: "1.0625rem",
+              fontSize: "clamp(0.95rem, 2vw, 1.0625rem)",
               lineHeight: 1.75,
-              maxWidth: "30rem",
-              marginBottom: "2.25rem",
+              maxWidth: "100%",
+              marginBottom: "2rem",
             }}
           >
             Różowy Event to nowoczesna agencja eventowa — tworzymy niezapomniane urodziny dla dzieci,
@@ -54,8 +53,8 @@ export default function Home() {
           </p>
 
           <div
-            className="animate-fade-up delay-300"
-            style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap", marginBottom: "3rem" }}
+            className="animate-fade-up delay-300 flex-col sm:flex-row"
+            style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "2rem" }}
           >
             <a href="/kontakt" className="btn-pink">
               Zarezerwuj termin
@@ -68,18 +67,18 @@ export default function Home() {
 
           {/* Stats */}
           <div
-            className="animate-fade-up delay-400"
-            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.875rem" }}
+            className="animate-fade-up delay-400 grid-cols-3 sm:grid-cols-3"
+            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}
           >
             {[
               { num: "250+", label: "eventów", sub: "zrealizowanych" },
               { num: "5 ★", label: "opinie", sub: "średnia klientów" },
               { num: "24h", label: "wycena", sub: "szybka odpowiedź" },
             ].map((s) => (
-              <div key={s.label} className="stat-box" style={{ textAlign: "center" }}>
-                <div className="counter-num" style={{ fontSize: "1.75rem" }}>{s.num}</div>
-                <div style={{ fontSize: "0.8rem", fontWeight: 600, color: "#fff", marginTop: "0.2rem" }}>{s.label}</div>
-                <div style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.4)", marginTop: "0.1rem" }}>{s.sub}</div>
+              <div className="stat-box" style={{ textAlign: "center", padding: "0.75rem 0.5rem" }}>
+                <div className="counter-num" style={{ fontSize: "clamp(1.25rem, 3vw, 1.75rem)" }}>{s.num}</div>
+                <div style={{ fontSize: "clamp(0.7rem, 1.5vw, 0.8rem)", fontWeight: 600, color: "#fff", marginTop: "0.2rem" }}>{s.label}</div>
+                <div style={{ fontSize: "clamp(0.6rem, 1.2vw, 0.65rem)", color: "rgba(255,255,255,0.4)", marginTop: "0.1rem" }}>{s.sub}</div>
               </div>
             ))}
           </div>
@@ -203,11 +202,11 @@ export default function Home() {
       </div>
 
       {/* ─── OFFER CARDS ─────────────────────────────────────────────── */}
-      <section style={{ maxWidth: "75rem", margin: "0 auto", padding: "5rem 1.5rem" }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "2rem", marginBottom: "3rem", flexWrap: "wrap" }}>
+      <section style={{ maxWidth: "75rem", margin: "0 auto", padding: "3rem 1rem 4rem" }} className="sm:px-1.5rem sm:py-20">
+        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "1rem", marginBottom: "2rem", flexWrap: "wrap" }} className="sm:gap-8 sm:mb-12">
           <div>
-            <div className="badge badge-dark" style={{ marginBottom: "1rem" }}>Nasza oferta</div>
-            <h2 className="heading-lg" style={{ color: "#fff" }}>
+            <div className="badge badge-dark" style={{ marginBottom: "0.75rem" }} >Nasza oferta</div>
+            <h2 className="heading-lg" style={{ color: "#fff", fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}>
               3 specjalizacje —{" "}
               <span style={{ color: "var(--pink-light)" }}>1 zespół</span>
             </h2>
@@ -215,23 +214,24 @@ export default function Home() {
           <a
             href="/oferta"
             style={{
-              padding: "0.75rem 1.5rem",
+              padding: "0.6rem 1.25rem",
               borderRadius: "9999px",
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.1)",
               color: "rgba(255,255,255,0.7)",
-              fontSize: "0.875rem",
+              fontSize: "0.8rem",
               fontWeight: 600,
               textDecoration: "none",
               transition: "all 200ms",
               whiteSpace: "nowrap",
             }}
+            className="sm:px-6 sm:py-3 sm:text-sm"
           >
             Pełna oferta →
           </a>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }} className="grid-cols-1 md:grid-cols-3">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }} className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {[
             {
               tag: "Dla dzieci",
@@ -263,7 +263,7 @@ export default function Home() {
               style={{
                 display: "block",
                 borderRadius: "1.5rem",
-                padding: "2rem",
+                padding: "1.5rem",
                 textDecoration: "none",
                 position: "relative",
                 overflow: "hidden",
@@ -286,21 +286,21 @@ export default function Home() {
                   filter: "blur(20px)",
                 }} />
               )}
-              <div style={{ fontSize: "2.5rem", marginBottom: "1rem" }}>{card.icon}</div>
+              <div style={{ fontSize: "clamp(2rem, 4vw, 2.5rem)", marginBottom: "0.75rem" }}>{card.icon}</div>
               <div className="pill pill-pink" style={{ marginBottom: "1rem" }}>{card.tag}</div>
               <h3
                 style={{
                   fontFamily: "var(--font-display)",
-                  fontSize: "1.25rem",
+                  fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
                   fontWeight: 700,
                   color: "#fff",
-                  marginBottom: "0.75rem",
+                  marginBottom: "0.5rem",
                   lineHeight: 1.25,
                 }}
               >
                 {card.title}
               </h3>
-              <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: "1.5rem" }}>
+              <p style={{ fontSize: "clamp(0.8rem, 1.5vw, 0.875rem)", color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: "1rem" }}>
                 {card.desc}
               </p>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--pink-light)", fontSize: "0.875rem", fontWeight: 700 }}>
@@ -316,21 +316,22 @@ export default function Home() {
         style={{
           maxWidth: "75rem",
           margin: "0 auto",
-          padding: "0 1.5rem 5rem",
+          padding: "0 1rem 3rem",
         }}
+        className="sm:px-1.5rem sm:py-20"
       >
         <div
           style={{
-            borderRadius: "2.5rem",
+            borderRadius: "1.5rem",
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(255,255,255,0.07)",
-            padding: "4rem",
+            padding: "2rem 1.5rem",
             display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "4rem",
+            gridTemplateColumns: "1fr",
+            gap: "2rem",
             alignItems: "center",
           }}
-          className="md:grid-cols-2 px-6 py-10"
+          className="sm:rounded-2xl sm:p-8 lg:grid-cols-2 lg:gap-16"
         >
           <div>
             <div className="badge badge-pink" style={{ marginBottom: "1.25rem" }}>Dlaczego my?</div>
@@ -347,7 +348,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1rem" }} className="sm:grid-cols-2">
             {[
               { icon: "⚡", title: "Dynamika", desc: "Energetyczne prowadzenie i animacje, które wciągają wszystkich." },
               { icon: "🎯", title: "Precyzja", desc: "Każdy detail zaplanowany. Zero stresu po Twojej stronie." },
@@ -360,7 +361,7 @@ export default function Home() {
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.08)",
                   borderRadius: "1.25rem",
-                  padding: "1.5rem",
+                  padding: "1.25rem",
                   transition: "all 220ms",
                 }}
                 className="hover-lift"
@@ -375,21 +376,22 @@ export default function Home() {
       </section>
 
       {/* ─── CTA BANNER ──────────────────────────────────────────────── */}
-      <section style={{ maxWidth: "75rem", margin: "0 auto", padding: "0 1.5rem 7rem" }}>
+      <section style={{ maxWidth: "75rem", margin: "0 auto", padding: "0 1rem 3rem" }} className="sm:px-1.5rem sm:py-20">
         <div
           style={{
-            borderRadius: "2.5rem",
+            borderRadius: "1.5rem",
             background: "linear-gradient(135deg, #f0177a 0%, #c0075a 40%, #7d0040 100%)",
-            padding: "4rem",
+            padding: "2rem 1.5rem",
             position: "relative",
             overflow: "hidden",
           }}
+          className="sm:rounded-2xl sm:p-8"
         >
           {/* Decorative circles */}
           <div style={{ position: "absolute", top: "-4rem", right: "-4rem", width: "18rem", height: "18rem", borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
           <div style={{ position: "absolute", bottom: "-3rem", left: "-3rem", width: "14rem", height: "14rem", borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
 
-          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "3rem", flexWrap: "wrap" }}>
+          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }} className="flex-col lg:flex-row">
             <div>
               <div style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", marginBottom: "0.75rem" }}>
                 Gotowy na wyjątkowy event?
@@ -411,24 +413,24 @@ export default function Home() {
                 Napisz do nas — wrócimy z propozycją scenariusza i wyceną w ciągu 24h.
               </p>
             </div>
-            <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap", flexShrink: 0 }}>
+            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", flexShrink: 0 }} className="sm:gap-4">
               <a
                 href="/kontakt"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
                   height: "3rem",
-                  padding: "0 1.75rem",
+                  padding: "0 1.5rem",
                   borderRadius: "9999px",
                   background: "#fff",
                   color: "#c0075a",
                   fontWeight: 700,
-                  fontSize: "0.875rem",
+                  fontSize: "0.8rem",
                   textDecoration: "none",
                   transition: "transform 180ms ease, box-shadow 180ms ease",
                   boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
                 }}
-                className="hover-lift"
+                className="hover-lift sm:h-12 sm:px-6 sm:text-sm"
               >
                 Wyślij zapytanie →
               </a>
@@ -438,14 +440,14 @@ export default function Home() {
                   display: "inline-flex",
                   alignItems: "center",
                   height: "3rem",
-                  padding: "0 1.75rem",
+                  padding: "0 1.5rem",
                   borderRadius: "9999px",
-                  border: "1.5px solid rgba(255,255,255,0.35)",
+                  border: "1.5px solid rgba(255,255,255,0.2)",
                   color: "#fff",
                   fontWeight: 600,
-                  fontSize: "0.875rem",
+                  fontSize: "0.8rem",
                   textDecoration: "none",
-                  transition: "background 180ms, border-color 180ms",
+                  transition: "all 200ms",
                 }}
                 className="hover:bg-white/10"
               >

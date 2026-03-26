@@ -18,117 +18,274 @@ export default function AdminMessagesPage() {
     })();
   }, []);
 
-  const selected = useMemo(() => {
-    return data?.messages.find((m) => m.id === selectedId) ?? null;
-  }, [data, selectedId]);
+  const selected = useMemo(
+    () => data?.messages.find((m) => m.id === selectedId) ?? null,
+    [data, selectedId],
+  );
 
   return (
     <AdminShell
       title="Formularze kontaktowe"
-      description="Lista zgłoszeń z formularza /kontakt. Kliknij pozycję, aby podejrzeć wiadomość." 
+      description="Lista zgłoszeń z formularza /kontakt. Kliknij pozycję, aby podejrzeć wiadomość."
     >
-      <div className="grid gap-6 md:grid-cols-[360px_1fr]">
-        <div className="rounded-3xl bg-white p-4 ring-1 ring-black/10">
-          <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold text-black">Zgłoszenia</div>
-            <a
-              href="/kontakt"
-              className="rounded-full bg-pink-500/10 px-3 py-2 text-xs font-semibold text-black transition-colors hover:bg-pink-500/15"
-            >
-              Formularz
-            </a>
+      <style>{`
+        .am-layout {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+          .am-layout { grid-template-columns: 1fr 2fr; gap: 2rem; }
+        }
+        .am-panel {
+          background: rgba(0,0,0,0.8);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 1.25rem;
+          padding: 1rem;
+        }
+        .am-panel-title {
+          font-size: 0.8rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.35);
+          margin-bottom: 1rem;
+        }
+        .am-list { display: flex; flex-direction: column; gap: 0.4rem; }
+        .am-item {
+          width: 100%;
+          text-align: left;
+          padding: 0.875rem 1rem;
+          border-radius: 0.875rem;
+          border: 1px solid transparent;
+          background: transparent;
+          cursor: pointer;
+          transition: all 180ms ease;
+        }
+        .am-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+        .am-item.active {
+          background: rgba(240,23,122,0.12);
+          border-color: rgba(240,23,122,0.3);
+        }
+        .am-item-name {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.5rem;
+        }
+        .am-item-date {
+          font-size: 0.7rem;
+          color: rgba(255,255,255,0.35);
+          margin-top: 0.2rem;
+        }
+        .am-status {
+          display: inline-block;
+          padding: 0.15rem 0.5rem;
+          border-radius: 9999px;
+          font-size: 0.6rem;
+          font-weight: 700;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          background: rgba(255,255,255,0.07);
+          color: rgba(255,255,255,0.4);
+          flex-shrink: 0;
+        }
+        .am-item.active .am-status {
+          background: rgba(240,23,122,0.2);
+          color: #ff4fa3;
+        }
+        .am-empty {
+          padding: 1.5rem 1rem;
+          text-align: center;
+          font-size: 0.8rem;
+          color: rgba(255,255,255,0.35);
+          border-radius: 0.75rem;
+          border: 1px dashed rgba(255,255,255,0.08);
+        }
+        .am-preview-row {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          margin-bottom: 1.25rem;
+        }
+        @media (min-width: 480px) {
+          .am-preview-row { flex-direction: row; align-items: flex-start; justify-content: space-between; }
+        }
+        .am-preview-name {
+          font-size: 1rem;
+          font-weight: 700;
+          color: #fff;
+          margin-bottom: 0.25rem;
+        }
+        .am-preview-sub {
+          font-size: 0.8rem;
+          color: rgba(255,255,255,0.45);
+          line-height: 1.6;
+        }
+        .am-date-badge {
+          display: inline-block;
+          padding: 0.375rem 0.75rem;
+          border-radius: 0.625rem;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.08);
+          font-size: 0.72rem;
+          color: rgba(255,255,255,0.4);
+          white-space: nowrap;
+          flex-shrink: 0;
+          font-family: var(--font-mono);
+        }
+        .am-message-box {
+          background: rgba(240,23,122,0.05);
+          border: 1px solid rgba(240,23,122,0.12);
+          border-radius: 1rem;
+          padding: 1.25rem;
+          margin-bottom: 1.25rem;
+        }
+        .am-message-label {
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.3);
+          margin-bottom: 0.75rem;
+        }
+        .am-message-text {
+          font-size: 0.875rem;
+          color: rgba(255,255,255,0.75);
+          line-height: 1.8;
+          white-space: pre-wrap;
+        }
+        .am-actions {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0.75rem;
+        }
+        @media (min-width: 480px) {
+          .am-actions { grid-template-columns: 1fr 1fr; gap: 1rem; }
+        }
+        .am-btn-primary {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 2.5rem;
+          border-radius: 9999px;
+          background: linear-gradient(135deg, #f0177a, #ff4fa3);
+          color: #fff;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-decoration: none;
+          box-shadow: 0 4px 16px rgba(240,23,122,0.35);
+          transition: all 200ms ease;
+        }
+        .am-btn-primary:hover { box-shadow: 0 6px 24px rgba(240,23,122,0.55); transform: translateY(-1px); }
+        .am-btn-outline {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 2.5rem;
+          border-radius: 9999px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.65);
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 200ms ease;
+        }
+        .am-btn-outline:hover { background: rgba(255,255,255,0.09); color: #fff; }
+        .am-form-link {
+          display: inline-flex;
+          align-items: center;
+          padding: 0.3rem 0.75rem;
+          border-radius: 9999px;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.4);
+          font-size: 0.7rem;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 180ms ease;
+        }
+        .am-form-link:hover { color: rgba(255,255,255,0.7); }
+      `}</style>
+
+      <div className="am-layout">
+        {/* ── LIST PANEL ── */}
+        <div className="am-panel">
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+            <div className="am-panel-title" style={{ marginBottom: 0 }}>Zgłoszenia</div>
+            <a href="/kontakt" className="am-form-link">Formularz →</a>
           </div>
 
-          <div className="mt-3 grid gap-2">
-            {data?.messages.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setSelectedId(m.id)}
-                className={
-                  "rounded-2xl px-4 py-3 text-left transition-colors ring-1 " +
-                  (m.id === selectedId
-                    ? "bg-black text-white ring-black"
-                    : "bg-white text-black ring-black/10 hover:bg-pink-500/10")
-                }
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <div className="text-sm font-semibold">{m.name}</div>
-                  <div className={
-                    "rounded-full px-3 py-1 text-xs font-semibold " +
-                    (m.id === selectedId ? "bg-white/10" : "bg-pink-500/10")
-                  }>
-                    {m.status}
+          {data && data.messages.length > 0 ? (
+            <div className="am-list">
+              {data.messages.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setSelectedId(m.id)}
+                  className={`am-item${m.id === selectedId ? " active" : ""}`}
+                >
+                  <div className="am-item-name">
+                    {m.name}
+                    <span className="am-status">{m.status}</span>
+                  </div>
+                  <div className="am-item-date">{new Date(m.createdAt).toLocaleString()}</div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="am-empty">
+              {data ? "Brak zgłoszeń." : "Wczytywanie…"}
+            </div>
+          )}
+        </div>
+
+        {/* ── PREVIEW PANEL ── */}
+        <div className="am-panel">
+          {selected ? (
+            <>
+              <div className="am-preview-row">
+                <div>
+                  <div className="am-preview-name">{selected.name}</div>
+                  <div className="am-preview-sub">
+                    {selected.email}<br />{selected.phone}
                   </div>
                 </div>
-                <div className={
-                  "mt-1 text-xs " +
-                  (m.id === selectedId ? "text-white/70" : "text-black/60")
-                }>
-                  {new Date(m.createdAt).toLocaleString()}
-                </div>
-              </button>
-            ))}
-          </div>
+                <span className="am-date-badge">
+                  {new Date(selected.createdAt).toLocaleString()}
+                </span>
+              </div>
 
-          {data && data.messages.length === 0 ? (
-            <div className="mt-4 rounded-2xl bg-pink-500/5 px-4 py-4 text-sm text-black/70">
-              Brak zgłoszeń.
+              <div className="am-message-box">
+                <div className="am-message-label">Wiadomość</div>
+                <div className="am-message-text">{selected.message}</div>
+              </div>
+
+              <div className="am-actions">
+                <a
+                  href={`mailto:${encodeURIComponent(selected.email)}?subject=${encodeURIComponent("Różowy Event — odpowiedź na zapytanie")}`}
+                  className="am-btn-primary"
+                >
+                  Odpowiedz mailem
+                </a>
+                <a href={`tel:${selected.phone}`} className="am-btn-outline">
+                  Zadzwoń
+                </a>
+              </div>
+            </>
+          ) : (
+            <div style={{ padding: "2rem 0", textAlign: "center" }}>
+              <div style={{ fontSize: "1.5rem", marginBottom: "0.75rem", opacity: 0.4 }}>◎</div>
+              <div style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.35)" }}>
+                Wybierz zgłoszenie z listy.
+              </div>
             </div>
-          ) : null}
+          )}
         </div>
-
-        <MessagePreview message={selected} />
       </div>
     </AdminShell>
-  );
-}
-
-function MessagePreview({ message }: { message: ContactMessage | null }) {
-  if (!message) {
-    return (
-      <div className="rounded-3xl bg-white p-6 ring-1 ring-black/10">
-        <div className="text-sm font-semibold text-black">Podgląd wiadomości</div>
-        <div className="mt-2 text-sm text-black/70">Wybierz zgłoszenie z listy.</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-3xl bg-white p-6 ring-1 ring-black/10">
-      <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-        <div>
-          <div className="text-sm font-semibold text-black">{message.name}</div>
-          <div className="mt-1 text-sm text-black/70">{message.email}</div>
-          <div className="mt-1 text-sm text-black/70">{message.phone}</div>
-        </div>
-        <div className="rounded-2xl bg-black px-4 py-3 text-xs font-semibold text-white">
-          {new Date(message.createdAt).toLocaleString()}
-        </div>
-      </div>
-
-      <div className="mt-6 rounded-3xl bg-pink-500/5 p-5">
-        <div className="text-xs font-semibold text-black/60">Wiadomość</div>
-        <div className="mt-2 whitespace-pre-wrap text-sm leading-6 text-black/80">
-          {message.message}
-        </div>
-      </div>
-
-      <div className="mt-6 grid gap-3 md:grid-cols-2">
-        <a
-          href={`mailto:${encodeURIComponent(message.email)}?subject=${encodeURIComponent(
-            "Różowy Event — odpowiedź na zapytanie",
-          )}`}
-          className="inline-flex h-11 items-center justify-center rounded-full bg-pink-500 px-6 text-sm font-semibold text-white shadow-sm shadow-pink-500/30 transition-transform hover:scale-[1.02] active:scale-[0.98]"
-        >
-          Odpowiedz mailem
-        </a>
-        <a
-          href={`tel:${message.phone}`}
-          className="inline-flex h-11 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-black ring-1 ring-black/10 transition-colors hover:bg-pink-500/10"
-        >
-          Zadzwoń
-        </a>
-      </div>
-    </div>
   );
 }

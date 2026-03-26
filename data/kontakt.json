@@ -2,15 +2,6 @@
   "updatedAt": "2026-03-25T18:48:08.506Z",
   "messages": [
     {
-      "id": "msg_bdeaaffde5cb_19d2653543a",
-      "name": "Szymon Ożóg",
-      "email": "szymon.ozog.08@gmail.com",
-      "phone": "+48609476355",
-      "message": "aaa",
-      "createdAt": "2026-03-25T18:48:08.506Z",
-      "status": "nowe"
-    },
-    {
       "id": "msg_demo_1",
       "name": "Anna Kowalska",
       "email": "anna@example.com",

@@ -61,10 +61,12 @@ export default function ContactForm() {
     <form
       onSubmit={onSubmit}
       style={{
-        background: "#fff",
+        background: "rgba(255,255,255,0.05)",
+        backdropFilter: "blur(20px)",
+        border: "1px solid rgba(255,255,255,0.1)",
         borderRadius: "2rem",
         padding: "2.5rem",
-        boxShadow: "0 40px 100px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05)",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.15), 0 0 0 1px rgba(255,255,255,0.04)",
       }}
     >
       <div style={{ marginBottom: "2rem" }}>
@@ -73,19 +75,19 @@ export default function ContactForm() {
             fontFamily: "var(--font-display)",
             fontWeight: 700,
             fontSize: "1.5rem",
-            color: "#060508",
+            color: "#fff",
             marginBottom: "0.4rem",
           }}
         >
           Wyślij zapytanie
         </h2>
-        <p style={{ fontSize: "0.875rem", color: "rgba(6,5,8,0.55)", lineHeight: 1.6 }}>
+        <p style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.6 }}>
           Wypełnij formularz — odezwiemy się w ciągu 24h z wyceną.
         </p>
       </div>
 
       <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "1fr 1fr" }}>
-        <label style={{ display: "grid", gap: "0.5rem", fontSize: "0.8rem", fontWeight: 700, color: "#060508", letterSpacing: "0.03em" }}>
+        <label style={{ display: "grid", gap: "0.5rem", fontSize: "0.8rem", fontWeight: 700, color: "#fff", letterSpacing: "0.03em" }}>
           Imię i nazwisko *
           <input
             value={form.name}
@@ -96,7 +98,7 @@ export default function ContactForm() {
           />
         </label>
 
-        <label style={{ display: "grid", gap: "0.5rem", fontSize: "0.8rem", fontWeight: 700, color: "#060508", letterSpacing: "0.03em" }}>
+        <label style={{ display: "grid", gap: "0.5rem", fontSize: "0.8rem", fontWeight: 700, color: "#fff", letterSpacing: "0.03em" }}>
           Email *
           <input
             value={form.email}
@@ -136,9 +138,10 @@ export default function ContactForm() {
             marginTop: "1.25rem",
             padding: "1rem 1.25rem",
             borderRadius: "1rem",
-            background: result.ok ? "rgba(240,23,122,0.08)" : "#060508",
+            background: result.ok ? "rgba(240,23,122,0.08)" : "rgba(255,255,255,0.05)",
+            backdropFilter: "blur(20px)",
             border: result.ok ? "1px solid rgba(240,23,122,0.25)" : "1px solid rgba(255,255,255,0.1)",
-            color: result.ok ? "#b5004e" : "#fff",
+            color: result.ok ? "#ff4fa3" : "#fff",
             fontSize: "0.875rem",
             fontWeight: 600,
             display: "flex",
@@ -152,7 +155,7 @@ export default function ContactForm() {
       )}
 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "1.75rem", gap: "1rem", flexWrap: "wrap" }}>
-        <p style={{ fontSize: "0.72rem", color: "rgba(6,5,8,0.4)", lineHeight: 1.5 }}>
+        <p style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.4)", lineHeight: 1.5 }}>
           * pola wymagane · dane zapisują się lokalnie (demo)
         </p>
         <button

@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Start" },
-  { href: "/o-nas", label: "O nas" },
-  { href: "/oferta", label: "Oferta" },
-  { href: "/galeria", label: "Galeria" },
-  { href: "/kontakt", label: "Kontakt" },
+  { href: "/", label: "Start", icon: "⌂" },
+  { href: "/o-nas", label: "O nas", icon: "◈" },
+  { href: "/oferta", label: "Oferta", icon: "✦" },
+  { href: "/galeria", label: "Galeria", icon: "◻" },
+  { href: "/kontakt", label: "Kontakt", icon: "◎" },
 ] as const;
 
 function isActivePath(pathname: string, href: string) {
@@ -21,6 +21,7 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -28,121 +29,498 @@ export default function SiteHeader() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
+  // Close on route change
   useEffect(() => {
-    const timer = setTimeout(() => setMobileOpen(false), 0);
-    return () => clearTimeout(timer);
+    setMobileOpen(false);
   }, [pathname]);
+
+  // Lock body scroll when menu open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
+  // Close on outside click
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [mobileOpen]);
 
   return (
     <>
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
-          transition: "all 300ms ease",
-          background: scrolled
-            ? "rgba(6,5,8,0.88)"
-            : "rgba(6,5,8,0.5)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: scrolled
-            ? "1px solid rgba(240,23,122,0.18)"
-            : "1px solid rgba(255,255,255,0.06)",
-          boxShadow: scrolled ? "0 8px 40px rgba(0,0,0,0.5)" : "none",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: "75rem",
-            margin: "0 auto",
-            padding: "0 1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            height: "4.5rem",
-          }}
-        >
+      <style>{`
+        :root {
+          --pink: #f0177a;
+          --pink-light: #ff4fa3;
+          --pink-glow: rgba(240,23,122,0.35);
+          --bg-dark: #060508;
+          --surface: rgba(255,255,255,0.05);
+          --border: rgba(255,255,255,0.08);
+          --text-muted: rgba(255,255,255,0.5);
+        }
+
+        .header-root {
+          position: sticky;
+          top: 0;
+          z-index: 100;
+          transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+        }
+        .header-root.scrolled {
+          background: rgba(6,5,8,0.92);
+          border-bottom: 1px solid rgba(240,23,122,0.2);
+          box-shadow: 0 1px 0 rgba(240,23,122,0.08), 0 8px 48px rgba(0,0,0,0.6);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+        }
+        .header-root:not(.scrolled) {
+          background: rgba(6,5,8,0.4);
+          border-bottom: 1px solid rgba(255,255,255,0.05);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+        }
+
+        .header-inner {
+          max-width: 76rem;
+          margin: 0 auto;
+          padding: 0 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 4.5rem;
+        }
+
+        /* ── LOGO ── */
+        .logo {
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex-shrink: 0;
+        }
+        .logo-mark {
+          width: 2.4rem;
+          height: 2.4rem;
+          border-radius: 0.6rem;
+          background: linear-gradient(135deg, #f0177a 0%, #ff4fa3 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 900;
+          font-size: 0.8rem;
+          color: #fff;
+          letter-spacing: 0.02em;
+          box-shadow: 0 4px 24px rgba(240,23,122,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+          position: relative;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+        .logo-mark::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+        }
+        .logo-text-name {
+          font-weight: 700;
+          font-size: 1rem;
+          color: #fff;
+          line-height: 1.2;
+          letter-spacing: -0.02em;
+        }
+        .logo-text-sub {
+          font-size: 0.6rem;
+          color: var(--text-muted);
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-weight: 500;
+        }
+
+        /* ── DESKTOP NAV ── */
+        .desktop-nav {
+          display: none;
+          align-items: center;
+          gap: 0.125rem;
+        }
+        @media (min-width: 768px) {
+          .desktop-nav { display: flex; }
+          .logo-text { display: block; }
+        }
+        .logo-text { display: none; }
+
+        .nav-link {
+          padding: 0.45rem 1rem;
+          border-radius: 9999px;
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: all 200ms ease;
+          color: rgba(255,255,255,0.7);
+          border: 1px solid transparent;
+          letter-spacing: 0.01em;
+          white-space: nowrap;
+        }
+        .nav-link:hover {
+          background: rgba(255,255,255,0.08);
+          color: #fff;
+        }
+        .nav-link.active {
+          background: rgba(240,23,122,0.14);
+          color: #ff4fa3;
+          border-color: rgba(240,23,122,0.3);
+          font-weight: 600;
+        }
+
+        /* ── RIGHT SIDE ── */
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        /* CTA button (desktop) */
+        .cta-btn {
+          display: none;
+          padding: 0.45rem 1.1rem;
+          border-radius: 9999px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-decoration: none;
+          background: linear-gradient(135deg, #f0177a, #ff4fa3);
+          color: #fff;
+          border: none;
+          cursor: pointer;
+          box-shadow: 0 4px 16px rgba(240,23,122,0.4);
+          letter-spacing: 0.02em;
+          transition: all 200ms ease;
+          white-space: nowrap;
+        }
+        .cta-btn:hover {
+          box-shadow: 0 6px 24px rgba(240,23,122,0.6);
+          transform: translateY(-1px);
+        }
+        @media (min-width: 768px) {
+          .cta-btn { display: block; }
+        }
+
+        /* ── HAMBURGER ── */
+        .hamburger {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 5px;
+          width: 2.4rem;
+          height: 2.4rem;
+          border-radius: 0.6rem;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.1);
+          cursor: pointer;
+          transition: all 200ms ease;
+          flex-shrink: 0;
+          padding: 0;
+        }
+        .hamburger:hover {
+          background: rgba(255,255,255,0.1);
+          border-color: rgba(240,23,122,0.3);
+        }
+        .hamburger.open {
+          background: rgba(240,23,122,0.12);
+          border-color: rgba(240,23,122,0.4);
+        }
+        @media (min-width: 768px) {
+          .hamburger { display: none; }
+        }
+        .bar {
+          width: 16px;
+          height: 1.5px;
+          background: #fff;
+          border-radius: 2px;
+          transition: all 250ms cubic-bezier(0.16,1,0.3,1);
+          transform-origin: center;
+        }
+        .hamburger.open .bar:nth-child(1) {
+          transform: translateY(6.5px) rotate(45deg);
+          background: var(--pink-light);
+        }
+        .hamburger.open .bar:nth-child(2) {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+        .hamburger.open .bar:nth-child(3) {
+          transform: translateY(-6.5px) rotate(-45deg);
+          background: var(--pink-light);
+        }
+
+        /* ── MOBILE OVERLAY ── */
+        .mobile-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 90;
+          background: rgba(0,0,0,0.6);
+          backdrop-filter: blur(4px);
+          -webkit-backdrop-filter: blur(4px);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 300ms ease;
+        }
+        .mobile-backdrop.open {
+          opacity: 1;
+          pointer-events: all;
+        }
+
+        /* ── MOBILE DRAWER ── */
+        .mobile-drawer {
+          position: fixed;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 99;
+          width: min(340px, 88vw);
+          background: #0c0a10;
+          border-left: 1px solid rgba(240,23,122,0.15);
+          box-shadow: -16px 0 80px rgba(0,0,0,0.7);
+          transform: translateX(100%);
+          transition: transform 350ms cubic-bezier(0.16,1,0.3,1);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .mobile-drawer.open {
+          transform: translateX(0);
+        }
+
+        /* drawer glow strip */
+        .mobile-drawer::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 2px;
+          height: 100%;
+          background: linear-gradient(180deg, transparent 0%, rgba(240,23,122,0.6) 30%, rgba(255,79,163,0.4) 70%, transparent 100%);
+        }
+
+        .drawer-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 1.25rem 1.5rem;
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+        .drawer-title {
+          font-size: 0.7rem;
+          font-weight: 600;
+          letter-spacing: 0.14em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+        .drawer-close {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 0.5rem;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.1);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          color: rgba(255,255,255,0.7);
+          font-size: 1rem;
+          transition: all 200ms ease;
+        }
+        .drawer-close:hover {
+          background: rgba(240,23,122,0.15);
+          border-color: rgba(240,23,122,0.4);
+          color: #ff4fa3;
+        }
+
+        .drawer-nav {
+          flex: 1;
+          padding: 1rem 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.3rem;
+          overflow-y: auto;
+        }
+
+        .drawer-link {
+          display: flex;
+          align-items: center;
+          gap: 0.875rem;
+          padding: 0.875rem 1rem;
+          border-radius: 0.75rem;
+          text-decoration: none;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: rgba(255,255,255,0.75);
+          border: 1px solid transparent;
+          transition: all 200ms ease;
+          position: relative;
+          overflow: hidden;
+          transform: translateX(20px);
+          opacity: 0;
+          animation: slideIn 300ms cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        .drawer-link:hover {
+          background: rgba(255,255,255,0.07);
+          color: #fff;
+          border-color: rgba(255,255,255,0.08);
+        }
+        .drawer-link.active {
+          background: rgba(240,23,122,0.12);
+          color: #ff4fa3;
+          border-color: rgba(240,23,122,0.25);
+          font-weight: 600;
+        }
+        .drawer-link.active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 3px;
+          height: 60%;
+          border-radius: 0 2px 2px 0;
+          background: var(--pink);
+        }
+        .drawer-icon {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 0.5rem;
+          background: rgba(255,255,255,0.06);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.85rem;
+          flex-shrink: 0;
+          transition: all 200ms ease;
+        }
+        .drawer-link.active .drawer-icon {
+          background: rgba(240,23,122,0.2);
+        }
+        .drawer-link-label { flex: 1; }
+        .drawer-arrow {
+          font-size: 0.7rem;
+          opacity: 0.3;
+          transition: all 200ms ease;
+        }
+        .drawer-link:hover .drawer-arrow,
+        .drawer-link.active .drawer-arrow { opacity: 0.7; transform: translateX(2px); }
+
+        @keyframes slideIn {
+          to { transform: translateX(0); opacity: 1; }
+        }
+
+        .drawer-footer {
+          padding: 1rem 1rem 1.5rem;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .drawer-cta {
+          display: block;
+          padding: 0.875rem 1rem;
+          border-radius: 0.75rem;
+          text-decoration: none;
+          font-size: 0.875rem;
+          font-weight: 700;
+          text-align: center;
+          background: linear-gradient(135deg, #f0177a, #ff4fa3);
+          color: #fff;
+          box-shadow: 0 4px 20px rgba(240,23,122,0.4);
+          letter-spacing: 0.02em;
+          transition: all 200ms ease;
+        }
+        .drawer-cta:hover { box-shadow: 0 6px 28px rgba(240,23,122,0.6); }
+        .drawer-admin {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          padding: 0.625rem 1rem;
+          border-radius: 0.75rem;
+          text-decoration: none;
+          font-size: 0.7rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: rgba(255,255,255,0.3);
+          border: 1px solid rgba(255,255,255,0.06);
+          background: rgba(255,255,255,0.02);
+          transition: all 200ms ease;
+        }
+        .drawer-admin:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
+        .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
+      `}</style>
+
+      {/* Backdrop */}
+      <div
+        className={`mobile-backdrop${mobileOpen ? " open" : ""}`}
+        onClick={() => setMobileOpen(false)}
+      />
+
+      {/* Mobile Drawer */}
+      <div ref={menuRef} className={`mobile-drawer${mobileOpen ? " open" : ""}`}>
+        <div className="drawer-header">
+          <span className="drawer-title">Nawigacja</span>
+          <button className="drawer-close" onClick={() => setMobileOpen(false)}>✕</button>
+        </div>
+
+        <nav className="drawer-nav">
+          {NAV_ITEMS.map((item, i) => {
+            const active = isActivePath(pathname, item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`drawer-link${active ? " active" : ""}`}
+                style={{ animationDelay: `${i * 50 + 60}ms` }}
+              >
+                <span className="drawer-icon">{item.icon}</span>
+                <span className="drawer-link-label">{item.label}</span>
+                <span className="drawer-arrow">›</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="drawer-footer">
+          <Link href="/kontakt" className="drawer-cta">Skontaktuj się</Link>
+          <Link href="/admin" className="drawer-admin">
+            <span className="dot" />
+            Panel Admina
+          </Link>
+        </div>
+      </div>
+
+      {/* Main Header */}
+      <header className={`header-root${scrolled ? " scrolled" : ""}`}>
+        <div className="header-inner">
           {/* Logo */}
-          <Link
-            href="/"
-            style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: "0.75rem" }}
-          >
-            <div
-              style={{
-                width: "2.5rem",
-                height: "2.5rem",
-                borderRadius: "0.75rem",
-                background: "linear-gradient(135deg, #f0177a, #ff4fa3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "var(--font-display)",
-                fontWeight: 900,
-                fontSize: "0.95rem",
-                color: "#fff",
-                boxShadow: "0 4px 20px rgba(240,23,122,0.5)",
-                flexShrink: 0,
-              }}
-            >
-              RE
-            </div>
-            <div>
-              <div
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontWeight: 700,
-                  fontSize: "1.05rem",
-                  color: "#fff",
-                  lineHeight: 1.2,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                Różowy Event
-              </div>
-              <div
-                style={{
-                  fontSize: "0.65rem",
-                  color: "rgba(255,255,255,0.45)",
-                  letterSpacing: "0.08em",
-                  textTransform: "uppercase",
-                  fontWeight: 500,
-                }}
-              >
-                Organizacja imprez
-              </div>
+          <Link href="/" className="logo">
+            <div className="logo-mark">RE</div>
+            <div className="logo-text">
+              <div className="logo-text-name">Różowy Event</div>
+              <div className="logo-text-sub">Organizacja imprez</div>
             </div>
           </Link>
 
           {/* Desktop Nav */}
-          <nav style={{ display: "flex", alignItems: "center", gap: "0.25rem" }} className="hidden md:flex">
+          <nav className="desktop-nav">
             {NAV_ITEMS.map((item) => {
               const active = isActivePath(pathname, item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    borderRadius: "9999px",
-                    fontSize: "0.875rem",
-                    fontWeight: active ? 600 : 500,
-                    textDecoration: "none",
-                    transition: "all 200ms ease",
-                    background: active
-                      ? "rgba(240,23,122,0.15)"
-                      : "transparent",
-                    color: active ? "#ff4fa3" : "rgba(255,255,255,0.75)",
-                    border: active
-                      ? "1px solid rgba(240,23,122,0.3)"
-                      : "1px solid transparent",
-                    letterSpacing: "0.01em",
-                  }}
-                  className={
-                    active
-                      ? ""
-                      : "hover:bg-white/10 hover:text-white"
-                  }
+                  className={`nav-link${active ? " active" : ""}`}
                 >
                   {item.label}
                 </Link>
@@ -150,118 +528,19 @@ export default function SiteHeader() {
             })}
           </nav>
 
-          {/* Right side */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <Link
-              href="/admin"
-              style={{
-                padding: "0.4rem 0.9rem",
-                borderRadius: "9999px",
-                fontSize: "0.75rem",
-                fontWeight: 600,
-                textDecoration: "none",
-                color: "rgba(255,255,255,0.5)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                background: "transparent",
-                transition: "all 200ms ease",
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-              }}
-              className="hidden md:inline-flex items-center hover:text-pink-400 hover:border-pink-400/40"
-            >
-              Admin
-            </Link>
-
-            <Link href="/kontakt" className="btn-pink" style={{ height: "2.5rem", padding: "0 1.25rem", fontSize: "0.8rem" }}>
-              Skontaktuj się
-            </Link>
-
-            {/* Hamburger */}
+          {/* Right */}
+          <div className="header-right">
+            <Link href="/kontakt" className="cta-btn">Skontaktuj się</Link>
             <button
+              className={`hamburger${mobileOpen ? " open" : ""}`}
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden"
-              style={{
-                width: "2.5rem",
-                height: "2.5rem",
-                borderRadius: "0.75rem",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "5px",
-                cursor: "pointer",
-                transition: "all 200ms ease",
-              }}
-              aria-label="Menu"
+              aria-label="Otwórz menu"
+              aria-expanded={mobileOpen}
             >
-              <span style={{ width: "18px", height: "2px", background: mobileOpen ? "var(--pink)" : "#fff", borderRadius: "2px", transition: "all 200ms ease", transform: mobileOpen ? "rotate(45deg) translateY(7px)" : "none" }} />
-              <span style={{ width: "18px", height: "2px", background: mobileOpen ? "transparent" : "#fff", borderRadius: "2px", transition: "all 200ms ease", opacity: mobileOpen ? 0 : 1 }} />
-              <span style={{ width: "18px", height: "2px", background: mobileOpen ? "var(--pink)" : "#fff", borderRadius: "2px", transition: "all 200ms ease", transform: mobileOpen ? "rotate(-45deg) translateY(-7px)" : "none" }} />
+              <span className="bar" />
+              <span className="bar" />
+              <span className="bar" />
             </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          style={{
-            maxHeight: mobileOpen ? "400px" : "0",
-            overflow: "hidden",
-            transition: "max-height 350ms cubic-bezier(0.16,1,0.3,1)",
-            borderTop: mobileOpen ? "1px solid rgba(240,23,122,0.12)" : "none",
-          }}
-          className="md:hidden"
-        >
-          <div style={{ padding: "1rem 1.5rem 1.5rem", display: "flex", flexDirection: "column", gap: "0.375rem" }}>
-            {NAV_ITEMS.map((item, i) => {
-              const active = isActivePath(pathname, item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  style={{
-                    padding: "0.875rem 1.25rem",
-                    borderRadius: "1rem",
-                    fontSize: "0.925rem",
-                    fontWeight: active ? 700 : 500,
-                    textDecoration: "none",
-                    background: active ? "rgba(240,23,122,0.15)" : "rgba(255,255,255,0.04)",
-                    color: active ? "#ff4fa3" : "rgba(255,255,255,0.85)",
-                    border: active ? "1px solid rgba(240,23,122,0.3)" : "1px solid rgba(255,255,255,0.07)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    animationDelay: `${i * 40}ms`,
-                  }}
-                  className="animate-fade-up"
-                >
-                  {item.label}
-                  <span style={{ opacity: 0.4, fontSize: "1rem" }}>→</span>
-                </Link>
-              );
-            })}
-            <Link
-              href="/admin"
-              style={{
-                padding: "0.875rem 1.25rem",
-                borderRadius: "1rem",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                textDecoration: "none",
-                background: "rgba(255,255,255,0.03)",
-                color: "rgba(255,255,255,0.45)",
-                border: "1px solid rgba(255,255,255,0.07)",
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--pink)", display: "inline-block" }} />
-              Panel Admina
-            </Link>
           </div>
         </div>
       </header>

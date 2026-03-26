@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-03-24T20:00:00.000Z",
+  "updatedAt": "2026-03-26T23:15:45.485Z",
   "images": [
     {
       "id": "img_urodziny_1",
@@ -13,13 +13,6 @@
       "title": "Festiwal szkolny",
       "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1400&q=80",
       "category": "szkolne",
-      "createdAt": "2026-03-20T12:00:00.000Z"
-    },
-    {
-      "id": "img_firmowe_1",
-      "title": "Event firmowy",
-      "url": "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1400&q=80",
-      "category": "firmowe",
       "createdAt": "2026-03-20T12:00:00.000Z"
     },
     {
