@@ -1,0 +1,47 @@
+{
+  "updatedAt": "2026-03-24T20:00:00.000Z",
+  "images": [
+    {
+      "id": "img_urodziny_1",
+      "title": "Mini disco i bańki",
+      "url": "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1400&q=80",
+      "category": "urodziny",
+      "createdAt": "2026-03-20T12:00:00.000Z"
+    },
+    {
+      "id": "img_szkolne_1",
+      "title": "Festiwal szkolny",
+      "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1400&q=80",
+      "category": "szkolne",
+      "createdAt": "2026-03-20T12:00:00.000Z"
+    },
+    {
+      "id": "img_firmowe_1",
+      "title": "Event firmowy",
+      "url": "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1400&q=80",
+      "category": "firmowe",
+      "createdAt": "2026-03-20T12:00:00.000Z"
+    },
+    {
+      "id": "img_inne_1",
+      "title": "Strefa foto",
+      "url": "https://images.unsplash.com/photo-1523528283115-9bf9b1699245?auto=format&fit=crop&w=1400&q=80",
+      "category": "inne",
+      "createdAt": "2026-03-20T12:00:00.000Z"
+    },
+    {
+      "id": "img_inne_2",
+      "title": "Dekoracje i światła",
+      "url": "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=1400&q=80",
+      "category": "inne",
+      "createdAt": "2026-03-20T12:00:00.000Z"
+    },
+    {
+      "id": "img_urodziny_2",
+      "title": "Urodzinowy klimat",
+      "url": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1400&q=80",
+      "category": "urodziny",
+      "createdAt": "2026-03-20T12:00:00.000Z"
+    }
+  ]
+}

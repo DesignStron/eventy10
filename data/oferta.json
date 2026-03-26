@@ -1,0 +1,41 @@
+{
+  "updatedAt": "2026-03-24T20:00:00.000Z",
+  "sections": [
+    {
+      "key": "urodziny",
+      "title": "Urodziny dla dzieci",
+      "description": "Pełen energii scenariusz urodzin: animacje, zabawy ruchowe, mini-dyskoteka, balony i tematyczne dekoracje. Program dopasowujemy do wieku oraz zainteresowań dziecka.",
+      "priceFromPLN": 899,
+      "bullets": [
+        "Animator / prowadzący",
+        "Scenariusz + gry i konkursy",
+        "Dekoracje i mini-strefa foto",
+        "Muzyka i mini-dyskoteka"
+      ]
+    },
+    {
+      "key": "szkolne",
+      "title": "Eventy szkolne",
+      "description": "Dni dziecka, festyny, bale i wydarzenia tematyczne. Zapewniamy prowadzenie, atrakcje, konkursy oraz sprawną organizację na miejscu.",
+      "priceFromPLN": 1490,
+      "bullets": [
+        "Prowadzenie wydarzenia",
+        "Atrakcje dla różnych grup wiekowych",
+        "Konkursy i nagrody (demo)",
+        "Opieka koordynatora"
+      ]
+    },
+    {
+      "key": "firmowe",
+      "title": "Imprezy firmowe",
+      "description": "Integracje, jubileusze i eventy wizerunkowe. Budujemy koncepcję, harmonogram oraz dobieramy atrakcje, aby wydarzenie było dynamiczne i profesjonalne.",
+      "priceFromPLN": 2990,
+      "bullets": [
+        "Koncepcja i harmonogram",
+        "Koordynacja na miejscu",
+        "Atrakcje i oprawa",
+        "Raport po evencie (demo)"
+      ]
+    }
+  ]
+}
