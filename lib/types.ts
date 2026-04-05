@@ -1,4 +1,4 @@
-export type OfferKey = "urodziny" | "animacje" | "komunie" | "wesela" | "pikniki" | "bale" | "mikolajki";
+export type OfferKey = "urodziny" | "szkolne" | "animacje" | "komunie" | "wesela" | "pikniki" | "bale" | "mikolajki";
 
 export type OfferSection = {
   key: OfferKey;
