@@ -14,27 +14,75 @@
       ]
     },
     {
-      "key": "szkolne",
-      "title": "Eventy szkolne",
-      "description": "Dni dziecka, festyny, bale i wydarzenia tematyczne. Zapewniamy prowadzenie, atrakcje, konkursy oraz sprawną organizację na miejscu.",
-      "priceFromPLN": 1490,
+      "key": "animacje",
+      "title": "Animacje i warsztaty",
+      "description": "Profesjonalne animacje dla dzieci w różnym wieku: kreatywne warsztaty, zabawy ruchowe, gry zespołowe i konkursy z nagrodami.",
+      "priceFromPLN": 599,
       "bullets": [
-        "Prowadzenie wydarzenia",
-        "Atrakcje dla różnych grup wiekowych",
-        "Konkursy i nagrody (demo)",
-        "Opieka koordynatora"
+        "Zespół animatorów (2-3 osoby)",
+        "Sprzęt do zabaw i gier",
+        "Materiały warsztatowe",
+        "Nagrody i upominki"
       ]
     },
     {
-      "key": "firmowe",
-      "title": "Imprezy firmowe",
-      "description": "Integracje, jubileusze i eventy wizerunkowe. Budujemy koncepcję, harmonogram oraz dobieramy atrakcje, aby wydarzenie było dynamiczne i profesjonalne.",
-      "priceFromPLN": 2990,
+      "key": "komunie",
+      "title": "Komunie i uroczystości",
+      "description": "Elegancka oprawa uroczystości komunijnych: animacje dla dzieci, muzyka, dekoracje oraz koordynacja całego wydarzenia.",
+      "priceFromPLN": 1890,
       "bullets": [
-        "Koncepcja i harmonogram",
-        "Koordynacja na miejscu",
-        "Atrakcje i oprawa",
-        "Raport po evencie (demo)"
+        "Oprawa artystyczna uroczystości",
+        "Animacje dla dzieci",
+        "Dekoracje kwiatowe i tematyczne",
+        "Koordynator wydarzenia"
+      ]
+    },
+    {
+      "key": "wesela",
+      "title": "Wesela i przyjęcia",
+      "description": "Profesjonalne prowadzenie wesel oraz oprawa muzyczna. Zabawy integracyjne, konkursy i animacje dla gości w każdym wieku.",
+      "priceFromPLN": 3490,
+      "bullets": [
+        "Prowadzenie imprezy",
+        "Oprawa muzyczna",
+        "Zabawy i konkursy",
+        "Koordynacja przebiegu wesela"
+      ]
+    },
+    {
+      "key": "pikniki",
+      "title": "Pikniki szkolne i festyny",
+      "description": "Organizacja pikników szkolnych, festynów i dni dziecka. Pełna oprawa techniczna, atrakcje dla wszystkich grup wiekowych.",
+      "priceFromPLN": 2490,
+      "bullets": [
+        "Namioty i sprzęt techniczny",
+        "Atrakcje dla dzieci i dorosłych",
+        "Prowadzenie imprezy",
+        "Obsługa gastronomiczna (opcja)"
+      ]
+    },
+    {
+      "key": "bale",
+      "title": "Bale karnawałowe i studniówki",
+      "description": "Magiczna atmosfera balów karnawałowych dla dzieci oraz eleganckie studniówki. Dekoracje, muzyka, prowadzenie i atrakcje.",
+      "priceFromPLN": 3290,
+      "bullets": [
+        "Dekoracje tematyczne",
+        "Oprawa muzyczna i oświetlenie",
+        "Prowadzenie balu",
+        "Zabawy i konkursy"
+      ]
+    },
+    {
+      "key": "mikolajki",
+      "title": "Mikołajki i eventy świąteczne",
+      "description": "Magiczne Mikołajki dla dzieci i firmowe eventy świąteczne. Święty Mikołaj, prezenty, animacje i świąteczna atmosfera.",
+      "priceFromPLN": 1990,
+      "bullets": [
+        "Wizyta Świętego Mikołaja",
+        "Prezenty i upominki",
+        "Świąteczne animacje",
+        "Dekoracje świąteczne"
       ]
     }
   ]

@@ -2,102 +2,34 @@ import Image from "next/image";
 import type { GalleryData, GalleryImage } from "@/lib/types";
 import { nowIso, readJsonFile } from "@/lib/data-store";
 
-export const metadata = {
-  title: "Galeria",
-};
+export const metadata = { title: "Galeria" };
 
-const FALLBACK: GalleryData = {
-  updatedAt: nowIso(),
-  images: [],
-};
+const FALLBACK: GalleryData = { updatedAt: nowIso(), images: [] };
 
 const CATEGORY_LABELS: Record<string, string> = {
   urodziny: "Urodziny",
-  szkolne: "Szkoła",
-  firmowe: "Firmowe",
-  inne: "Inne",
+  szkolne:  "Eventy szkolne",
+  firmowe:  "Firmowe",
+  inne:     "Inne",
 };
 
-function ImageCard({ img, index }: { img: GalleryImage; index: number }) {
-  const tall = index % 5 === 0 || index % 5 === 3;
+function ImageCard({ img }: { img: GalleryImage }) {
   return (
-    <div
-      className="group hover-lift"
-      style={{
-        borderRadius: "1.25rem",
-        overflow: "hidden",
-        background: "#0c0a10",
-        border: "1px solid rgba(255,255,255,0.07)",
-        position: "relative",
-        transition: "transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease",
-        gridRow: tall ? "span 2" : "span 1",
-      }}
-    >
-      <div
-        style={{
-          position: "relative",
-          height: tall ? "100%" : "220px",
-          minHeight: tall ? "320px" : "220px",
-          overflow: "hidden",
-        }}
-      >
+    <div className="gal-item">
+      <div className="gal-img-wrap">
         <Image
           src={img.url}
           alt={img.title}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          width={800}
+          height={600}
+          className="gal-img"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
-        {/* gradient overlay */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "linear-gradient(to top, rgba(6,5,8,0.85) 0%, rgba(6,5,8,0.1) 55%, transparent 100%)",
-          }}
-        />
-        {/* category pill */}
-        <div style={{ position: "absolute", top: "0.875rem", left: "0.875rem" }}>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "0.25rem 0.625rem",
-              borderRadius: "9999px",
-              background: "rgba(240,23,122,0.2)",
-              border: "1px solid rgba(240,23,122,0.35)",
-              color: "#ff4fa3",
-              fontSize: "0.65rem",
-              fontWeight: 700,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              backdropFilter: "blur(8px)",
-            }}
-          >
+        <div className="gal-overlay">
+          <span className="gal-cat">
             {CATEGORY_LABELS[img.category] ?? img.category}
           </span>
-        </div>
-        {/* title on image */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            padding: "1rem 1.125rem",
-          }}
-        >
-          <div
-            style={{
-              fontWeight: 600,
-              color: "#fff",
-              fontSize: "0.875rem",
-              lineHeight: 1.3,
-              textShadow: "0 1px 8px rgba(0,0,0,0.5)",
-            }}
-          >
-            {img.title}
-          </div>
+          <span className="gal-title">{img.title}</span>
         </div>
       </div>
     </div>
@@ -108,183 +40,175 @@ export default async function GalleryPage() {
   const data = await readJsonFile<GalleryData>("galeria.json", FALLBACK);
 
   return (
-    <div className="page-bg noise">
-      <div
-        style={{
-          maxWidth: "75rem",
-          margin: "0 auto",
-          padding: "3.5rem 1.5rem 5rem",
-        }}
-      >
-        {/* ── PAGE HEADER ── */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "1rem",
-            marginBottom: "3rem",
-          }}
-        >
-          {/* badge */}
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              padding: "0.375rem 0.875rem",
-              borderRadius: "9999px",
-              background: "rgba(240,23,122,0.1)",
-              border: "1px solid rgba(240,23,122,0.25)",
-              width: "fit-content",
-            }}
-          >
-            <span
-              style={{
-                width: "7px",
-                height: "7px",
-                borderRadius: "50%",
-                background: "var(--pink)",
-                display: "inline-block",
-                animation: "pulsePink 2s ease-in-out infinite",
-              }}
-            />
-            <span
-              style={{
-                fontSize: "0.72rem",
-                fontWeight: 700,
-                letterSpacing: "0.08em",
-                textTransform: "uppercase",
-                color: "#ff4fa3",
-              }}
-            >
+    <>
+      <style>{`
+        @keyframes pulseDot { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+        /* ── masonry via CSS columns ── */
+        .gal-grid {
+          columns: 1;
+          column-gap: 0.75rem;
+        }
+        @media(min-width: 540px)  { .gal-grid { columns: 2; } }
+        @media(min-width: 900px)  { .gal-grid { columns: 3; } }
+        @media(min-width: 1200px) { .gal-grid { columns: 4; } }
+
+        .gal-item {
+          break-inside: avoid;
+          margin-bottom: 0.75rem;
+        }
+
+        .gal-img-wrap {
+          position: relative;
+          border-radius: 0.75rem;
+          overflow: hidden;
+          background: #111;
+          cursor: pointer;
+          display: block;
+        }
+
+        .gal-img {
+          width: 100%;
+          height: auto;
+          display: block;
+          transition: transform 400ms ease;
+        }
+
+        .gal-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(6,5,8,0.75) 0%,
+            rgba(6,5,8,0.15) 45%,
+            transparent 100%
+          );
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 1rem;
+          opacity: 0;
+          transition: opacity 300ms ease;
+        }
+
+        .gal-img-wrap:hover .gal-overlay { opacity: 1; }
+        .gal-img-wrap:hover .gal-img     { transform: scale(1.04); }
+
+        .gal-cat {
+          display: inline-flex;
+          align-self: flex-start;
+          padding: 0.2rem 0.55rem;
+          border-radius: 9999px;
+          background: rgba(240,23,122,0.25);
+          border: 1px solid rgba(240,23,122,0.4);
+          color: #ff4fa3;
+          font-size: 0.6rem;
+          font-weight: 700;
+          letter-spacing: 0.07em;
+          text-transform: uppercase;
+          margin-bottom: 0.35rem;
+        }
+
+        .gal-title {
+          font-size: 0.84rem;
+          font-weight: 600;
+          color: #fff;
+          line-height: 1.3;
+        }
+      `}</style>
+
+      <div className="page-bg noise">
+        <div style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 8rem" }}>
+
+          {/* ── HEADER ── */}
+          <div style={{ marginBottom:"3rem" }}>
+            <span style={{
+              display:"inline-flex", alignItems:"center", gap:"0.42rem",
+              padding:"0.36rem 0.9rem", borderRadius:"9999px",
+              background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.22)",
+              fontSize:"0.67rem", fontWeight:700, letterSpacing:"0.1em",
+              textTransform:"uppercase", color:"var(--pink-light)", marginBottom:"1.5rem",
+            }}>
+              <span style={{
+                width:"5px", height:"5px", borderRadius:"50%",
+                background:"var(--pink)", display:"inline-block",
+                animation:"pulseDot 2.2s ease-in-out infinite",
+              }}/>
               Galeria
             </span>
-          </div>
 
-          {/* title row */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              gap: "1.5rem",
-              flexWrap: "wrap",
-            }}
-          >
-            <div>
-              <h1
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(1.75rem, 4vw, 3rem)",
-                  fontWeight: 700,
-                  color: "#fff",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  marginBottom: "0.75rem",
-                }}
-              >
-                Zobacz klimat naszych{" "}
-                <span style={{ color: "var(--pink-light)" }}>realizacji</span>
-              </h1>
-              <p
-                style={{
-                  color: "rgba(255,255,255,0.55)",
-                  fontSize: "clamp(0.875rem, 1.5vw, 1rem)",
-                  lineHeight: 1.7,
-                  maxWidth: "36rem",
-                }}
-              >
-                Galeria zarządzana z panelu admina. Każde zdjęcie to kawałek naszej historii.
-              </p>
-            </div>
-            <a
-              href="/admin/galeria"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                padding: "0.625rem 1.25rem",
-                borderRadius: "9999px",
-                background: "rgba(255,255,255,0.06)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                color: "rgba(255,255,255,0.65)",
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                textDecoration: "none",
-                transition: "all 200ms ease",
-                whiteSpace: "nowrap",
-                flexShrink: 0,
-              }}
-            >
-              Zarządzaj galerią →
-            </a>
-          </div>
-        </div>
+            <h1 style={{
+              fontFamily:"var(--font-display)",
+              fontSize:"clamp(2.6rem,5.5vw,4.5rem)",
+              fontWeight:700, color:"#fff", lineHeight:1.06,
+              letterSpacing:"-0.025em", marginBottom:"1rem",
+            }}>
+              Nasze realizacje
+            </h1>
 
-        {/* ── GALLERY GRID ── */}
-        {data.images.length > 0 ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-              gridAutoRows: "220px",
-              gap: "1rem",
-            }}
-          >
-            {data.images.map((img, i) => (
-              <ImageCard key={img.id} img={img} index={i} />
-            ))}
-          </div>
-        ) : (
-          /* ── EMPTY STATE ── */
-          <div
-            style={{
-              borderRadius: "1.5rem",
-              border: "1px dashed rgba(240,23,122,0.25)",
-              background: "rgba(240,23,122,0.04)",
-              padding: "5rem 1.5rem",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <div style={{ fontSize: "3rem" }}>📸</div>
-            <div
-              style={{
-                fontFamily: "var(--font-display)",
-                fontWeight: 700,
-                color: "#fff",
-                fontSize: "1.25rem",
-              }}
-            >
-              Brak zdjęć w galerii
-            </div>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.875rem", maxWidth: "24rem", lineHeight: 1.6 }}>
-              Dodaj zdjęcia w panelu admina, aby wypełnić galerię.
+            <p style={{
+              color:"rgba(255,255,255,0.5)",
+              fontSize:"clamp(0.95rem,1.8vw,1.1rem)",
+              lineHeight:1.8, maxWidth:"460px",
+            }}>
+              Każde zdjęcie to kawałek historii — imprez, uśmiechów
+              i&nbsp;momentów, które zostały w&nbsp;pamięci.
             </p>
-            <a
-              href="/admin/galeria"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                marginTop: "0.5rem",
-                padding: "0.75rem 1.5rem",
-                borderRadius: "9999px",
-                background: "linear-gradient(135deg, #f0177a, #ff4fa3)",
-                color: "#fff",
-                fontSize: "0.875rem",
-                fontWeight: 700,
-                textDecoration: "none",
-                boxShadow: "0 4px 20px rgba(240,23,122,0.4)",
-              }}
-            >
-              Dodaj pierwsze zdjęcie →
-            </a>
           </div>
-        )}
+
+          {/* divider */}
+          <div style={{
+            height:"1px", marginBottom:"3rem",
+            background:"linear-gradient(90deg,transparent,rgba(240,23,122,0.25),transparent)",
+          }}/>
+
+          {/* ── MASONRY GRID ── */}
+          {data.images.length > 0 ? (
+            <div className="gal-grid">
+              {data.images.map((img) => (
+                <ImageCard key={img.id} img={img} />
+              ))}
+            </div>
+          ) : (
+            <div style={{
+              borderRadius:"1.25rem",
+              border:"1px dashed rgba(240,23,122,0.2)",
+              background:"rgba(240,23,122,0.03)",
+              padding:"6rem 1.5rem",
+              textAlign:"center",
+              display:"flex", flexDirection:"column", alignItems:"center", gap:"1rem",
+            }}>
+              <div style={{
+                width:"3.5rem", height:"3.5rem", borderRadius:"0.875rem",
+                background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ff4fa3" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="3"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <path d="M21 15l-5-5L5 21"/>
+                </svg>
+              </div>
+              <div style={{ fontFamily:"var(--font-display)", fontWeight:700, color:"#fff", fontSize:"1.25rem" }}>
+                Galeria jest w przygotowaniu
+              </div>
+              <p style={{ color:"rgba(255,255,255,0.45)", fontSize:"0.875rem", maxWidth:"22rem", lineHeight:1.7 }}>
+                Wkrótce pojawią się tu zdjęcia z naszych realizacji.
+              </p>
+              <a href="/kontakt" style={{
+                display:"inline-flex", alignItems:"center", gap:"0.5rem",
+                marginTop:"0.5rem", height:"3rem", padding:"0 1.75rem",
+                borderRadius:"9999px", background:"var(--pink)", color:"#fff",
+                fontSize:"0.875rem", fontWeight:700, textDecoration:"none",
+                boxShadow:"0 6px 24px rgba(240,23,122,0.4)",
+              }}>
+                Skontaktuj się →
+              </a>
+            </div>
+          )}
+
+        </div>
       </div>
-    </div>
+    </>
   );
 }

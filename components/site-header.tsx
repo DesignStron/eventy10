@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
-const NAV_ITEMS = [
+const NAV_LINKS = [
   { href: "/", label: "Start", icon: "⌂" },
   { href: "/o-nas", label: "O nas", icon: "◈" },
   { href: "/oferta", label: "Oferta", icon: "✦" },
+  { href: "/oprawa-muzyczna", label: "Oprawa muzyczna", icon: "🎵" },
   { href: "/galeria", label: "Galeria", icon: "◻" },
   { href: "/kontakt", label: "Kontakt", icon: "◎" },
 ] as const;
@@ -21,13 +22,41 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [theme, setTheme] = useState<"dark" | "light">("dark");
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const applyTheme = (next: "dark" | "light") => {
+    const root = document.documentElement;
+    root.setAttribute("data-theme", next);
+    root.classList.toggle("theme-light", next === "light");
+    root.classList.toggle("theme-dark", next === "dark");
+
+    document.body.setAttribute("data-theme", next);
+    document.body.classList.toggle("theme-light", next === "light");
+    document.body.classList.toggle("theme-dark", next === "dark");
+  };
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem("theme");
+    const next = saved === "light" ? "light" : "dark";
+    setTheme(next);
+    applyTheme(next);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme((prev) => {
+      const next: "dark" | "light" = prev === "dark" ? "light" : "dark";
+      applyTheme(next);
+      window.localStorage.setItem("theme", next);
+      return next;
+    });
+  };
 
   // Close on route change
   useEffect(() => {
@@ -145,13 +174,117 @@ export default function SiteHeader() {
         .desktop-nav {
           display: none;
           align-items: center;
-          gap: 0.125rem;
+          gap: 0.25rem;
         }
-        @media (min-width: 768px) {
+        @media (min-width: 860px) {
           .desktop-nav { display: flex; }
-          .logo-text { display: block; }
+          .mobile-btn { display: none; }
         }
-        .logo-text { display: none; }
+
+        .theme-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 2.6rem;
+          height: 2.6rem;
+          border-radius: 9999px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.85);
+          cursor: pointer;
+          transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+        }
+        .theme-btn:hover {
+          transform: translateY(-1px);
+          border-color: rgba(240,23,122,0.3);
+          background: rgba(240,23,122,0.08);
+        }
+        .theme-btn:active { transform: translateY(0px) scale(0.98); }
+
+        /* Light theme overrides */
+        html[data-theme="light"] .header-root {
+          background: rgba(255,255,255,0.92);
+          border-bottom: 1px solid rgba(240,23,122,0.12);
+          box-shadow: 0 1px 0 rgba(240,23,122,0.06), 0 4px 24px rgba(0,0,0,0.04);
+        }
+        html[data-theme="light"] .header-root:not(.scrolled) {
+          background: rgba(255,255,255,0.85);
+          border-bottom: 1px solid rgba(240,23,122,0.08);
+        }
+        html[data-theme="light"] .logo-text-name {
+          color: var(--black);
+        }
+        html[data-theme="light"] .logo-text-sub {
+          color: rgba(0,0,0,0.45);
+        }
+        html[data-theme="light"] .nav-link {
+          color: rgba(0,0,0,0.7);
+          border: 1px solid transparent;
+        }
+        html[data-theme="light"] .nav-link:hover {
+          color: var(--pink);
+          background: rgba(240,23,122,0.06);
+          border-color: rgba(240,23,122,0.15);
+        }
+        html[data-theme="light"] .nav-link.active {
+          color: var(--pink);
+          background: rgba(240,23,122,0.1);
+          border-color: rgba(240,23,122,0.25);
+        }
+        html[data-theme="light"] .cta-btn {
+          background: var(--pink);
+          color: #fff;
+          border: 1px solid var(--pink);
+          box-shadow: 0 4px 14px rgba(240,23,122,0.35);
+        }
+        html[data-theme="light"] .cta-btn:hover {
+          background: var(--pink-light);
+          border-color: var(--pink-light);
+          box-shadow: 0 6px 20px rgba(240,23,122,0.5);
+        }
+        html[data-theme="light"] .theme-btn {
+          background: rgba(0,0,0,0.04);
+          border: 1px solid rgba(0,0,0,0.12);
+          color: rgba(0,0,0,0.8);
+        }
+        html[data-theme="light"] .theme-btn:hover {
+          border-color: rgba(240,23,122,0.3);
+          background: rgba(240,23,122,0.08);
+          color: var(--pink);
+        }
+        html[data-theme="light"] .hamburger .bar {
+          background: var(--black);
+        }
+        html[data-theme="light"] .mobile-drawer {
+          background: rgba(255,255,255,0.98);
+          border: 1px solid rgba(0,0,0,0.08);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        }
+        html[data-theme="light"] .drawer-title {
+          color: var(--black);
+        }
+        html[data-theme="light"] .drawer-link {
+          color: rgba(0,0,0,0.75);
+        }
+        html[data-theme="light"] .drawer-link:hover {
+          color: var(--pink);
+          background: rgba(240,23,122,0.06);
+        }
+        html[data-theme="light"] .drawer-link.active {
+          color: var(--pink);
+          background: rgba(240,23,122,0.1);
+        }
+        html[data-theme="light"] .drawer-link-label {
+          color: inherit;
+        }
+        html[data-theme="light"] .drawer-close {
+          color: rgba(0,0,0,0.6);
+          border-color: rgba(0,0,0,0.15);
+        }
+        html[data-theme="light"] .drawer-close:hover {
+          color: var(--pink);
+          border-color: rgba(240,23,122,0.3);
+        }
 
         .nav-link {
           padding: 0.45rem 1rem;
@@ -474,7 +607,7 @@ export default function SiteHeader() {
         </div>
 
         <nav className="drawer-nav">
-          {NAV_ITEMS.map((item, i) => {
+          {NAV_LINKS.map((item, i) => {
             const active = isActivePath(pathname, item.href);
             return (
               <Link
@@ -514,7 +647,7 @@ export default function SiteHeader() {
 
           {/* Desktop Nav */}
           <nav className="desktop-nav">
-            {NAV_ITEMS.map((item) => {
+            {NAV_LINKS.map((item) => {
               const active = isActivePath(pathname, item.href);
               return (
                 <Link
@@ -527,6 +660,16 @@ export default function SiteHeader() {
               );
             })}
           </nav>
+
+          <button
+            type="button"
+            className="theme-btn"
+            onClick={toggleTheme}
+            aria-label={theme === "dark" ? "Włącz jasny motyw" : "Włącz ciemny motyw"}
+            title={theme === "dark" ? "Jasny motyw" : "Ciemny motyw"}
+          >
+            {theme === "dark" ? "☀" : "☾"}
+          </button>
 
           {/* Right */}
           <div className="header-right">

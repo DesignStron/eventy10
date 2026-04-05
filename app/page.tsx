@@ -1,462 +1,381 @@
+"use client";
+
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+function useCounter(target: number, duration = 1800) {
+  const [val, setVal] = useState(0);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting || started) return;
+      setStarted(true);
+      obs.disconnect();
+      let t: number | null = null;
+      const step = (ts: number) => {
+        if (!t) t = ts;
+        const p = Math.min((ts - t) / duration, 1);
+        setVal(Math.round((1 - Math.pow(1 - p, 4)) * target));
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration, started]);
+  return { val, ref };
+}
+
+const HERO_IMAGE =
+  "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1800&q=80";
+
+
 export default function Home() {
   return (
-    <div className="page-bg noise">
-      {/* ─── HERO ──────────────────────────────────────────────────── */}
-      <section
-        style={{
-          maxWidth: "75rem",
-          margin: "0 auto",
-          padding: "4rem 1rem 3rem",
-          display: "grid",
-          gap: "2rem",
-          alignItems: "center",
-        }}
-        className="grid-cols-1 lg:grid-cols-2"
-      >
-        {/* Left */}
-        <div>
-          <div className="badge badge-pink animate-fade-up" style={{ marginBottom: "1.5rem" }}>
-            <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "var(--pink)", display: "inline-block", animation: "pulsePink 2s ease-in-out infinite" }} />
-            Energia + Profesjonalizm
-          </div>
+    <>
+      <style>{`
+        @keyframes fadeUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+        @keyframes dot      { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.75)} }
+        @keyframes lineGrow { from{transform:scaleX(0);opacity:0} to{transform:scaleX(1);opacity:1} }
+        @keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes shine    { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes borderGlow {
+          0%,100% { box-shadow: 0 0 0 1px rgba(240,23,122,0.15), 0 32px 80px rgba(0,0,0,0.5); }
+          50%     { box-shadow: 0 0 0 1px rgba(240,23,122,0.4),  0 32px 80px rgba(0,0,0,0.5), 0 0 40px rgba(240,23,122,0.08); }
+        }
 
-          <h1
-            className="heading-xl animate-fade-up delay-100"
-            style={{ color: "#fff", marginBottom: "1.5rem", fontSize: "clamp(2rem, 5vw, 4rem)" }}
-          >
-            Organizujemy imprezy,{" "}
-            <span
-              style={{
-                background: "linear-gradient(135deg, var(--pink-light) 0%, #fff 60%)",
-                WebkitBackgroundClip: "text",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                display: "inline-block",
-              }}
-            >
-              które zostają w pamięci
-            </span>
-          </h1>
+        .fu{animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both}
+        .fi{animation:fadeIn .7s ease both}
+        .d1{animation-delay:.08s}.d2{animation-delay:.2s}.d3{animation-delay:.34s}
+        .d4{animation-delay:.5s}.d5{animation-delay:.65s}
 
-          <p
-            className="animate-fade-up delay-200"
-            style={{
-              color: "rgba(255,255,255,0.65)",
-              fontSize: "clamp(0.95rem, 2vw, 1.0625rem)",
-              lineHeight: 1.75,
-              maxWidth: "100%",
-              marginBottom: "2rem",
-            }}
-          >
-            Różowy Event to nowoczesna agencja eventowa — tworzymy niezapomniane urodziny dla dzieci,
-            eventy szkolne i imprezy firmowe. Kompleksowo: scenariusz, atrakcje, prowadzenie i oprawa.
-          </p>
+        /* ── HERO GRID ── */
+        .hg {
+          display:grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 4rem;
+          align-items: center;
+          min-height: 88vh;
+          padding: 6rem 0 3rem;
+        }
+        @media(max-width:900px){
+          .hg { grid-template-columns:1fr; min-height:auto; padding:4rem 0 2rem; gap:2.5rem; }
+          .hg-img { order:2; }
+          .hg-txt { order:1; }
+        }
 
-          <div
-            className="animate-fade-up delay-300 flex-col sm:flex-row"
-            style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", marginBottom: "2rem" }}
-          >
-            <a href="/kontakt" className="btn-pink">
-              Zarezerwuj termin
-              <span style={{ marginLeft: "0.5rem" }}>→</span>
-            </a>
-            <a href="/oferta" className="btn-outline">
-              Poznaj ofertę
-            </a>
-          </div>
+        /* ── HEADLINE ── */
+        .h1 {
+          font-family: var(--font-display);
+          font-size: clamp(3.4rem, 6vw, 5.8rem);
+          font-weight: 700;
+          line-height: 1.06;
+          letter-spacing: -0.03em;
+          color: #fff;
+          margin: 0 0 1.75rem;
+          overflow: visible;
+          padding-bottom:.06em;
+        }
+        .h1 em {
+          font-style: normal;
+          background: linear-gradient(105deg,#fff 0%,#fff 18%,var(--pink-light) 38%,#ffb3d4 55%,var(--pink-light) 72%,#fff 88%,#fff 100%);
+          background-size: 220% auto;
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shine 5s linear infinite;
+        }
 
-          {/* Stats */}
-          <div
-            className="animate-fade-up delay-400 grid-cols-3 sm:grid-cols-3"
-            style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}
-          >
-            {[
-              { num: "250+", label: "eventów", sub: "zrealizowanych" },
-              { num: "5 ★", label: "opinie", sub: "średnia klientów" },
-              { num: "24h", label: "wycena", sub: "szybka odpowiedź" },
-            ].map((s) => (
-              <div className="stat-box" style={{ textAlign: "center", padding: "0.75rem 0.5rem" }}>
-                <div className="counter-num" style={{ fontSize: "clamp(1.25rem, 3vw, 1.75rem)" }}>{s.num}</div>
-                <div style={{ fontSize: "clamp(0.7rem, 1.5vw, 0.8rem)", fontWeight: 600, color: "#fff", marginTop: "0.2rem" }}>{s.label}</div>
-                <div style={{ fontSize: "clamp(0.6rem, 1.2vw, 0.65rem)", color: "rgba(255,255,255,0.4)", marginTop: "0.1rem" }}>{s.sub}</div>
+        /* ── BADGE ── */
+        .badge-pill {
+          display:inline-flex; align-items:center; gap:.45rem;
+          padding:.38rem 1rem; border-radius:9999px;
+          background:rgba(240,23,122,.1); border:1px solid rgba(240,23,122,.25);
+          font-size:.67rem; font-weight:700; letter-spacing:.1em;
+          text-transform:uppercase; color:var(--pink-light);
+          margin-bottom:1.75rem;
+        }
+
+        /* ── BUTTONS ── */
+        .btn-hero {
+          display:inline-flex; align-items:center; gap:.5rem;
+          height:3.3rem; padding:0 2.2rem; border-radius:9999px;
+          background:var(--pink); color:#fff;
+          font-size:.92rem; font-weight:700; text-decoration:none;
+          letter-spacing:.01em;
+          box-shadow:0 8px 32px rgba(240,23,122,.48);
+          transition:transform 220ms,box-shadow 220ms,background 220ms;
+          position:relative; overflow:hidden; white-space:nowrap;
+        }
+        .btn-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.16) 0%,transparent 55%);pointer-events:none}
+        .btn-hero:hover{transform:translateY(-3px);box-shadow:0 14px 48px rgba(240,23,122,.62);background:var(--pink-light)}
+        .btn-hero:hover .ar{transform:translateX(5px)}
+        .ar{display:inline-block;transition:transform 240ms ease}
+
+        .btn-img-w{
+          display:inline-flex;align-items:center;gap:.45rem;
+          height:2.8rem;padding:0 1.4rem;border-radius:9999px;
+          background:#fff;color:#0d0b10;font-size:.84rem;font-weight:700;
+          text-decoration:none;box-shadow:0 4px 20px rgba(0,0,0,.35);
+          transition:transform 200ms,box-shadow 200ms; white-space:nowrap;
+        }
+        .btn-img-w:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45)}
+        .btn-img-w:hover .ar{transform:translateX(4px)}
+
+        .btn-img-g{
+          display:inline-flex;align-items:center;gap:.45rem;
+          height:2.8rem;padding:0 1.4rem;border-radius:9999px;
+          background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.52);
+          color:#fff;font-size:.84rem;font-weight:700;text-decoration:none;
+          backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+          transition:background 200ms,border-color 200ms,transform 200ms; white-space:nowrap;
+        }
+        .btn-img-g:hover{background:rgba(255,255,255,.26);border-color:rgba(255,255,255,.8);transform:translateY(-2px)}
+        .btn-img-g:hover .ar{transform:translateX(4px)}
+
+        /* ── IMAGE CARD ── */
+        .img-card {
+          border-radius:1.75rem;
+          overflow:hidden;
+          position:relative;
+          aspect-ratio:4/5;
+          animation:borderGlow 4s ease-in-out infinite, float 9s ease-in-out infinite;
+        }
+        @media(max-width:900px){
+          .img-card{aspect-ratio:16/9;animation:none;}
+        }
+        .img-glow{
+          position:absolute;
+          width:130%;height:130%;top:-15%;left:-15%;
+          background:radial-gradient(ellipse at center,rgba(240,23,122,.2) 0%,transparent 65%);
+          pointer-events:none;filter:blur(30px);z-index:0;
+        }
+
+        /* ── DIVIDER ── */
+        .div-pink{
+          height:1px;
+          background:linear-gradient(90deg,transparent,rgba(240,23,122,.35),transparent);
+          transform-origin:left;
+          animation:lineGrow 1.1s cubic-bezier(.16,1,.3,1) .6s both;
+        }
+
+        /* ── STATS ── */
+        .stats-wrap{
+          display:flex;flex-wrap:wrap;
+          gap:0;
+          border:1px solid rgba(255,255,255,.07);
+          border-radius:1rem;
+          overflow:hidden;
+          margin-top:2.5rem;
+        }
+        .stat-cell{
+          flex:1;min-width:100px;
+          padding:1.5rem 1.25rem;
+          border-right:1px solid rgba(255,255,255,.07);
+          text-align:center;
+          transition:background 200ms;
+        }
+        .stat-cell:last-child{border-right:none}
+        .stat-cell:hover{background:rgba(255,255,255,.03)}
+        .stat-n{
+          font-family:var(--font-display);
+          font-size:clamp(2rem,3.5vw,2.8rem);
+          font-weight:700;line-height:1;letter-spacing:-.02em;
+        }
+        .stat-l{
+          font-size:.75rem;font-weight:500;margin-top:.4rem;line-height:1.4;
+        }
+
+        
+        /* ── BANNER ── */
+        .bnr{
+          border-radius:1.5rem;
+          position:relative;overflow:hidden;
+          background:rgba(255,255,255,.025);
+          border:1px solid rgba(240,23,122,.18);
+          padding:5rem 2rem;
+          display:flex;flex-direction:column;align-items:center;text-align:center;
+        }
+        .bnr::before{
+          content:"";position:absolute;inset:0;pointer-events:none;
+          background:
+            radial-gradient(ellipse 80% 100% at 50% 120%,rgba(240,23,122,.16) 0%,transparent 60%),
+            radial-gradient(ellipse 50% 60% at 90% 0%,rgba(240,23,122,.06) 0%,transparent 55%);
+        }
+        /* animated shimmer border */
+        .bnr::after{
+          content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+          background:linear-gradient(105deg,transparent 30%,rgba(240,23,122,.4) 50%,transparent 70%);
+          background-size:300% 100%;
+          animation:shine 4s linear infinite;
+          mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+          mask-composite:exclude;
+          -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+          -webkit-mask-composite:xor;
+          padding:1px;
+        }
+        .bnr>*{position:relative;z-index:1}
+        .bnr-btn{
+          display:inline-flex;align-items:center;gap:.5rem;
+          height:3.3rem;padding:0 2.2rem;border-radius:9999px;
+          background:var(--pink);color:#fff;
+          font-size:.9rem;font-weight:700;text-decoration:none;
+          box-shadow:0 8px 32px rgba(240,23,122,.46);
+          transition:transform 220ms,box-shadow 220ms,background 220ms;
+          position:relative;overflow:hidden;
+        }
+        .bnr-btn::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.16) 0%,transparent 55%);pointer-events:none}
+        .bnr-btn:hover{transform:translateY(-3px);box-shadow:0 16px 48px rgba(240,23,122,.64);background:var(--pink-light)}
+        .bnr-btn:hover .ar{transform:translateX(5px)}
+
+        /* ── SECTION LABEL ── */
+        .sec-lbl{
+          font-size:.62rem;font-weight:700;letter-spacing:.14em;
+          text-transform:uppercase;color:rgba(255,255,255,.22);
+          margin-bottom:.6rem;display:block;
+        }
+      `}</style>
+
+      <div className="page-bg noise">
+        <div style={{maxWidth:"76rem",margin:"0 auto",padding:"0 1.5rem"}}>
+
+          {/* ══ HERO ══════════════════════════════ */}
+          <div className="hg">
+
+            {/* TEXT */}
+            <div className="hg-txt">
+              <div className="badge-pill fu">
+                <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"var(--pink)",display:"inline-block",animation:"dot 2s ease-in-out infinite"}}/>
+                Organizacja rozrywki i animacji
               </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Right — hero image */}
-        <div className="animate-scale-in delay-200" style={{ position: "relative" }}>
-          <div
-            style={{
-              position: "absolute",
-              inset: "-2rem",
-              borderRadius: "3rem",
-              background: "radial-gradient(ellipse at center, rgba(240,23,122,0.2) 0%, transparent 70%)",
-              filter: "blur(30px)",
-              zIndex: 0,
-            }}
-          />
-          <div
-            style={{
-              position: "relative",
-              borderRadius: "2rem",
-              overflow: "hidden",
-              aspectRatio: "4/3",
-              border: "1px solid rgba(240,23,122,0.2)",
-              boxShadow: "0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04)",
-              zIndex: 1,
-            }}
-          >
-            <div
-              style={{
-                width: "100%",
-                height: "100%",
-                backgroundImage: "url(https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1400&q=80)",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            />
-            <div className="img-overlay" />
-            {/* Bottom label */}
-            <div
-              style={{
-                position: "absolute",
-                bottom: "1.25rem",
-                left: "1.25rem",
-                right: "1.25rem",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.75rem",
-              }}
-            >
-              <div
-                style={{
-                  background: "rgba(6,5,8,0.75)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(240,23,122,0.25)",
-                  borderRadius: "1rem",
-                  padding: "0.75rem 1rem",
-                  flex: 1,
-                }}
-              >
-                <div style={{ fontSize: "0.75rem", fontWeight: 700, color: "#ff4fa3", marginBottom: "0.25rem" }}>Ostatni event</div>
-                <div style={{ fontSize: "0.875rem", color: "#fff", fontWeight: 500 }}>Urodziny Zosi — 50 dzieci 🎉</div>
+              <h1 className="h1 fu d1">
+                Imprezy,{" "}
+                <em>które zostają<br/>w&nbsp;pamięci</em>
+              </h1>
+
+              <p className="fu d2" style={{
+                color:"rgba(255,255,255,.54)",
+                fontSize:"clamp(1rem,1.8vw,1.12rem)",
+                lineHeight:1.85,maxWidth:"46ch",marginBottom:"2.5rem",
+              }}>
+                Ponad 10 lat doświadczenia w tworzeniu wyjątkowych wydarzeń —
+                od animacji dla dzieci po imprezy firmowe i eventy szkolne.
+              </p>
+
+              <div className="fu d3" style={{marginBottom:"3rem"}}>
+                <Link href="/oferta" className="btn-hero">
+                  Zobacz ofertę <span className="ar">→</span>
+                </Link>
+              </div>
+
+              {/* STATS in a bordered box */}
+              <div className="fu d4">
+                <div className="div-pink" style={{marginBottom:"0"}}/>
+                <div className="stats-wrap">
+                  <StatCell num={250} suffix="+" label="zrealizowanych wydarzeń" delay="0s"/>
+                  <StatCell num={10}  suffix="+" label="lat doświadczenia"        delay=".15s"/>
+                  <StatCell num={5}   suffix="★" label="średnia ocen"             delay=".3s"/>
+                </div>
+              </div>
+            </div>
+
+            {/* IMAGE */}
+            <div className="hg-img fu d5" style={{position:"relative"}}>
+              <div className="img-glow"/>
+              <div className="img-card" style={{position:"relative",zIndex:1}}>
+                <img
+                  src={HERO_IMAGE}
+                  alt="Realizacja wydarzenia"
+                  style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
+                />
+                <div style={{
+                  position:"absolute",inset:0,
+                  background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
+                }}/>
+                <div style={{
+                  position:"absolute",left:"1.4rem",right:"1.4rem",bottom:"1.6rem",
+                  display:"flex",flexDirection:"column",gap:".75rem",
+                }}>
+                  <span style={{
+                    display:"inline-flex",alignItems:"center",gap:".4rem",
+                    padding:".28rem .8rem",borderRadius:"9999px",
+                    background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.32)",
+                    backdropFilter:"blur(10px)",
+                    fontSize:".62rem",fontWeight:700,letterSpacing:".09em",
+                    textTransform:"uppercase",color:"#fff",width:"fit-content",
+                  }}>
+                    ✦ Nasze realizacje
+                  </span>
+                  <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
+                    <Link href="/galeria" className="btn-img-w">
+                      Zobacz galerię <span className="ar">→</span>
+                    </Link>
+                    <Link href="/oferta" className="btn-img-g">
+                      Oferta <span className="ar">→</span>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Floating card */}
-          <div
-            className="animate-floaty"
-            style={{
-              position: "absolute",
-              top: "-1.5rem",
-              right: "-2rem",
-              background: "rgba(13,11,16,0.85)",
-              backdropFilter: "blur(16px)",
-              border: "1px solid rgba(240,23,122,0.25)",
-              borderRadius: "1.25rem",
-              padding: "1rem 1.25rem",
-              boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
-              zIndex: 2,
-              minWidth: "160px",
-            }}
-          >
-            <div style={{ fontSize: "0.7rem", color: "rgba(255,255,255,0.5)", marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Kompleksowo</div>
-            {["Scenariusz", "Atrakcje", "Prowadzenie", "Dekoracje"].map((item) => (
-              <div key={item} style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.3rem" }}>
-                <span style={{ width: "5px", height: "5px", borderRadius: "50%", background: "var(--pink)", flexShrink: 0 }} />
-                <span style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.8)", fontWeight: 500 }}>{item}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+          
+          {/* ══ BANNER ════════════════════════════ */}
+          <div style={{paddingBottom:"8rem"}}>
+            <div className="bnr">
+              <span style={{
+                display:"inline-flex",alignItems:"center",gap:".42rem",
+                padding:".34rem .95rem",borderRadius:"9999px",
+                background:"rgba(240,23,122,.12)",border:"1px solid rgba(240,23,122,.28)",
+                fontSize:".67rem",fontWeight:700,letterSpacing:".1em",
+                textTransform:"uppercase",color:"var(--pink-light)",marginBottom:"1.4rem",
+              }}>
+                <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"var(--pink)",display:"inline-block",animation:"dot 2s ease-in-out infinite"}}/>
+                Wycena w 24 godziny
+              </span>
 
-      {/* ─── TICKER ──────────────────────────────────────────────────── */}
-      <div
-        style={{
-          borderTop: "1px solid rgba(240,23,122,0.12)",
-          borderBottom: "1px solid rgba(240,23,122,0.12)",
-          padding: "1rem 0",
-          overflow: "hidden",
-          background: "rgba(240,23,122,0.04)",
-        }}
-      >
-        <div className="marquee-inner" style={{ display: "inline-flex", gap: "4rem", whiteSpace: "nowrap" }}>
-          {Array(6).fill(["🎂 Urodziny dla dzieci", "🏫 Eventy szkolne", "🏢 Imprezy firmowe", "🎉 Animacje", "🎤 Prowadzenie", "🎨 Dekoracje", "⚡ Kompleksowa obsługa"]).flat().map((item, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: i % 7 === 0 ? "var(--pink-light)" : "rgba(255,255,255,0.45)",
-              }}
-            >
-              {item}
-            </span>
-          ))}
+              <h2 style={{
+                fontFamily:"var(--font-display)",
+                fontSize:"clamp(2rem,4.5vw,3.2rem)",
+                fontWeight:700,color:"#fff",lineHeight:1.08,
+                letterSpacing:"-.025em",marginBottom:".875rem",
+              }}>
+                Gotowy na wyjątkowe wydarzenie?
+              </h2>
+
+              <p style={{
+                color:"rgba(255,255,255,.5)",fontSize:"1.02rem",lineHeight:1.78,
+                maxWidth:"38ch",marginBottom:"2.5rem",
+              }}>
+                Napisz do nas — przygotujemy indywidualny scenariusz
+                i&nbsp;wycenę dopasowaną do Twoich potrzeb.
+              </p>
+
+              <Link href="/kontakt" className="bnr-btn">
+                Wyślij zapytanie <span className="ar">→</span>
+              </Link>
+            </div>
+          </div>
+
         </div>
       </div>
+    </>
+  );
+}
 
-      {/* ─── OFFER CARDS ─────────────────────────────────────────────── */}
-      <section style={{ maxWidth: "75rem", margin: "0 auto", padding: "3rem 1rem 4rem" }} className="sm:px-1.5rem sm:py-20">
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: "1rem", marginBottom: "2rem", flexWrap: "wrap" }} className="sm:gap-8 sm:mb-12">
-          <div>
-            <div className="badge badge-dark" style={{ marginBottom: "0.75rem" }} >Nasza oferta</div>
-            <h2 className="heading-lg" style={{ color: "#fff", fontSize: "clamp(1.5rem, 3vw, 2.5rem)" }}>
-              3 specjalizacje —{" "}
-              <span style={{ color: "var(--pink-light)" }}>1 zespół</span>
-            </h2>
-          </div>
-          <a
-            href="/oferta"
-            style={{
-              padding: "0.6rem 1.25rem",
-              borderRadius: "9999px",
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.7)",
-              fontSize: "0.8rem",
-              fontWeight: 600,
-              textDecoration: "none",
-              transition: "all 200ms",
-              whiteSpace: "nowrap",
-            }}
-            className="sm:px-6 sm:py-3 sm:text-sm"
-          >
-            Pełna oferta →
-          </a>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }} className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              tag: "Dla dzieci",
-              icon: "🎂",
-              title: "Urodziny dla dzieci",
-              desc: "Animacje, gry, bańki, mini-dyskoteka, konkursy i dekoracje. Program dopasowany do wieku i wybranego motywu.",
-              href: "/oferta#urodziny",
-              accent: true,
-            },
-            {
-              tag: "Dla szkół",
-              icon: "🏫",
-              title: "Eventy szkolne",
-              desc: "Dni dziecka, festyny, bale, zakończenia roku. Scena, konkursy, prowadzenie i pełna oprawa techniczna.",
-              href: "/oferta#szkolne",
-            },
-            {
-              tag: "Dla biznesu",
-              icon: "🏢",
-              title: "Imprezy firmowe",
-              desc: "Integracje, premiery, jubileusze i eventy wizerunkowe. Koordynacja od A do Z, scenariusz i profesjonalna obsługa.",
-              href: "/oferta#firmowe",
-            },
-          ].map((card) => (
-            <a
-              key={card.title}
-              href={card.href}
-              className="card-dark"
-              style={{
-                display: "block",
-                borderRadius: "1.5rem",
-                padding: "1.5rem",
-                textDecoration: "none",
-                position: "relative",
-                overflow: "hidden",
-                background: card.accent
-                  ? "linear-gradient(135deg, rgba(240,23,122,0.12) 0%, rgba(255,255,255,0.03) 100%)"
-                  : undefined,
-                border: card.accent
-                  ? "1px solid rgba(240,23,122,0.25)"
-                  : undefined,
-              }}
-            >
-              {card.accent && (
-                <div style={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  width: "120px",
-                  height: "120px",
-                  background: "radial-gradient(circle, rgba(240,23,122,0.2), transparent 70%)",
-                  filter: "blur(20px)",
-                }} />
-              )}
-              <div style={{ fontSize: "clamp(2rem, 4vw, 2.5rem)", marginBottom: "0.75rem" }}>{card.icon}</div>
-              <div className="pill pill-pink" style={{ marginBottom: "1rem" }}>{card.tag}</div>
-              <h3
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(1.1rem, 2.5vw, 1.25rem)",
-                  fontWeight: 700,
-                  color: "#fff",
-                  marginBottom: "0.5rem",
-                  lineHeight: 1.25,
-                }}
-              >
-                {card.title}
-              </h3>
-              <p style={{ fontSize: "clamp(0.8rem, 1.5vw, 0.875rem)", color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: "1rem" }}>
-                {card.desc}
-              </p>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: "var(--pink-light)", fontSize: "0.875rem", fontWeight: 700 }}>
-                Zobacz szczegóły <span>→</span>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── WHY US SECTION ──────────────────────────────────────────── */}
-      <section
-        style={{
-          maxWidth: "75rem",
-          margin: "0 auto",
-          padding: "0 1rem 3rem",
-        }}
-        className="sm:px-1.5rem sm:py-20"
-      >
-        <div
-          style={{
-            borderRadius: "1.5rem",
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.07)",
-            padding: "2rem 1.5rem",
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "2rem",
-            alignItems: "center",
-          }}
-          className="sm:rounded-2xl sm:p-8 lg:grid-cols-2 lg:gap-16"
-        >
-          <div>
-            <div className="badge badge-pink" style={{ marginBottom: "1.25rem" }}>Dlaczego my?</div>
-            <h2 className="heading-lg" style={{ color: "#fff", marginBottom: "1.5rem" }}>
-              Każdy event to{" "}
-              <span style={{ color: "var(--pink-light)" }}>wyjątkowe przeżycie</span>
-            </h2>
-            <p style={{ color: "rgba(255,255,255,0.6)", lineHeight: 1.75, fontSize: "0.95rem", marginBottom: "2rem" }}>
-              Łączymy kreatywność z perfekcyjną organizacją. Nie tylko dostarczamy atrakcje —
-              projektujemy pełne doświadczenia, które goście zapamiętują na długo.
-            </p>
-            <a href="/o-nas" className="btn-pink">
-              Dowiedz się więcej
-            </a>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1rem" }} className="sm:grid-cols-2">
-            {[
-              { icon: "⚡", title: "Dynamika", desc: "Energetyczne prowadzenie i animacje, które wciągają wszystkich." },
-              { icon: "🎯", title: "Precyzja", desc: "Każdy detail zaplanowany. Zero stresu po Twojej stronie." },
-              { icon: "🎨", title: "Kreatywność", desc: "Unikalne scenariusze dopasowane do Twojego eventu." },
-              { icon: "🤝", title: "Kompleksowość", desc: "Od pomysłu do realizacji — jedne ręce, jedna odpowiedzialność." },
-            ].map((f) => (
-              <div
-                key={f.title}
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: "1.25rem",
-                  padding: "1.25rem",
-                  transition: "all 220ms",
-                }}
-                className="hover-lift"
-              >
-                <div style={{ fontSize: "1.75rem", marginBottom: "0.75rem" }}>{f.icon}</div>
-                <div style={{ fontWeight: 700, color: "#fff", fontSize: "0.925rem", marginBottom: "0.4rem" }}>{f.title}</div>
-                <div style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.5)", lineHeight: 1.6 }}>{f.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── CTA BANNER ──────────────────────────────────────────────── */}
-      <section style={{ maxWidth: "75rem", margin: "0 auto", padding: "0 1rem 3rem" }} className="sm:px-1.5rem sm:py-20">
-        <div
-          style={{
-            borderRadius: "1.5rem",
-            background: "linear-gradient(135deg, #f0177a 0%, #c0075a 40%, #7d0040 100%)",
-            padding: "2rem 1.5rem",
-            position: "relative",
-            overflow: "hidden",
-          }}
-          className="sm:rounded-2xl sm:p-8"
-        >
-          {/* Decorative circles */}
-          <div style={{ position: "absolute", top: "-4rem", right: "-4rem", width: "18rem", height: "18rem", borderRadius: "50%", background: "rgba(255,255,255,0.06)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: "-3rem", left: "-3rem", width: "14rem", height: "14rem", borderRadius: "50%", background: "rgba(255,255,255,0.04)", pointerEvents: "none" }} />
-
-          <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }} className="flex-col lg:flex-row">
-            <div>
-              <div style={{ fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(255,255,255,0.65)", marginBottom: "0.75rem" }}>
-                Gotowy na wyjątkowy event?
-              </div>
-              <h2
-                style={{
-                  fontFamily: "var(--font-display)",
-                  fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-                  fontWeight: 700,
-                  color: "#fff",
-                  lineHeight: 1.1,
-                  letterSpacing: "-0.02em",
-                  marginBottom: "1rem",
-                }}
-              >
-                Masz termin? Zarezerwujmy go od razu.
-              </h2>
-              <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.95rem", maxWidth: "32rem", lineHeight: 1.7 }}>
-                Napisz do nas — wrócimy z propozycją scenariusza i wyceną w ciągu 24h.
-              </p>
-            </div>
-            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", flexShrink: 0 }} className="sm:gap-4">
-              <a
-                href="/kontakt"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  height: "3rem",
-                  padding: "0 1.5rem",
-                  borderRadius: "9999px",
-                  background: "#fff",
-                  color: "#c0075a",
-                  fontWeight: 700,
-                  fontSize: "0.8rem",
-                  textDecoration: "none",
-                  transition: "transform 180ms ease, box-shadow 180ms ease",
-                  boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
-                }}
-                className="hover-lift sm:h-12 sm:px-6 sm:text-sm"
-              >
-                Wyślij zapytanie →
-              </a>
-              <a
-                href="/galeria"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  height: "3rem",
-                  padding: "0 1.5rem",
-                  borderRadius: "9999px",
-                  border: "1.5px solid rgba(255,255,255,0.2)",
-                  color: "#fff",
-                  fontWeight: 600,
-                  fontSize: "0.8rem",
-                  textDecoration: "none",
-                  transition: "all 200ms",
-                }}
-                className="hover:bg-white/10"
-              >
-                Zobacz galerię
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+/* ── stat cell with counter ── */
+function StatCell({ num, suffix, label, delay }: { num:number; suffix:string; label:string; delay:string }) {
+  const { val, ref } = useCounter(num);
+  return (
+    <div ref={ref} className="stat-cell" style={{animationDelay:delay}}>
+      {/* .home-stat-num from globals.css — respects light/dark theme */}
+      <div className="home-stat-num stat-n">{val}{suffix}</div>
+      <div className="home-stat-lbl stat-l">{label}</div>
     </div>
   );
 }

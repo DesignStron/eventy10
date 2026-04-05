@@ -13,6 +13,23 @@
   --font-display: "Playfair Display", Georgia, serif;
   --font-body: "DM Sans", system-ui, sans-serif;
   --font-mono: "DM Mono", monospace;
+  
+  /* Theme system variables */
+  --surface: #06050a;
+  --surface-elevated: #0d0b10;
+  --border: rgba(255,255,255,0.08);
+  --text: #ffffff;
+  --text-secondary: rgba(255,255,255,0.6);
+  --text-muted: rgba(255,255,255,0.3);
+}
+
+html[data-theme="light"] {
+  --surface: #ffffff;
+  --surface-elevated: #f8f9fa;
+  --border: rgba(0,0,0,0.12);
+  --text: #060508;
+  --text-secondary: rgba(6,5,8,0.7);
+  --text-muted: rgba(6,5,8,0.5);
 }
 
 *, *::before, *::after {
@@ -31,6 +48,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html[data-theme="light"] body {
+  background: #ffffff;
+  color: var(--black);
+}
+
 ::selection {
   background: rgba(240, 23, 122, 0.38);
   color: #fff;
@@ -45,11 +67,19 @@ body {
 /* ─── BACKGROUNDS ────────────────────────────────────────────────────── */
 .page-bg {
   background:
-    radial-gradient(ellipse 900px 600px at 0% -5%, rgba(240,23,122,0.28) 0%, transparent 55%),
-    radial-gradient(ellipse 600px 400px at 100% 5%, rgba(240,23,122,0.18) 0%, transparent 50%),
-    radial-gradient(ellipse 800px 500px at 50% 100%, rgba(240,23,122,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 1200px 800px at 0% -8%, rgba(240,23,122,0.15) 0%, transparent 65%),
+    radial-gradient(ellipse 800px 600px at 100% 8%, rgba(240,23,122,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 700px at 50% 100%, rgba(240,23,122,0.06) 0%, transparent 70%),
     var(--black);
   min-height: 100vh;
+}
+
+html[data-theme="light"] .page-bg {
+  background:
+    radial-gradient(ellipse 1200px 800px at 0% -8%, rgba(240,23,122,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 800px 600px at 100% 8%, rgba(240,23,122,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 700px at 50% 100%, rgba(240,23,122,0.04) 0%, transparent 70%),
+    #ffffff;
 }
 
 .page-bg-light {
@@ -72,32 +102,48 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
+html[data-theme="light"] .noise::after {
+  opacity: 0.015;
+}
+
 /* ─── GLASS / SURFACES ───────────────────────────────────────────────── */
 .glass {
-  background: rgba(13, 11, 16, 0.65);
-  backdrop-filter: blur(18px) saturate(1.4);
-  -webkit-backdrop-filter: blur(18px) saturate(1.4);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(13, 11, 16, 0.45);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
 .glass-light {
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(240,23,122,0.12);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(240,23,122,0.08);
   color: var(--black);
 }
 
 .card-dark {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: background 220ms ease, border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: background 260ms ease, border-color 260ms ease, transform 260ms ease, box-shadow 260ms ease;
 }
 .card-dark:hover {
-  background: rgba(255,255,255,0.07);
-  border-color: rgba(240,23,122,0.3);
-  transform: translateY(-3px);
-  box-shadow: 0 24px 60px rgba(240,23,122,0.14), 0 8px 20px rgba(0,0,0,0.5);
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(240,23,122,0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(240,23,122,0.08), 0 4px 12px rgba(0,0,0,0.4);
+}
+
+html[data-theme="light"] .card-dark {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--black);
+}
+
+html[data-theme="light"] .card-dark:hover {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(240,23,122,0.25);
+  box-shadow: 0 16px 40px rgba(240,23,122,0.10), 0 4px 12px rgba(0,0,0,0.10);
 }
 
 .card-white {
@@ -138,11 +184,32 @@ body {
   pointer-events: none;
 }
 .btn-pink:hover {
-  transform: scale(1.035);
-  box-shadow: 0 0 0 6px rgba(240,23,122,0.18), 0 8px 30px rgba(240,23,122,0.45);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 0 8px rgba(240,23,122,0.18), 0 12px 40px rgba(240,23,122,0.45);
   background: var(--pink-light);
 }
-.btn-pink:active { transform: scale(0.97); }
+.btn-pink:hover span:last-child {
+  transform: translateX(4px);
+}
+.btn-pink:active { 
+  transform: scale(0.98); 
+  box-shadow: 0 0 0 4px rgba(240,23,122,0.18), 0 6px 20px rgba(240,23,122,0.45);
+}
+
+html[data-theme="light"] .btn-pink {
+  background: var(--pink);
+  color: #fff;
+  box-shadow: 0 0 0 0 rgba(240,23,122,0.5);
+}
+html[data-theme="light"] .btn-pink:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 0 8px rgba(240,23,122,0.18), 0 12px 40px rgba(240,23,122,0.45);
+  background: var(--pink-light);
+}
+html[data-theme="light"] .btn-pink:active { 
+  transform: scale(0.98); 
+  box-shadow: 0 0 0 4px rgba(240,23,122,0.18), 0 6px 20px rgba(240,23,122,0.45);
+}
 
 .btn-outline {
   display: inline-flex;
@@ -162,6 +229,160 @@ body {
   border-color: var(--pink);
   background: rgba(240,23,122,0.1);
   transform: scale(1.02);
+}
+
+html[data-theme="light"] .btn-outline {
+  border: 1.5px solid rgba(0,0,0,0.12);
+  color: var(--black);
+  background: rgba(0,0,0,0.03);
+}
+
+html[data-theme="light"] .btn-outline:hover {
+  border-color: rgba(240,23,122,0.45);
+  background: rgba(240,23,122,0.10);
+}
+
+/* ─── GLOBAL LIGHT THEME TEXT FIXES ───────────────────────────────────────── */
+html[data-theme="light"] body,
+html[data-theme="light"] .page-bg,
+html[data-theme="light"] .page-bg > div > section,
+html[data-theme="light"] .page-bg > div > section > div,
+html[data-theme="light"] .page-bg > div > section > div > *,
+html[data-theme="light"] .page-bg > div > section > h1,
+html[data-theme="light"] .page-bg > div > section > h2,
+html[data-theme="light"] .page-bg > div > section > p {
+  color: var(--black) !important;
+}
+html[data-theme="light"] .page-bg .btn-pink,
+html[data-theme="light"] .page-bg .theme-btn {
+  color: #fff !important;
+}
+html[data-theme="light"] .page-bg .btn-outline {
+  color: var(--black) !important;
+}
+html[data-theme="light"] .page-bg p,
+html[data-theme="light"] .page-bg .text-muted,
+html[data-theme="light"] .page-bg span[style*="color:rgba(255,255,255,0"],
+html[data-theme="light"] .page-bg span[style*="color:rgba(255,255,255,0."] {
+  color: rgba(0,0,0,0.55) !important;
+}
+html[data-theme="light"] .page-bg .stat-box,
+html[data-theme="light"] .page-bg .stat-box div {
+  color: var(--black) !important;
+}
+html[data-theme="light"] .page-bg .stat-box div[style*="color:rgba(255,255,255,0"] {
+  color: rgba(0,0,0,0.42) !important;
+}
+html[data-theme="light"] .page-bg h1,
+html[data-theme="light"] .page-bg h2,
+html[data-theme="light"] .page-bg h3,
+html[data-theme="light"] .page-bg .heading-xl,
+html[data-theme="light"] .page-bg .heading-lg,
+html[data-theme="light"] .page-bg .heading-md {
+  color: var(--black) !important;
+}
+
+/* ─── OFFERTA PAGE SPECIFIC ───────────────────────────────────────────────── */
+html[data-theme="light"] .offerta-section {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-section:hover {
+  border-color: rgba(240,23,122,0.25);
+}
+html[data-theme="light"] .offerta-header {
+  background: rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-badge {
+  background: rgba(240,23,122,0.12);
+  border: 1px solid rgba(240,23,122,0.25);
+  color: var(--pink-light);
+}
+html[data-theme="light"] .offerta-title {
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-desc {
+  color: rgba(0,0,0,0.55);
+}
+html[data-theme="light"] .offerta-price {
+  background: rgba(0,0,0,0.08);
+  border: 1px solid rgba(0,0,0,0.12);
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-price-label {
+  color: rgba(0,0,0,0.4);
+}
+html[data-theme="light"] .offerta-price-value {
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-bullet {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-bullet-text {
+  color: rgba(0,0,0,0.7);
+}
+html[data-theme="light"] .offerta-nav-btn {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.7);
+}
+html[data-theme="light"] .offerta-nav-btn:hover {
+  background: rgba(240,23,122,0.1);
+  border-color: rgba(240,23,122,0.28);
+  color: var(--pink-light);
+}
+html[data-theme="light"] .offerta-nav-btn.music {
+  background: rgba(240,23,122,0.1);
+  border-color: rgba(240,23,122,0.25);
+  color: var(--pink-light);
+}
+html[data-theme="light"] .offerta-cta-banner {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(240,23,122,0.18);
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-cta-title {
+  color: var(--black);
+}
+html[data-theme="light"] .offerta-cta-desc {
+  color: rgba(0,0,0,0.55);
+}
+
+/* Force light theme text colors */
+html[data-theme="light"] .offerta-section,
+html[data-theme="light"] .offerta-header,
+html[data-theme="light"] .offerta-title,
+html[data-theme="light"] .offerta-price-value,
+html[data-theme="light"] .offerta-cta-title,
+html[data-theme="light"] .offerta-cta-banner,
+html[data-theme="light"] .page-bg.noise {
+  color: var(--black) !important;
+}
+html[data-theme="light"] .offerta-section .offerta-badge,
+html[data-theme="light"] .offerta-section .offerta-nav-btn.music,
+html[data-theme="light"] .offerta-section .btn-pink {
+  color: #fff !important;
+}
+html[data-theme="light"] .offerta-section .offerta-desc,
+html[data-theme="light"] .offerta-section .offerta-bullet-text,
+html[data-theme="light"] .offerta-section .offerta-price-label,
+html[data-theme="light"] .offerta-section .offerta-cta-desc {
+  color: rgba(0,0,0,0.55) !important;
+}
+html[data-theme="light"] .offerta-section .offerta-nav-btn {
+  color: rgba(0,0,0,0.7) !important;
+}
+html[data-theme="light"] .offerta-page h1,
+html[data-theme="light"] .offerta-page p {
+  color: var(--black) !important;
+}
+html[data-theme="light"] .offerta-page h1 span[style*="color:var(--pink-light)"] {
+  color: var(--pink-light) !important;
 }
 
 .btn-dark {
@@ -235,6 +456,17 @@ body {
 .badge-pink {
   background: rgba(240,23,122,0.15);
   border: 1px solid rgba(240,23,122,0.3);
+  color: var(--pink-light);
+}
+
+html[data-theme="light"] .badge-dark {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.12);
+  color: var(--black);
+}
+html[data-theme="light"] .badge-pink {
+  background: rgba(240,23,122,0.12);
+  border: 1px solid rgba(240,23,122,0.25);
   color: var(--pink-light);
 }
 
@@ -352,6 +584,34 @@ body {
 .delay-600 { animation-delay: 600ms; }
 .delay-700 { animation-delay: 700ms; }
 
+/* ─── HOME STATS ─────────────────────────────────────────────────────── */
+.home-stat-num { color: var(--white); }
+.home-stat-lbl { color: rgba(255,255,255,0.42); }
+html[data-theme="light"] .home-stat-num { color: var(--black); }
+html[data-theme="light"] .home-stat-lbl { color: rgba(0,0,0,0.55); }
+
+/* ─── HOME HERO MOBILE ───────────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .home-hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .home-hero-media {
+    order: 2;
+  }
+
+  .home-hero-media .card-dark {
+    aspect-ratio: 16 / 9 !important;
+    border-radius: 1.25rem;
+  }
+
+  .home-hero-media .badge,
+  .home-hero-media .btn-outline {
+    display: none !important;
+  }
+}
+
 /* ─── SHIMMER TEXT ───────────────────────────────────────────────────── */
 .shimmer-text {
   background: linear-gradient(90deg, var(--white) 0%, var(--pink-light) 40%, var(--white) 60%, var(--white) 100%);
@@ -359,6 +619,24 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+html[data-theme="light"] .shimmer-text {
+  background: linear-gradient(90deg, var(--black) 0%, var(--pink) 40%, var(--black) 60%, var(--black) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ─── HOME HERO SHIMMER INLINE OVERRIDE ───────────────────────────────── */
+html[data-theme="light"] .h1 em {
+  background: linear-gradient(105deg,var(--black) 0%,var(--black) 18%,var(--pink) 38%,var(--pink) 55%,var(--pink) 72%,var(--black) 88%,var(--black) 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shine 5s linear infinite;
 }
 
 /* ─── PINK UNDERLINE ─────────────────────────────────────────────────── */
@@ -432,8 +710,32 @@ body {
 }
 
 /* ─── SECTION SPACING ────────────────────────────────────────────────── */
-.section { padding: 5rem 0; }
-.section-sm { padding: 3rem 0; }
+.section { padding: 6rem 0; }
+.section-sm { padding: 4rem 0; }
+
+/* ─── MINIMALIST UTILITY CLASSES ───────────────────────────────────────── */
+.hover-lift {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+/* More spacing and breathing room */
+.max-w-prose {
+  max-width: 65ch;
+}
+
+/* Cleaner borders */
+.border-subtle {
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Softer shadows */
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
 
 /* ─── COUNTER NUMBER ─────────────────────────────────────────────────── */
 .counter-num {
@@ -473,6 +775,67 @@ body {
   background: #fff;
   border: 1px solid rgba(0,0,0,0.08);
   color: var(--black);
+}
+
+/* ─── ALTERNATE COLOR SCHEME ───────────────────────────────────────────── */
+.page-bg-light-alt {
+  background:
+    radial-gradient(ellipse 1200px 800px at 0% -8%, rgba(240,23,122,0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 800px 600px at 100% 8%, rgba(240,23,122,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 1000px 700px at 50% 100%, rgba(240,23,122,0.04) 0%, transparent 70%),
+    #ffffff;
+  color: var(--black);
+  min-height: 100vh;
+}
+
+.page-bg-light-alt .badge-pink {
+  background: rgba(240,23,122,0.12);
+  border: 1px solid rgba(240,23,122,0.25);
+  color: var(--pink);
+}
+
+.page-bg-light-alt .btn-pink {
+  background: var(--pink);
+  color: #fff;
+}
+
+.page-bg-light-alt .card-dark {
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--black);
+}
+
+.page-bg-light-alt .card-dark:hover {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(240,23,122,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(240,23,122,0.12), 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.page-bg-light-alt h1,
+.page-bg-light-alt h2,
+.page-bg-light-alt h3 {
+  color: var(--black);
+}
+
+.page-bg-light-alt .text-white {
+  color: var(--black) !important;
+}
+
+.page-bg-light-alt .text-white\/70 {
+  color: rgba(0,0,0,0.7) !important;
+}
+
+.page-bg-light-alt .text-white\/60 {
+  color: rgba(0,0,0,0.6) !important;
+}
+
+.page-bg-light-alt .text-white\/80 {
+  color: rgba(0,0,0,0.8) !important;
+}
+
+.page-bg-light-alt .text-white\/90 {
+  color: rgba(0,0,0,0.9) !important;
 }
 
 /* ─── ZIGZAG BORDER ──────────────────────────────────────────────────── */

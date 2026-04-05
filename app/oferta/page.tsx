@@ -1,156 +1,324 @@
 import type { OfferData, OfferSection } from "@/lib/types";
 import { nowIso, readJsonFile } from "@/lib/data-store";
+import Link from "next/link";
 
-export const metadata = {
-  title: "Oferta",
+export const metadata = { title: "Oferta" };
+
+const FALLBACK: OfferData = { updatedAt: nowIso(), sections: [] };
+
+/* map category key → readable label */
+const CAT_LABELS: Record<string, string> = {
+  urodziny:  "Urodziny",
+  animacje:  "Animacje",
+  komunie:   "Komunie",
+  wesela:    "Wesela",
+  pikniki:   "Pikniki szkolne",
+  bale:      "Bale karnawałowe",
+  mikolajki: "Mikołajki",
 };
 
-const FALLBACK: OfferData = {
-  updatedAt: nowIso(),
-  sections: [],
+/* category accent colours (subtle) */
+const CAT_COLORS: Record<string, string> = {
+  urodziny:  "rgba(240,23,122,0.12)",
+  animacje:  "rgba(130,40,200,0.1)",
+  komunie:   "rgba(40,130,220,0.1)",
+  wesela:    "rgba(200,100,40,0.1)",
+  pikniki:   "rgba(30,160,80,0.1)",
+  bale:      "rgba(200,40,160,0.1)",
+  mikolajki: "rgba(200,60,30,0.1)",
 };
 
-function SectionCard({ section }: { section: OfferSection }) {
+function SectionCard({ s }: { s: OfferSection }) {
+  const bg    = CAT_COLORS[s.key] ?? "rgba(255,255,255,0.04)";
+  const label = CAT_LABELS[s.key] ?? s.key;
+
   return (
-    <section
-      id={section.key}
-      className="scroll-mt-28 overflow-hidden rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-pink-500/30"
+    <article
+      id={s.key}
+      className="offerta-section"
+      style={{
+        scrollMarginTop:"6rem",
+        borderRadius:"1.25rem",
+        border:"1px solid rgba(255,255,255,0.07)",
+        background:"rgba(255,255,255,0.025)",
+        overflow:"hidden",
+        transition:"border-color 240ms",
+      }}
     >
-      {/* Header with gradient background */}
-      <div className="relative bg-gradient-to-r from-pink-500 to-pink-600 p-6 text-white sm:p-8">
-        <div className="absolute inset-0 bg-black opacity-10" />
-        <div className="relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-sm px-3 py-1.5 text-xs font-semibold text-white sm:px-4 sm:py-2">
-            {section.key === "urodziny" && (
-              <>
-                <span className="text-lg">🎂</span> Dla dzieci
-              </>
-            )}
-            {section.key === "szkolne" && (
-              <>
-                <span className="text-lg">🏫</span> Dla szkół
-              </>
-            )}
-            {section.key === "firmowe" && (
-              <>
-                <span className="text-lg">🏢</span> Dla firm
-              </>
-            )}
-          </div>
-          <h2 className="mt-4 text-2xl font-bold tracking-tight text-white sm:mt-6 sm:text-3xl">
-            {section.title}
+      <style>{`
+        #${s.key}:hover { border-color:rgba(240,23,122,0.22) !important; }
+      `}</style>
+
+      {/* header strip */}
+      <div className="offerta-header" style={{
+        padding:"2rem 2rem 1.75rem",
+        borderBottom:"1px solid rgba(255,255,255,0.06)",
+        background: bg,
+        display:"flex", alignItems:"flex-start",
+        justifyContent:"space-between", gap:"1rem", flexWrap:"wrap",
+      }}>
+        <div>
+          <span className="offerta-badge" style={{
+            display:"inline-block", marginBottom:"0.75rem",
+            padding:"0.3rem 0.8rem", borderRadius:"9999px",
+            background:"rgba(240,23,122,0.12)", border:"1px solid rgba(240,23,122,0.25)",
+            fontSize:"0.66rem", fontWeight:700, letterSpacing:"0.1em",
+            textTransform:"uppercase", color:"var(--pink-light)",
+          }}>
+            {label}
+          </span>
+          <h2 className="offerta-title" style={{
+            fontFamily:"var(--font-display)", fontSize:"clamp(1.4rem,3vw,1.9rem)",
+            fontWeight:700, color:"#fff", lineHeight:1.12, letterSpacing:"-0.02em",
+            margin:0, marginBottom:"0.6rem",
+          }}>
+            {s.title}
           </h2>
-          <p className="mt-3 text-sm leading-6 text-white/90 sm:mt-4 sm:text-base">
-            {section.description}
+          <p className="offerta-desc" style={{ color:"rgba(255,255,255,0.52)", fontSize:"0.9rem", lineHeight:1.75, margin:0, maxWidth:"44rem" }}>
+            {s.description}
           </p>
         </div>
-      </div>
 
-      {/* Price card */}
-      <div className="relative px-6 py-4 sm:px-8 sm:py-6">
-        <div className="absolute -top-6 right-4 rounded-2xl bg-black px-4 py-3 text-white shadow-lg ring-4 ring-white/10 sm:-top-8 sm:right-6 sm:px-6 sm:py-4 sm:max-w-36">
-          <div className="text-xs font-semibold text-white/80 uppercase tracking-wide">Cena od</div>
-          <div className="mt-1 text-xl font-bold sm:text-2xl">
-            {section.priceFromPLN} zł
+        {/* price badge */}
+        <div className="offerta-price" style={{
+          flexShrink:0, padding:"1rem 1.25rem", borderRadius:"0.875rem",
+          background:"rgba(0,0,0,0.35)", border:"1px solid rgba(255,255,255,0.09)",
+          textAlign:"center", minWidth:"110px",
+        }}>
+          <div className="offerta-price-label" style={{ fontSize:"0.6rem", fontWeight:700, letterSpacing:"0.1em", textTransform:"uppercase", color:"rgba(255,255,255,0.3)", marginBottom:"0.3rem" }}>
+            Cena od
           </div>
-          <div className="mt-1 text-xs text-white/70">Wycena zależna od terminu i zakresu</div>
+          <div className="offerta-price-value" style={{ fontFamily:"var(--font-display)", fontSize:"1.6rem", fontWeight:700, color:"#fff", lineHeight:1 }}>
+            {s.priceFromPLN}
+            <span style={{ fontSize:"0.8rem", fontWeight:500, color:"rgba(255,255,255,0.5)" }}>&nbsp;zł</span>
+          </div>
         </div>
       </div>
 
-      {/* Features grid */}
-      <div className="px-6 pb-6 sm:px-8 sm:pb-8">
-        <div className="mt-12 grid gap-3 sm:gap-4 md:grid-cols-2">
-          {section.bullets.map((b, index) => (
-            <div
-              key={b}
-              className="group flex items-start gap-3 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-4 text-white/80 transition-all duration-200 hover:bg-white/10 hover:border-pink-500/30 hover:shadow-md sm:p-5"
-            >
-              <div className="flex-shrink-0 rounded-full bg-pink-500 p-1.5 text-white">
-                <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+      {/* bullets */}
+      {s.bullets?.length > 0 && (
+        <div style={{
+          padding:"1.75rem 2rem",
+          display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:"0.7rem",
+          borderBottom:"1px solid rgba(255,255,255,0.06)",
+        }}>
+          {s.bullets.map((b) => (
+            <div key={b} className="offerta-bullet" style={{
+              display:"flex", alignItems:"flex-start", gap:"0.65rem",
+              padding:"0.875rem 1rem", borderRadius:"0.75rem",
+              background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.06)",
+            }}>
+              <span style={{
+                width:"18px", height:"18px", borderRadius:"50%", flexShrink:0,
+                background:"rgba(240,23,122,0.15)", border:"1px solid rgba(240,23,122,0.28)",
+                display:"flex", alignItems:"center", justifyContent:"center",
+                marginTop:"1px",
+              }}>
+                <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+                  <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </div>
-              <div className="flex-1">
-                <div className="text-sm font-medium text-white sm:text-base">{b}</div>
-              </div>
+              </span>
+              <span className="offerta-bullet-text" style={{ fontSize:"0.84rem", color:"rgba(255,255,255,0.72)", fontWeight:500, lineHeight:1.55 }}>
+                {b}
+              </span>
             </div>
           ))}
         </div>
-      </div>
+      )}
 
-      {/* CTA buttons */}
-      <div className="border-t border-white/10 bg-white/5 backdrop-blur-sm px-6 py-5 sm:px-8 sm:py-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-          <a
-            href="/kontakt"
-            className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full bg-gradient-to-r from-pink-500 to-pink-600 px-8 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:from-pink-600 hover:to-pink-700 hover:shadow-xl active:scale-95 sm:h-14 sm:px-10 sm:text-base"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              Poproś o wycenę
-              <svg className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </span>
-          </a>
-          <a
-            href="/galeria"
-            className="inline-flex h-12 items-center justify-center rounded-full border-2 border-pink-500 bg-white/10 backdrop-blur-sm px-8 text-sm font-semibold text-pink-500 transition-all duration-200 hover:bg-pink-500/20 hover:border-pink-400 hover:shadow-md active:scale-95 sm:h-14 sm:px-10 sm:text-base"
-          >
-            Zobacz realizacje
-          </a>
-        </div>
+      {/* cta row */}
+      <div style={{ padding:"1.25rem 2rem", display:"flex", gap:"0.75rem", flexWrap:"wrap" }}>
+        <Link href="/kontakt" className="btn-pink" style={{
+          height:"2.75rem", padding:"0 1.5rem",
+          fontSize:"0.84rem",
+        }}>
+          Zapytaj o wycenę →
+        </Link>
+        <Link href="/galeria" className="btn-outline" style={{
+          height:"2.75rem", padding:"0 1.5rem",
+          fontSize:"0.84rem",
+        }}>
+          Zobacz realizacje
+        </Link>
       </div>
-    </section>
+    </article>
   );
 }
+
+/* category navigation */
+const NAV_ITEMS = [
+  { key:"urodziny",         label:"Urodziny" },
+  { key:"animacje",         label:"Animacje" },
+  { key:"komunie",          label:"Komunie" },
+  { key:"wesela",           label:"Wesela" },
+  { key:"pikniki",          label:"Pikniki szkolne" },
+  { key:"bale",             label:"Bale karnawałowe" },
+  { key:"mikolajki",        label:"Mikołajki" },
+  { key:"oprawa-muzyczna",  label:"Oprawa muzyczna", href:"/oprawa-muzyczna" },
+];
 
 export default async function OfferPage() {
   const data = await readJsonFile<OfferData>("oferta.json", FALLBACK);
 
   return (
-    <div className="page-bg noise">
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:py-10">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-pink-500/10 px-3 py-1.5 text-xs font-semibold text-white sm:px-4 sm:py-2">
-            <span className="h-2 w-2 rounded-full bg-pink-500" />
-            Oferta
-          </div>
-          <h1 className="mt-4 text-3xl font-semibold tracking-tight text-white sm:mt-5 sm:text-4xl md:text-5xl">
-            Pakiety dopasowane do Twojego wydarzenia
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-7 text-white/70 sm:mt-4 sm:text-base md:text-lg">
-            Poniżej widzisz przykładowe pakiety i ceny startowe. W panelu admina (demo)
-            można edytować opisy oraz ceny, a zmiany od razu pojawiają się na stronie.
-          </p>
+    <>
+      <style>{`
+        @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
+        .off-nav-btn {
+          padding:0.45rem 1rem; border-radius:9999px;
+          font-size:0.8rem; font-weight:600;
+          color:rgba(255,255,255,0.6); text-decoration:none;
+          background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+          transition:all 180ms ease; white-space:nowrap;
+          display:inline-block;
+        }
+        .off-nav-btn:hover {
+          background:rgba(240,23,122,0.1); border-color:rgba(240,23,122,0.28);
+          color:var(--pink-light);
+        }
+        .off-nav-btn.music {
+          background:rgba(240,23,122,0.1); border-color:rgba(240,23,122,0.25);
+          color:var(--pink-light);
+        }
+      `}</style>
 
-          <div className="mt-4 grid gap-2 rounded-3xl bg-white/5 p-4 ring-1 ring-white/10 sm:mt-6 sm:gap-3 sm:p-6 md:grid-cols-3">
-            <a
-              href="#urodziny"
-              className="rounded-2xl bg-pink-500/10 px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-pink-500/15 sm:px-4 sm:py-3"
-            >
-              Urodziny dla dzieci
-            </a>
-            <a
-              href="#szkolne"
-              className="rounded-2xl bg-pink-500/10 px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-pink-500/15 sm:px-4 sm:py-3"
-            >
-              Eventy szkolne
-            </a>
-            <a
-              href="#firmowe"
-              className="rounded-2xl bg-pink-500/10 px-3 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-pink-500/15 sm:px-4 sm:py-3"
-            >
-              Imprezy firmowe
-            </a>
-          </div>
-        </div>
+      <div className="page-bg noise offerta-page">
+        <div style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 8rem" }}>
 
-        <div className="mt-6 grid gap-4 sm:mt-8">
-          {data.sections.map((section) => (
-            <SectionCard key={section.key} section={section} />
-          ))}
+          {/* page header */}
+          <div style={{ marginBottom:"3rem" }}>
+            <div className="badge badge-pink" style={{ marginBottom:"1.25rem" }}>
+              <span style={{
+                width:"5px", height:"5px", borderRadius:"50%",
+                background:"var(--pink)", display:"inline-block",
+                animation:"pulseDot 2.2s ease-in-out infinite",
+              }}/>
+              Oferta
+            </div>
+
+            <h1 className="heading-xl" style={{ color:"#fff", marginBottom:"1rem" }}>
+              Profesjonalna organizacja<br/>
+              <span style={{ color:"var(--pink-light)" }}>każdego wydarzenia</span>
+            </h1>
+
+            <p style={{
+              color:"rgba(255,255,255,0.52)", fontSize:"1rem", lineHeight:1.8,
+              maxWidth:"520px", marginBottom:"2.5rem",
+            }}>
+              Specjalizujemy się w różnych typach wydarzeń — od przyjęć prywatnych
+              po eventy firmowe. Każdą usługę dopasowujemy indywidualnie.
+            </p>
+
+            {/* category nav */}
+            <div style={{ display:"flex", flexWrap:"wrap", gap:"0.5rem" }}>
+              {NAV_ITEMS.map((n) => (
+                <a
+                  key={n.key}
+                  href={n.href ?? `#${n.key}`}
+                  className={`off-nav-btn offerta-nav-btn${n.href ? " music" : ""}`}
+                >
+                  {n.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* divider */}
+          <div className="divider-pink" style={{ marginBottom:"3rem" }}/>
+
+          {/* sections */}
+          {data.sections.length > 0 ? (
+            <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
+              {data.sections.map((s) => (
+                <SectionCard key={s.key} s={s} />
+              ))}
+            </div>
+          ) : (
+            /* fallback when no data yet */
+            <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
+              {Object.entries(CAT_LABELS).map(([key, label]) => (
+                <article
+                  key={key}
+                  id={key}
+                  className="offerta-section"
+                  style={{
+                    scrollMarginTop:"6rem",
+                    borderRadius:"1.25rem",
+                    border:"1px solid rgba(255,255,255,0.07)",
+                    background:"rgba(255,255,255,0.025)",
+                    overflow:"hidden",
+                  }}
+                >
+                  <div className="offerta-header" style={{
+                    padding:"2rem",
+                    borderBottom:"1px solid rgba(255,255,255,0.06)",
+                    background: CAT_COLORS[key] ?? "rgba(255,255,255,0.04)",
+                  }}>
+                    <span className="offerta-badge" style={{
+                      display:"inline-block", marginBottom:"0.75rem",
+                      padding:"0.3rem 0.8rem", borderRadius:"9999px",
+                      background:"rgba(240,23,122,0.12)", border:"1px solid rgba(240,23,122,0.25)",
+                      fontSize:"0.66rem", fontWeight:700, letterSpacing:"0.1em",
+                      textTransform:"uppercase", color:"var(--pink-light)",
+                    }}>
+                      {label}
+                    </span>
+                    <h2 className="offerta-title" style={{
+                      fontFamily:"var(--font-display)", fontSize:"1.6rem",
+                      fontWeight:700, color:"#fff", margin:0, marginBottom:"0.5rem",
+                    }}>
+                      {label}
+                    </h2>
+                    <p className="offerta-desc" style={{ color:"rgba(255,255,255,0.45)", fontSize:"0.875rem", margin:0, lineHeight:1.7 }}>
+                      Treść tej sekcji zostanie uzupełniona — skontaktuj się, aby dowiedzieć się więcej.
+                    </p>
+                  </div>
+                  <div style={{ padding:"1.25rem 2rem" }}>
+                    <Link href="/kontakt" className="btn-pink" style={{
+                      height:"2.75rem", padding:"0 1.5rem",
+                      fontSize:"0.84rem",
+                    }}>
+                      Zapytaj o wycenę →
+                    </Link>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+
+          {/* bottom CTA */}
+          <div className="offerta-cta-banner" style={{
+            marginTop:"4rem", borderRadius:"1.25rem",
+            border:"1px solid rgba(240,23,122,0.18)",
+            background:"rgba(255,255,255,0.025)",
+            padding:"2.5rem", textAlign:"center",
+            position:"relative", overflow:"hidden",
+          }}>
+            <div style={{
+              position:"absolute", inset:0, pointerEvents:"none",
+              background:"radial-gradient(ellipse 70% 80% at 50% 120%,rgba(240,23,122,0.1) 0%,transparent 65%)",
+            }}/>
+            <h2 className="offerta-cta-title" style={{
+              fontFamily:"var(--font-display)", fontSize:"clamp(1.5rem,3vw,2.2rem)",
+              fontWeight:700, color:"#fff", marginBottom:"0.75rem", position:"relative",
+            }}>
+              Nie widzisz tego czego szukasz?
+            </h2>
+            <p className="offerta-cta-desc" style={{ color:"rgba(255,255,255,0.5)", fontSize:"0.95rem", lineHeight:1.75, maxWidth:"400px", margin:"0 auto 2rem", position:"relative" }}>
+              Skontaktuj się z nami — organizujemy również niestandardowe wydarzenia.
+            </p>
+            <Link href="/kontakt" className="btn-pink" style={{
+              display:"inline-flex", alignItems:"center", gap:"0.5rem",
+              height:"3rem", padding:"0 2rem", borderRadius:"9999px",
+              fontSize:"0.9rem", fontWeight:700, textDecoration:"none",
+              position:"relative",
+            }}>
+              Napisz do nas →
+            </Link>
+          </div>
+
         </div>
       </div>
-    </div>
+    </>
   );
 }

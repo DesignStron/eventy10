@@ -1,40 +1,91 @@
 {
-  "updatedAt": "2026-03-26T23:15:45.485Z",
+  "updatedAt": "2026-04-04T12:00:00.000Z",
   "images": [
     {
-      "id": "img_urodziny_1",
-      "title": "Mini disco i bańki",
-      "url": "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1400&q=80",
+      "id": "img_1",
+      "title": "Animacje dla dzieci",
+      "url": "https://images.unsplash.com/photo-1511988617509-a57c8a288659?auto=format&fit=crop&w=1400&q=80",
       "category": "urodziny",
-      "createdAt": "2026-03-20T12:00:00.000Z"
+      "createdAt": "2026-04-04T12:00:00.000Z"
     },
     {
-      "id": "img_szkolne_1",
+      "id": "img_2",
+      "title": "Kolorowe przyjęcie",
+      "url": "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?auto=format&fit=crop&w=1400&q=80",
+      "category": "urodziny",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+    {
+      "id": "img_3",
+      "title": "Balony i zabawa",
+      "url": "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?auto=format&fit=crop&w=1400&q=80",
+      "category": "urodziny",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+    {
+      "id": "img_4",
+      "title": "Tort urodzinowy",
+      "url": "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=1400&q=80",
+      "category": "urodziny",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+    {
+      "id": "img_5",
+      "title": "Zabawy grupowe",
+      "url": "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1400&q=80",
+      "category": "szkolne",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+
+    {
+      "id": "img_6",
       "title": "Festiwal szkolny",
       "url": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1400&q=80",
       "category": "szkolne",
-      "createdAt": "2026-03-20T12:00:00.000Z"
+      "createdAt": "2026-04-04T12:00:00.000Z"
     },
     {
-      "id": "img_inne_1",
-      "title": "Strefa foto",
-      "url": "https://images.unsplash.com/photo-1523528283115-9bf9b1699245?auto=format&fit=crop&w=1400&q=80",
+      "id": "img_7",
+      "title": "Warsztaty dla dzieci",
+      "url": "https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1400&q=80",
+      "category": "szkolne",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+    {
+      "id": "img_10",
+      "title": "Event plenerowy",
+      "url": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?auto=format&fit=crop&w=1400&q=80",
       "category": "inne",
-      "createdAt": "2026-03-20T12:00:00.000Z"
+      "createdAt": "2026-04-04T12:00:00.000Z"
     },
+
     {
-      "id": "img_inne_2",
-      "title": "Dekoracje i światła",
-      "url": "https://images.unsplash.com/photo-1527814050087-3793815479db?auto=format&fit=crop&w=1400&q=80",
+      "id": "img_11",
+      "title": "Scena i światła",
+      "url": "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1400&q=80",
       "category": "inne",
-      "createdAt": "2026-03-20T12:00:00.000Z"
+      "createdAt": "2026-04-04T12:00:00.000Z"
     },
     {
-      "id": "img_urodziny_2",
-      "title": "Urodzinowy klimat",
-      "url": "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1400&q=80",
-      "category": "urodziny",
-      "createdAt": "2026-03-20T12:00:00.000Z"
+      "id": "img_12",
+      "title": "Koncert",
+      "url": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1400&q=80",
+      "category": "inne",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+    {
+      "id": "img_14",
+      "title": "Dekoracje eventowe",
+      "url": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1400&q=80",
+      "category": "inne",
+      "createdAt": "2026-04-04T12:00:00.000Z"
+    },
+    {
+      "id": "img_15",
+      "title": "Event nocny",
+      "url": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1400&q=80",
+      "category": "inne",
+      "createdAt": "2026-04-04T12:00:00.000Z"
     }
   ]
 }
