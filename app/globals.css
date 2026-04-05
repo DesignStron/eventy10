@@ -590,6 +590,18 @@ html[data-theme="light"] .badge-pink {
 html[data-theme="light"] .home-stat-num { color: var(--black); }
 html[data-theme="light"] .home-stat-lbl { color: rgba(0,0,0,0.55); }
 
+/* Light theme stats container styling */
+html[data-theme="light"] .stats-wrap {
+  background: rgba(0,0,0,0.02);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .stat-cell {
+  border-right: 1px solid rgba(0,0,0,0.08);
+}
+html[data-theme="light"] .stat-cell:hover {
+  background: rgba(0,0,0,0.04);
+}
+
 /* ─── HOME HERO MOBILE ───────────────────────────────────────────────── */
 @media (max-width: 860px) {
   .home-hero-grid {
