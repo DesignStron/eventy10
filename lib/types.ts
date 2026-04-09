@@ -32,6 +32,7 @@ export type ContactMessage = {
   email: string;
   phone: string;
   message: string;
+  status?: string;
   created_at?: string;
 };
 

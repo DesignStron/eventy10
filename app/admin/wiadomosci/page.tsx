@@ -233,7 +233,7 @@ export default function AdminMessagesPage() {
                     {m.name}
                     <span className="am-status">{m.status}</span>
                   </div>
-                  <div className="am-item-date">{new Date(m.createdAt).toLocaleString()}</div>
+                  <div className="am-item-date">{m.created_at ? new Date(m.created_at).toLocaleString() : new Date().toLocaleString()}</div>
                 </button>
               ))}
             </div>
@@ -256,7 +256,7 @@ export default function AdminMessagesPage() {
                   </div>
                 </div>
                 <span className="am-date-badge">
-                  {new Date(selected.createdAt).toLocaleString()}
+                  {selected.created_at ? new Date(selected.created_at).toLocaleString() : new Date().toLocaleString()}
                 </span>
               </div>
 
