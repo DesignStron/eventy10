@@ -576,6 +576,32 @@ html[data-theme="light"] .badge-pink {
 .animate-slide-left  { animation: slideInLeft 700ms cubic-bezier(0.16,1,0.3,1) both; }
 .animate-slide-right { animation: slideInRight 700ms cubic-bezier(0.16,1,0.3,1) both; }
 
+@media (hover: none) {
+  .hover-glow:hover,
+  .hover-glow-pink:hover,
+  .card-enhanced:hover {
+    transform: none;
+    box-shadow: none;
+  }
+  .hover-shimmer::after {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hover-shimmer::after {
+    animation: none !important;
+  }
+}
+
 .delay-100 { animation-delay: 100ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
@@ -853,4 +879,76 @@ html[data-theme="light"] .h1 em {
 /* ─── ZIGZAG BORDER ──────────────────────────────────────────────────── */
 .border-pink {
   border: 1.5px solid rgba(240,23,122,0.3);
+}
+/* ─── ABOUT PAGE — LIGHT THEME DEEP FIXES ─────────────────────────────────── */
+ 
+/* Hero inline color overrides */
+html[data-theme="light"] .hero-title,
+html[data-theme="light"] h1.hero-title {
+  color: #0d0b10 !important;
+}
+ 
+html[data-theme="light"] [style*="color:rgba(255,255,255,0.55)"],
+html[data-theme="light"] [style*="color:rgba(255,255,255,0.48)"],
+html[data-theme="light"] [style*="color:rgba(255,255,255,0.42)"],
+html[data-theme="light"] [style*="color:rgba(255,255,255,0.45)"],
+html[data-theme="light"] [style*="color:rgba(255,255,255,0.5)"] {
+  color: rgba(13, 11, 16, 0.58) !important;
+}
+ 
+/* Stat strip light mode */
+html[data-theme="light"] .stats-strip {
+  background: #ffffff !important;
+  border: 1px solid rgba(240, 23, 122, 0.15) !important;
+  box-shadow: 0 8px 40px rgba(240, 23, 122, 0.08), 0 2px 12px rgba(0, 0, 0, 0.05) !important;
+}
+ 
+html[data-theme="light"] .stat-tile {
+  border-right: 1px solid rgba(240, 23, 122, 0.08) !important;
+  border-bottom: 1px solid rgba(240, 23, 122, 0.08) !important;
+}
+ 
+html[data-theme="light"] .stat-tile:hover {
+  background: rgba(240, 23, 122, 0.04) !important;
+}
+ 
+/* Process section */
+html[data-theme="light"] .proc-wrap {
+  background: #ffffff !important;
+  border: 1px solid rgba(240, 23, 122, 0.15) !important;
+  box-shadow: 0 8px 40px rgba(240, 23, 122, 0.06) !important;
+}
+ 
+/* CTA strip */
+html[data-theme="light"] .cta-wrap {
+  background: #ffffff !important;
+  border: 1px solid rgba(240, 23, 122, 0.18) !important;
+  box-shadow: 0 12px 50px rgba(240, 23, 122, 0.10), 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+}
+ 
+/* Value cards */
+html[data-theme="light"] .val-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(240, 23, 122, 0.12) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04) !important;
+}
+ 
+html[data-theme="light"] .val-card:hover {
+  border-color: rgba(240, 23, 122, 0.35) !important;
+  box-shadow: 0 20px 60px rgba(240, 23, 122, 0.12), 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+ 
+/* Orb decorations in light mode — reduce opacity */
+html[data-theme="light"] .orb {
+  opacity: 0.4;
+}
+ 
+/* Section eyebrow line color in light mode */
+html[data-theme="light"] .sec-eyebrow::before {
+  background: var(--pink) !important;
+}
+ 
+/* Fancy divider center dot in light mode */
+html[data-theme="light"] .fancy-divider {
+  background: linear-gradient(90deg, transparent, rgba(240, 23, 122, 0.3), transparent) !important;
 }

@@ -1,10 +1,10 @@
-export type OfferKey = "urodziny" | "szkolne" | "animacje" | "komunie" | "wesela" | "pikniki" | "bale" | "mikolajki";
+export type OfferKey = "urodziny" | "szkolne" | "firmowe" | "animacje" | "komunie" | "wesela" | "pikniki" | "bale" | "mikolajki";
 
 export type OfferSection = {
   key: OfferKey;
   title: string;
   description: string;
-  priceFromPLN: number;
+  price: string;
   bullets: string[];
 };
 
@@ -18,7 +18,7 @@ export type GalleryImage = {
   title: string;
   url: string;
   category: OfferKey | "inne";
-  createdAt: string;
+  created_at?: string;
 };
 
 export type GalleryData = {
@@ -32,8 +32,7 @@ export type ContactMessage = {
   email: string;
   phone: string;
   message: string;
-  createdAt: string;
-  status: "nowe" | "w_toku" | "zamkniete";
+  created_at?: string;
 };
 
 export type ContactData = {

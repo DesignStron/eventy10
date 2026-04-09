@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
-import type { GalleryData, GalleryImage } from "@/lib/types";
+import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
+import { GalleryImage } from '@/lib/types'
 
 export async function GET() {
   try {
@@ -14,14 +14,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Failed to fetch gallery' }, { status: 500 })
     }
 
-    const images: GalleryImage[] = (data || []).map(item => ({
-      id: item.id,
-      title: item.title,
-      url: item.url,
-      category: item.category,
-      created_at: item.created_at
-    }))
-
+    const images = data || []
     return NextResponse.json({
       updatedAt: new Date().toISOString(),
       images
@@ -32,64 +25,67 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const payload = (await req.json()) as Omit<GalleryImage, "id" | "createdAt">;
+    const body = await request.json()
+    console.log('📥 Gallery API POST received:', body)
+    const { title, url, category } = body
 
+    if (!title?.trim() || !url?.trim() || !category) {
+      console.error('❌ Missing required fields:', { title, url, category })
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    }
+
+    const newImage: Omit<GalleryImage, 'id' | 'created_at'> = {
+      title: title.trim(),
+      url: url.trim(),
+      category
+    }
+
+    console.log('📤 Inserting into Supabase:', newImage)
+    
     const { data, error } = await supabase
       .from('gallery')
-      .insert({
-        title: payload.title,
-        url: payload.url,
-        category: payload.category
-      })
+      .insert(newImage)
       .select()
       .single()
 
     if (error) {
-      console.error('Gallery POST error:', error)
+      console.error('❌ Supabase insert error:', error)
       return NextResponse.json({ error: 'Failed to add image' }, { status: 500 })
     }
 
-    const newImage: GalleryImage = {
-      id: data.id,
-      title: data.title,
-      url: data.url,
-      category: data.category,
-      created_at: data.created_at
-    }
+    console.log('✅ Successfully inserted:', data)
 
-    // Return updated gallery data
-    const { data: allData } = await supabase
+    // Return updated gallery
+    const { data: images, error: fetchError } = await supabase
       .from('gallery')
       .select('*')
       .order('created_at', { ascending: false })
 
-    const images: GalleryImage[] = (allData || []).map(item => ({
-      id: item.id,
-      title: item.title,
-      url: item.url,
-      category: item.category,
-      created_at: item.created_at
-    }))
+    if (fetchError) {
+      console.error('❌ Fetch error after insert:', fetchError)
+    }
+
+    console.log('📥 Returning updated gallery:', { count: images?.length })
 
     return NextResponse.json({
       updatedAt: new Date().toISOString(),
-      images
+      images: images || []
     })
   } catch (error) {
-    console.error('Gallery POST error:', error)
+    console.error('❌ Gallery POST error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function DELETE(req: Request) {
+export async function DELETE(request: NextRequest) {
   try {
-    const url = new URL(req.url);
-    const id = url.searchParams.get("id");
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
 
     if (!id) {
-      return NextResponse.json({ error: "Brak parametru id" }, { status: 400 });
+      return NextResponse.json({ error: 'Missing image ID' }, { status: 400 })
     }
 
     const { error } = await supabase
@@ -102,23 +98,15 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: 'Failed to delete image' }, { status: 500 })
     }
 
-    // Return updated gallery data
-    const { data: allData } = await supabase
+    // Return updated gallery
+    const { data: images } = await supabase
       .from('gallery')
       .select('*')
       .order('created_at', { ascending: false })
 
-    const images: GalleryImage[] = (allData || []).map(item => ({
-      id: item.id,
-      title: item.title,
-      url: item.url,
-      category: item.category,
-      created_at: item.created_at
-    }))
-
     return NextResponse.json({
       updatedAt: new Date().toISOString(),
-      images
+      images: images || []
     })
   } catch (error) {
     console.error('Gallery DELETE error:', error)

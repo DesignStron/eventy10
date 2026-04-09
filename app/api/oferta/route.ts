@@ -1,29 +1,81 @@
-import { NextResponse } from "next/server";
-
-import { nowIso, readJsonFile, writeJsonFile } from "@/lib/data-store";
-import type { OfferData } from "@/lib/types";
-
-const FILE = "oferta.json";
-
-const FALLBACK: OfferData = {
-  updatedAt: nowIso(),
-  sections: [],
-};
+import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
+import { OfferData, OfferSection } from '@/lib/types'
 
 export async function GET() {
-  const data = await readJsonFile<OfferData>(FILE, FALLBACK);
-  return NextResponse.json(data);
+  try {
+    const { data, error } = await supabase
+      .from('offer')
+      .select('*')
+      .order('created_at', { ascending: true })
+
+    if (error) {
+      console.error('Offer GET error:', error)
+      return NextResponse.json({ error: 'Failed to fetch offer' }, { status: 500 })
+    }
+
+    const sections: OfferSection[] = (data || []).map(item => ({
+      key: item.key,
+      title: item.title,
+      description: item.description,
+      price: item.price,
+      bullets: item.bullets || []
+    }))
+
+    return NextResponse.json({
+      updatedAt: new Date().toISOString(),
+      sections
+    })
+  } catch (error) {
+    console.error('Offer GET error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
 
-export async function PUT(req: Request) {
-  const body = (await req.json()) as OfferData;
+export async function PUT(request: NextRequest) {
+  try {
+    const body: OfferData = await request.json()
+    const { sections } = body
 
-  const next: OfferData = {
-    ...body,
-    updatedAt: nowIso(),
-  };
+    if (!sections || !Array.isArray(sections)) {
+      return NextResponse.json({ error: 'Invalid sections data' }, { status: 400 })
+    }
 
-  await writeJsonFile(FILE, next);
+    // Clear existing data
+    const { error: deleteError } = await supabase
+      .from('offer')
+      .delete()
+      .neq('id', 0) // Delete all records
 
-  return NextResponse.json(next);
+    if (deleteError) {
+      console.error('Offer DELETE error:', deleteError)
+      return NextResponse.json({ error: 'Failed to clear offer data' }, { status: 500 })
+    }
+
+    // Insert new data
+    const offerData = sections.map(section => ({
+      key: section.key,
+      title: section.title,
+      description: section.description,
+      price: section.price,
+      bullets: section.bullets
+    }))
+
+    const { error: insertError } = await supabase
+      .from('offer')
+      .insert(offerData)
+
+    if (insertError) {
+      console.error('Offer INSERT error:', insertError)
+      return NextResponse.json({ error: 'Failed to save offer data' }, { status: 500 })
+    }
+
+    return NextResponse.json({
+      updatedAt: new Date().toISOString(),
+      sections
+    })
+  } catch (error) {
+    console.error('Offer PUT error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }

@@ -22,6 +22,7 @@ export default function SiteHeader() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -37,16 +38,17 @@ export default function SiteHeader() {
   };
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  useEffect(() => {
+    setMounted(true);
     const saved = window.localStorage.getItem("theme");
     const next = saved === "light" ? "light" : "dark";
     setTheme(next);
-    applyTheme(next);
+    // Don't apply theme here - it's already applied by the script in layout.tsx
+  }, []);
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
   }, []);
 
   const toggleTheme = () => {
@@ -665,10 +667,10 @@ export default function SiteHeader() {
             type="button"
             className="theme-btn"
             onClick={toggleTheme}
-            aria-label={theme === "dark" ? "Włącz jasny motyw" : "Włącz ciemny motyw"}
-            title={theme === "dark" ? "Jasny motyw" : "Ciemny motyw"}
+            aria-label={mounted && theme === "dark" ? "Włącz jasny motyw" : "Włącz ciemny motyw"}
+            title={mounted && theme === "dark" ? "Jasny motyw" : "Ciemny motyw"}
           >
-            {theme === "dark" ? "☀" : "☾"}
+            {mounted && theme === "dark" ? "☀" : "☾"}
           </button>
 
           {/* Right */}

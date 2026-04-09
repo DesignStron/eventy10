@@ -1,0 +1,14 @@
+-- ADD ALL OFFERS TO SUPABASE
+-- Run this to add all remaining offers
+
+INSERT INTO offer (key, title, description, price, bullets, created_at) VALUES
+('animacje', 'Animacje i warsztaty', 'Profesjonalne animacje dla dzieci w rónym wieku: kreatywne warsztaty, zabawy ruchowe, gry zespowowe i konkursy z nagrodami.', '599 PLN', ARRAY['Zesp animatorw (2-3 osoby)', 'Sprzt do zabaw i gier', 'Materia warsztatowe', 'Nagrody i upominki'], NOW()),
+('komunie', 'Komunie i uroczystoci', 'Elegancka oprawa uroczystoci komunijnych: animacje dla dzieci, muzyka, dekoracje oraz koordynacja caego wydarzenia.', '1890 PLN', ARRAY['Oprawa artystyczna uroczystoci', 'Animacje dla dzieci', 'Dekoracje kwiatowe i tematyczne', 'Koordynator wydarzenia'], NOW()),
+('wesela', 'Wesela i przyjcia', 'Profesjonalne prowadzenie wesel oraz oprawa muzyczna. Zabawy integracyjne, konkursy i animacje dla goci w kadym wieku.', '3490 PLN', ARRAY['Prowadzenie imprezy', 'Oprawa muzyczna', 'Zabawy i konkursy', 'Koordynacja przebiegu wesela'], NOW()),
+('pikniki', 'Pikniki szkolne i festyny', 'Organizacja piknikw szkolnych, festynw i dni dziecka. Pena oprawa techniczna, atrakcje dla wszystkich grup wiekowych.', '2490 PLN', ARRAY['Namioty i sprzt techniczny', 'Atrakcje dla dzieci i dorosych', 'Prowadzenie imprezy', 'Obsuga gastronomiczna (opcja)'], NOW()),
+('bale', 'Bale karnawaowe i studniwki', 'Magiczna atmosfera balw karnawaowych dla dzieci oraz eleganckie studniwki. Dekoracje, muzyka, prowadzenie i atrakcje.', '3290 PLN', ARRAY['Dekoracje tematyczne', 'Oprawa muzyczna i owietlenie', 'Prowadzenie balu', 'Zabawy i konkursy'], NOW()),
+('mikolajki', 'Mikoajki i eventy witeczne', 'Magiczne Mikoajki dla dzieci i firmowe eventy witeczne. wity Mikoaj, prezenty, animacje i witeczna atmosfera.', '1990 PLN', ARRAY['Wizyta witego Mikoaja', 'Prezenty i upominki', 'Witeczne animacje', 'Dekoracje witeczne'], NOW());
+
+-- Verify all offers are added
+SELECT COUNT(*) as total_offers FROM offer;
+SELECT * FROM offer ORDER BY key;

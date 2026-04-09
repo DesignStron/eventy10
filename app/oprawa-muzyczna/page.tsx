@@ -1,219 +1,437 @@
 export const metadata = { title: "Oprawa muzyczna" };
 
-const EVENTS = [
-  {
-    key: "studniowki",
-    title: "Studniówki",
-    desc: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
-    features: ["Repertuar taneczny i okolicznościowy","Profesjonalne prowadzenie imprezy","Oświetlenie i efekty świetlne","Współpraca z fotografem"],
-  },
-  {
-    key: "wesela",
-    title: "Wesela",
-    desc: "Kompleksowa oprawa muzyczna wesela — od pierwszego tańca po oczepiny. Dbamy o każdy moment tego wyjątkowego dnia.",
-    features: ["Konsultacja i dobór repertuaru","Prowadzenie ceremonii i przyjęcia","Zabawy i konkursy weselne","Sprzęt nagłośnieniowy i oświetlenie"],
-  },
-  {
-    key: "urodziny",
-    title: "Urodziny i przyjęcia",
-    desc: "Muzyczna oprawa przyjęć urodzinowych, rocznic i spotkań rodzinnych. Dopasujemy klimat do charakteru imprezy i gości.",
-    features: ["Różne gatunki muzyczne","Możliwość dedykacji i życzeń","Nagłośnienie dostosowane do sali","Opcjonalnie animacje dla dzieci"],
-  },
-  {
-    key: "firmowe",
-    title: "Eventy firmowe",
-    desc: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
-    features: ["Muzyka tła i taneczna","Prowadzenie programu","Nagłośnienie konferencji","Oświetlenie sceniczne"],
-  },
-  {
-    key: "bale",
-    title: "Bale karnawałowe",
-    desc: "Dynamiczna oprawa muzyczna balów karnawałowych dla dzieci i dorosłych. Wiele gatunków i klimatów w jednym wieczorze.",
-    features: ["Repertuar taneczny i zabawowy","Konkursy muzyczne z nagrodami","Światła i efekty specjalne","Współpraca z animatorami"],
-  },
-  {
-    key: "swiateczne",
-    title: "Eventy świąteczne",
-    desc: "Magiczna atmosfera świąt Bożego Narodzenia z odpowiednią oprawą muzyczną. Kolędy, nowoczesne świąteczne hity i klimatyczne aranżacje.",
-    features: ["Repertuar świąteczny","Oświetlenie dekoracyjne","Możliwość nagłośnienia na zewnątrz","Współpraca z Mikołajem"],
-  },
-];
-
 const EQUIPMENT = [
-  { title:"Nagłośnienie",  desc:"Systemy głośnikowe dostosowane do wielkości i charakteru pomieszczenia." },
-  { title:"Oświetlenie",   desc:"Profesjonalne zestawy świateł — od subtelnego tła po pełne show." },
-  { title:"DJ i prowadzący", desc:"Doświadczony DJ z bogatym repertuarem i umiejętnościami MC." },
-  { title:"Mikrofony",     desc:"Bezprzewodowe mikrofony dla prowadzących i gości." },
-  { title:"Efekty",        desc:"Dym, konfetti, bańki mydlane i inne efekty specjalne na życzenie." },
-  { title:"Transport",     desc:"Pełny montaż i demontaż sprzętu — bez stresu dla organizatora." },
+  { icon:"", title:"Naglosnienie",    desc:"Systemy gonikowe dostosowane do wielkoci i charakteru pomieszczenia." },
+  { icon:"", title:"Oswietlenie",     desc:"Profesjonalne zestawy wiate — od subtelnego tla po pen show." },
+  { icon:"", title:"DJ i prowadzcy", desc:"Doswiadczony DJ z bogatym repertuarem i umiejtnociami MC." },
+  { icon:"", title:"Mikrofony",       desc:"Bezprzewodowe mikrofony dla prowadzcych i goci." },
+  { icon:"", title:"Efekty",          desc:"Dym, konfetti, banki mydlane i inne efekty specjalne na yczenie." },
+  { icon:"", title:"Transport",       desc:"Pen montaz i demontaz sprztu — bez stresu dla organizatora." },
 ];
 
-export default function MusicPage() {
+async function fetchMusicData() {
+  try {
+    const res = await fetch('http://localhost:3000/api/oprawa-muzyczna', { cache: 'no-store' });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch music data:', error);
+  }
+  // Fallback data
+  return {
+    updatedAt: new Date().toISOString(),
+    services: [
+      {
+        key: "studniowki",
+        title: "Studniówki",
+        description: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
+        features: ["Repertuar taneczny i okoliczosciowy", "Profesjonalne prowadzenie imprezy", "Oswietlenie i efekty swietlne", "Wspolpraca z fotografem"]
+      },
+      {
+        key: "wesela",
+        title: "Wesela",
+        description: "Kompleksowa oprawa muzyczna wesela — od pierwszego taca po oczepiny. Dbamy o kazdy moment tego wyjatkowego dnia.",
+        features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjcia", "Zabawy i konkursy weselne", "Sprzet naglosnieniowy i oswietlenie"]
+      },
+      {
+        key: "urodziny",
+        title: "Urodziny i przyjcia",
+        description: "Muzyczna oprawa przyjec urodzinowych, rocznic i spotkan rodzinnych. Dopasujemy klimat do charakteru imprezy i gosci.",
+        features: ["Rózne gatunki muzyczne", "Mozliwosc dedykacji i zyczen", "Naglosnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"]
+      },
+      {
+        key: "firmowe",
+        title: "Eventy firmowe",
+        description: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
+        features: ["Muzyka tla i taneczna", "Prowadzenie programu", "Naglosnienie konferencji", "Oswietlenie sceniczne"]
+      },
+      {
+        key: "bale",
+        title: "Bale karnawaowe",
+        description: "Dynamiczna oprawa muzyczna balów karnawaowych dla dzieci i doroslych. Wiele gatunków i klimatów w jednym wieczorze.",
+        features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Swiatla i efekty specjalne", "Wspolpraca z animatorami"]
+      },
+      {
+        key: "swiateczne",
+        title: "Eventy witeczne",
+        description: "Magiczna atmosfera swiat Bozego Narodzenia z odpowiednia oprawa muzyczna. Koledy, nowoczesne hity i klimatyczne aranacje.",
+        features: ["Repertuar witeczny", "Oswietlenie dekoracyjne", "Mozliwosc naglosnienia na zewnatrz", "Wspolpraca z Mikolajem"]
+      }
+    ]
+  };
+}
+
+export default async function MusicPage() {
+  const musicData = await fetchMusicData();
+
   return (
     <>
       <style>{`
-        @keyframes pulseDot{0%,100%{opacity:1}50%{opacity:.35}}
+        @keyframes pulseDot  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.35)} }
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeLeft  { from{opacity:0;transform:translateX(-22px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes floatY    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+        @keyframes shimBar   { 0%{background-position:-200% center} 100%{background-position:200% center} }
 
-        .mu-section { max-width:72rem; margin:0 auto; padding:0 1.5rem; }
+        .fu { animation:fadeUp  0.75s cubic-bezier(0.16,1,0.3,1) both; }
+        .fl { animation:fadeLeft 0.75s cubic-bezier(0.16,1,0.3,1) both; }
+        .d1{animation-delay:.06s} .d2{animation-delay:.16s}
+        .d3{animation-delay:.28s} .d4{animation-delay:.42s}
 
+        .mu-wrap { max-width:72rem; margin:0 auto; padding:0 1.5rem; }
+
+        /* ── HERO BADGE ── */
+        .mu-hero-badge {
+          display:inline-flex; align-items:center; gap:0.5rem;
+          padding:0.38rem 1rem; border-radius:9999px;
+          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.25);
+          font-size:0.63rem; font-weight:800; letter-spacing:0.12em;
+          text-transform:uppercase; color:var(--pink-light);
+          margin-bottom:1.5rem; backdrop-filter:blur(8px);
+        }
+        html[data-theme="light"] .mu-hero-badge {
+          background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.3);
+          color:var(--pink);
+        }
+
+        /* ── HERO TITLE ── */
+        .mu-hero-title {
+          font-family:var(--font-display);
+          font-size:clamp(2.6rem,5.5vw,4.5rem);
+          font-weight:700; color:#fff; line-height:1.06;
+          letter-spacing:-0.028em; margin-bottom:1.35rem;
+        }
+        html[data-theme="light"] .mu-hero-title { color:#0d0b10; }
+
+        .mu-hero-accent {
+          display:inline-block;
+          background:linear-gradient(105deg,#f0177a 0%,#ff6bb5 50%,#f0177a 80%);
+          background-size:200% auto;
+          -webkit-background-clip:text; background-clip:text;
+          -webkit-text-fill-color:transparent;
+          animation:shimBar 3.5s linear infinite;
+        }
+
+        .mu-hero-desc {
+          color:rgba(255,255,255,0.52); font-size:clamp(1rem,1.8vw,1.12rem);
+          line-height:1.85; max-width:520px;
+        }
+        html[data-theme="light"] .mu-hero-desc { color:rgba(13,11,16,0.58); }
+
+        /* ── SECTION EYEBROW ── */
+        .mu-eyebrow {
+          display:flex; align-items:center; gap:0.6rem;
+          font-size:0.62rem; font-weight:800; letter-spacing:0.15em;
+          text-transform:uppercase; color:var(--pink); margin-bottom:0.85rem;
+        }
+        .mu-eyebrow::before {
+          content:''; display:inline-block; width:22px; height:2px;
+          background:var(--pink); border-radius:2px; flex-shrink:0;
+        }
+
+        .mu-sec-title {
+          font-family:var(--font-display);
+          font-size:clamp(1.7rem,3.2vw,2.5rem);
+          font-weight:700; color:#fff; line-height:1.1;
+          letter-spacing:-0.02em; margin-bottom:1rem;
+        }
+        html[data-theme="light"] .mu-sec-title { color:#0d0b10; }
+
+        .mu-sec-sub {
+          font-size:0.95rem; color:rgba(255,255,255,0.5);
+          line-height:1.85; max-width:42rem; margin-bottom:3rem;
+        }
+        html[data-theme="light"] .mu-sec-sub { color:rgba(13,11,16,0.58); }
+
+        /* ── EVENT GRID ── */
         .mu-event-grid {
           display:grid; grid-template-columns:1fr; gap:1.25rem;
         }
-        @media(min-width:768px){ .mu-event-grid { grid-template-columns:repeat(2,1fr); } }
-        @media(min-width:1024px){ .mu-event-grid { grid-template-columns:repeat(3,1fr); } }
+        @media(min-width:768px)  { .mu-event-grid { grid-template-columns:repeat(2,1fr); } }
+        @media(min-width:1100px) { .mu-event-grid { grid-template-columns:repeat(3,1fr); } }
 
+        /* ── EVENT CARD ── */
         .mu-card {
-          border-radius:1.1rem;
+          border-radius:1.4rem;
           background:rgba(255,255,255,0.025);
           border:1px solid rgba(255,255,255,0.07);
-          overflow:hidden;
-          transition:border-color 220ms, transform 220ms, box-shadow 220ms;
-          display:flex; flex-direction:column;
+          overflow:hidden; display:flex; flex-direction:column;
+          transition:border-color 280ms ease, transform 280ms cubic-bezier(0.16,1,0.3,1), box-shadow 280ms ease;
+          position:relative;
+        }
+        .mu-card::after {
+          content:''; position:absolute; top:0; left:1.5rem; right:1.5rem; height:2px;
+          background:linear-gradient(90deg,transparent,rgba(240,23,122,0.55),transparent);
+          opacity:0; transition:opacity 280ms ease; border-radius:0 0 2px 2px;
         }
         .mu-card:hover {
-          border-color:rgba(240,23,122,0.25);
-          transform:translateY(-3px);
-          box-shadow:0 16px 40px rgba(0,0,0,0.3), 0 4px 12px rgba(240,23,122,0.08);
+          border-color:rgba(240,23,122,0.28);
+          transform:translateY(-4px);
+          box-shadow:0 20px 60px rgba(0,0,0,0.3), 0 4px 16px rgba(240,23,122,0.1);
         }
+        .mu-card:hover::after { opacity:1; }
+
+        html[data-theme="light"] .mu-card {
+          background:#ffffff;
+          border:1px solid rgba(0,0,0,0.07);
+          box-shadow:0 4px 20px rgba(0,0,0,0.05);
+        }
+        html[data-theme="light"] .mu-card:hover {
+          border-color:rgba(240,23,122,0.3);
+          box-shadow:0 20px 60px rgba(240,23,122,0.1), 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        /* Card head */
         .mu-card-hd {
-          padding:1.5rem 1.5rem 1.25rem;
+          padding:1.75rem 1.75rem 1.5rem;
           border-bottom:1px solid rgba(255,255,255,0.06);
-          background:rgba(240,23,122,0.05);
+          position:relative; overflow:hidden;
         }
+        .mu-card-hd::before {
+          content:''; position:absolute; inset:0; pointer-events:none;
+          background:radial-gradient(ellipse at 100% 0%, rgba(240,23,122,0.08) 0%, transparent 55%);
+        }
+        html[data-theme="light"] .mu-card-hd {
+          border-bottom:1px solid rgba(240,23,122,0.08);
+        }
+        html[data-theme="light"] .mu-card-hd::before {
+          background:radial-gradient(ellipse at 100% 0%, rgba(240,23,122,0.05) 0%, transparent 55%);
+        }
+
+        /* Icon */
+        .mu-card-icon {
+          width:2.75rem; height:2.75rem; border-radius:0.9rem;
+          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.2);
+          display:flex; align-items:center; justify-content:center;
+          font-size:1.2rem; margin-bottom:1rem;
+          transition:transform 300ms ease, box-shadow 300ms ease, background 300ms ease;
+          animation:floatY 6s ease-in-out infinite;
+        }
+        .mu-card:nth-child(2) .mu-card-icon { animation-delay:1s; }
+        .mu-card:nth-child(3) .mu-card-icon { animation-delay:2s; }
+        .mu-card:nth-child(4) .mu-card-icon { animation-delay:3s; }
+        .mu-card:nth-child(5) .mu-card-icon { animation-delay:4s; }
+        .mu-card:nth-child(6) .mu-card-icon { animation-delay:5s; }
+        .mu-card:hover .mu-card-icon {
+          transform:scale(1.1) rotate(-4deg);
+          box-shadow:0 8px 24px rgba(240,23,122,0.3);
+          background:rgba(240,23,122,0.18);
+        }
+        html[data-theme="light"] .mu-card-icon {
+          background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.18);
+        }
+
         .mu-card-title {
           font-family:var(--font-display); font-size:1.15rem;
-          font-weight:700; color:#fff; margin-bottom:0.5rem; line-height:1.2;
+          font-weight:700; color:#fff; margin-bottom:0.55rem; line-height:1.15;
+          position:relative;
         }
-        .mu-card-desc { font-size:0.82rem; color:rgba(255,255,255,0.5); line-height:1.7; }
-        .mu-card-ft { padding:1.25rem 1.5rem; flex:1; }
+        html[data-theme="light"] .mu-card-title { color:#0d0b10; }
+
+        .mu-card-desc {
+          font-size:0.83rem; color:rgba(255,255,255,0.48); line-height:1.75;
+          position:relative;
+        }
+        html[data-theme="light"] .mu-card-desc { color:rgba(13,11,16,0.58); }
+
+        /* Features */
+        .mu-card-ft { padding:1.4rem 1.75rem 1.75rem; flex:1; }
+
         .mu-feat {
-          display:flex; align-items:flex-start; gap:0.6rem;
-          padding:0.4rem 0; border-bottom:1px solid rgba(255,255,255,0.05);
+          display:flex; align-items:flex-start; gap:0.65rem;
+          padding:0.55rem 0;
+          border-bottom:1px solid rgba(255,255,255,0.04);
+          transition:padding-left 200ms ease;
         }
         .mu-feat:last-child { border-bottom:none; padding-bottom:0; }
         .mu-feat:first-child { padding-top:0; }
+        .mu-card:hover .mu-feat { padding-left:2px; }
+        html[data-theme="light"] .mu-feat { border-bottom:1px solid rgba(240,23,122,0.07); }
+
         .mu-check {
-          width:16px; height:16px; border-radius:50%; flex-shrink:0;
-          background:rgba(240,23,122,0.13); border:1px solid rgba(240,23,122,0.28);
+          width:18px; height:18px; border-radius:50%; flex-shrink:0;
+          background:rgba(240,23,122,0.12); border:1px solid rgba(240,23,122,0.28);
           display:flex; align-items:center; justify-content:center; margin-top:1px;
         }
-        .mu-feat-txt { font-size:0.81rem; color:rgba(255,255,255,0.65); font-weight:500; line-height:1.5; }
+        html[data-theme="light"] .mu-check {
+          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.25);
+        }
 
+        .mu-feat-txt {
+          font-size:0.82rem; color:rgba(255,255,255,0.65); font-weight:500; line-height:1.55;
+        }
+        html[data-theme="light"] .mu-feat-txt { color:rgba(13,11,16,0.7); }
+
+        /* ── EQUIPMENT GRID ── */
         .mu-eq-grid {
-          display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
-          border-radius:1.1rem; overflow:hidden;
-          border:1px solid rgba(255,255,255,0.07);
+          display:grid; grid-template-columns:repeat(2,1fr); gap:1.25rem;
         }
-        @media(min-width:768px){ .mu-eq-grid { grid-template-columns:repeat(3,1fr); } }
+        @media(min-width:768px) { .mu-eq-grid { grid-template-columns:repeat(3,1fr); } }
+
         .mu-eq-cell {
-          background:rgba(255,255,255,0.025); padding:1.75rem;
-          transition:background 180ms;
+          padding:1.75rem; border-radius:1.25rem;
+          background:rgba(255,255,255,0.025);
+          border:1px solid rgba(255,255,255,0.07);
+          transition:border-color 240ms ease, background 240ms ease, transform 240ms ease;
         }
-        .mu-eq-cell:hover { background:rgba(255,255,255,0.04); }
-        .mu-eq-title { font-size:0.95rem; font-weight:700; color:#fff; margin-bottom:0.4rem; }
-        .mu-eq-desc  { font-size:0.8rem; color:rgba(255,255,255,0.45); line-height:1.65; }
-        .mu-eq-icon  {
-          width:2.2rem; height:2.2rem; border-radius:0.5rem;
+        .mu-eq-cell:hover {
+          background:rgba(255,255,255,0.04);
+          border-color:rgba(240,23,122,0.22);
+          transform:translateY(-2px);
+        }
+        html[data-theme="light"] .mu-eq-cell {
+          background:#ffffff; border:1px solid rgba(0,0,0,0.07);
+          box-shadow:0 2px 12px rgba(0,0,0,0.04);
+        }
+        html[data-theme="light"] .mu-eq-cell:hover {
+          border-color:rgba(240,23,122,0.3); background:#fff;
+          box-shadow:0 8px 32px rgba(240,23,122,0.1);
+        }
+
+        .mu-eq-icon-box {
+          width:2.75rem; height:2.75rem; border-radius:0.875rem; margin-bottom:1rem;
           background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.2);
-          display:flex; align-items:center; justify-content:center;
-          margin-bottom:0.875rem;
+          display:flex; align-items:center; justify-content:center; font-size:1.2rem;
+          transition:transform 280ms ease, box-shadow 280ms ease, background 280ms ease;
+        }
+        .mu-eq-cell:hover .mu-eq-icon-box {
+          transform:scale(1.08) rotate(-3deg);
+          box-shadow:0 6px 20px rgba(240,23,122,0.25);
+          background:rgba(240,23,122,0.16);
+        }
+        html[data-theme="light"] .mu-eq-icon-box {
+          background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.18);
         }
 
-        .sec-lbl { font-size:0.63rem; font-weight:700; letter-spacing:0.13em; text-transform:uppercase; color:rgba(255,255,255,0.22); margin-bottom:0.75rem; }
-        .sec-title { font-family:var(--font-display); font-size:clamp(1.6rem,3.5vw,2.4rem); font-weight:700; color:#fff; line-height:1.12; letter-spacing:-0.02em; margin-bottom:1rem; }
-        .sec-sub { font-size:0.95rem; color:rgba(255,255,255,0.5); line-height:1.8; max-width:42rem; }
-        .div-h { height:1px; background:linear-gradient(90deg,transparent,rgba(240,23,122,0.25),transparent); }
+        .mu-eq-title {
+          font-size:0.975rem; font-weight:700; color:#fff; margin-bottom:0.45rem;
+          font-family:var(--font-display);
+        }
+        html[data-theme="light"] .mu-eq-title { color:#0d0b10; }
 
-        .btn-p {
+        .mu-eq-desc {
+          font-size:0.81rem; color:rgba(255,255,255,0.44); line-height:1.7;
+        }
+        html[data-theme="light"] .mu-eq-desc { color:rgba(13,11,16,0.56); }
+
+        /* ── DIVIDER ── */
+        .mu-divider {
+          height:1px; position:relative; overflow:visible; margin:0;
+          background:linear-gradient(90deg,transparent,rgba(240,23,122,0.25),transparent);
+        }
+        .mu-divider::after {
+          content:''; position:absolute; left:50%; top:50%;
+          transform:translate(-50%,-50%);
+          width:8px; height:8px; border-radius:50%;
+          background:var(--pink); box-shadow:0 0 12px rgba(240,23,122,0.7);
+        }
+
+        /* ── CTA ── */
+        .mu-cta {
+          border-radius:1.5rem; padding:3.5rem 2.5rem; text-align:center;
+          border:1px solid rgba(240,23,122,0.18);
+          background:rgba(255,255,255,0.025);
+          position:relative; overflow:hidden;
+        }
+        html[data-theme="light"] .mu-cta {
+          background:#ffffff;
+          border:1px solid rgba(240,23,122,0.2);
+          box-shadow:0 12px 50px rgba(240,23,122,0.1), 0 4px 16px rgba(0,0,0,0.04);
+        }
+        .mu-cta-title {
+          font-family:var(--font-display); font-size:clamp(1.6rem,3.2vw,2.4rem);
+          font-weight:700; color:#fff; line-height:1.1;
+          letter-spacing:-0.02em; margin-bottom:0.875rem; position:relative;
+        }
+        html[data-theme="light"] .mu-cta-title { color:#0d0b10; }
+        .mu-cta-desc {
+          color:rgba(255,255,255,0.48); font-size:0.95rem;
+          line-height:1.8; max-width:420px; margin:0 auto 2.25rem; position:relative;
+        }
+        html[data-theme="light"] .mu-cta-desc { color:rgba(13,11,16,0.55); }
+
+        /* ── BUTTON ── */
+        .mu-btn {
           display:inline-flex; align-items:center; gap:0.5rem;
-          height:3rem; padding:0 1.75rem; border-radius:9999px;
+          height:3.2rem; padding:0 2.2rem; border-radius:9999px;
           background:var(--pink); color:#fff;
-          font-size:0.875rem; font-weight:700; text-decoration:none;
-          box-shadow:0 6px 24px rgba(240,23,122,0.4);
-          transition:transform 200ms, box-shadow 200ms, background 200ms;
+          font-size:0.9rem; font-weight:700; text-decoration:none;
+          box-shadow:0 8px 28px rgba(240,23,122,0.4);
+          transition:transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+          position:relative; overflow:hidden;
         }
-        .btn-p:hover { transform:translateY(-2px); box-shadow:0 10px 36px rgba(240,23,122,0.55); background:var(--pink-light); }
-
-        html[data-theme="light"] .mu-card {
-          background: rgba(0,0,0,0.02);
-          border: 1px solid rgba(0,0,0,0.10);
+        .mu-btn::after {
+          content:''; position:absolute; inset:0;
+          background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 60%);
+          pointer-events:none;
         }
-        html[data-theme="light"] .mu-card-hd {
-          border-bottom: 1px solid rgba(0,0,0,0.08);
-          background: rgba(240,23,122,0.06);
+        .mu-btn:hover {
+          transform:translateY(-3px) scale(1.02);
+          box-shadow:0 16px 44px rgba(240,23,122,0.55);
+          background:var(--pink-light);
         }
-        html[data-theme="light"] .mu-card-title { color: var(--black); }
-        html[data-theme="light"] .mu-card-desc { color: rgba(0,0,0,0.6); }
-        html[data-theme="light"] .mu-feat { border-bottom: 1px solid rgba(0,0,0,0.06); }
-        html[data-theme="light"] .mu-feat-txt { color: rgba(0,0,0,0.7); }
-
-        html[data-theme="light"] .mu-eq-grid { border: 1px solid rgba(0,0,0,0.10); }
-        html[data-theme="light"] .mu-eq-cell { background: rgba(0,0,0,0.02); }
-        html[data-theme="light"] .mu-eq-cell:hover { background: rgba(0,0,0,0.04); }
-        html[data-theme="light"] .mu-eq-title { color: var(--black); }
-        html[data-theme="light"] .mu-eq-desc { color: rgba(0,0,0,0.6); }
-
-        html[data-theme="light"] .sec-lbl { color: rgba(0,0,0,0.45); }
-        html[data-theme="light"] .sec-title { color: var(--black); }
-        html[data-theme="light"] .sec-sub { color: rgba(0,0,0,0.6); }
       `}</style>
 
       <div className="page-bg noise">
 
         {/* ── HERO ── */}
-        <section style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 5rem" }}>
-          <span style={{
-            display:"inline-flex", alignItems:"center", gap:"0.42rem",
-            padding:"0.36rem 0.9rem", borderRadius:"9999px",
-            background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.22)",
-            fontSize:"0.67rem", fontWeight:700, letterSpacing:"0.1em",
-            textTransform:"uppercase", color:"var(--pink-light)", marginBottom:"1.5rem",
-          }}>
-            <span style={{
-              width:"5px", height:"5px", borderRadius:"50%",
-              background:"var(--pink)", display:"inline-block",
-              animation:"pulseDot 2.2s ease-in-out infinite",
-            }}/>
-            Oprawa muzyczna
-          </span>
+        <section style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 5rem", position:"relative" }}>
+          {/* Orb */}
+          <div style={{
+            position:"absolute", top:"-60px", right:"-60px",
+            width:"380px", height:"380px", borderRadius:"50%", pointerEvents:"none",
+            background:"radial-gradient(circle,rgba(240,23,122,0.14) 0%,transparent 70%)",
+            filter:"blur(40px)", animation:"floatY 9s ease-in-out infinite",
+          }}/>
 
-          <h1 style={{
-            fontFamily:"var(--font-display)", fontSize:"clamp(2.6rem,5.5vw,4.5rem)",
-            fontWeight:700, color:"#fff", lineHeight:1.06,
-            letterSpacing:"-0.025em", marginBottom:"1.25rem",
-          }}>
+          <div className="fu" style={{ display:"block" }}>
+            <span className="mu-hero-badge">
+              <span style={{
+                width:"5px", height:"5px", borderRadius:"50%",
+                background:"var(--pink)", display:"inline-block",
+                animation:"pulseDot 2.2s ease-in-out infinite",
+              }}/>
+              Oprawa muzyczna
+            </span>
+          </div>
+
+          <h1 className="mu-hero-title fu d1">
             Muzyka, która tworzy<br/>
-            <span style={{ color:"var(--pink-light)" }}>niezapomnianą atmosferę</span>
+            <span className="mu-hero-accent">niezapomnianą atmosferę</span>
           </h1>
 
-          <p style={{
-            color:"rgba(255,255,255,0.52)", fontSize:"clamp(1rem,2vw,1.12rem)",
-            lineHeight:1.8, maxWidth:"520px",
-          }}>
+          <p className="mu-hero-desc fu d2">
             Zapewniamy kompleksową obsługę muzyczną dla każdego typu wydarzenia —
             od kameralnych przyjęć po wielkie imprezy plenerowe.
           </p>
         </section>
 
         {/* ── EVENT TYPES ── */}
-        <section className="mu-section" style={{ paddingBottom:"5rem" }}>
-          <p className="sec-lbl">Typy wydarzeń</p>
-          <h2 className="sec-title">Dla kogo gramy</h2>
-          <p className="sec-sub" style={{ marginBottom:"2.5rem" }}>
-            Dostosowujemy repertuar, sprzęt i styl prowadzenia do konkretnego wydarzenia.
-          </p>
+        <section className="mu-wrap" style={{ paddingBottom:"5rem" }}>
+          <div className="fl d1">
+            <div className="mu-eyebrow">Typy wydarzeń</div>
+            <h2 className="mu-sec-title">Dla kogo gramy</h2>
+            <p className="mu-sec-sub">
+              Dostosowujemy repertuar, sprzęt i styl prowadzenia do konkretnego wydarzenia.
+            </p>
+          </div>
+
           <div className="mu-event-grid">
-            {EVENTS.map((e) => (
-              <div key={e.key} className="mu-card">
+            {musicData.services.map((service: any, i: number) => (
+              <div key={service.key} className="mu-card fu" style={{ animationDelay:`${0.08 + i * 0.1}s` }}>
                 <div className="mu-card-hd">
-                  <div className="mu-card-title">{e.title}</div>
-                  <div className="mu-card-desc">{e.desc}</div>
+                  <div className="mu-card-icon" style={{ animationDelay:`${i * 1.2}s` }}>
+                    {service.key === 'studniowki' ? '' : service.key === 'wesela' ? '' : service.key === 'urodziny' ? '' : service.key === 'firmowe' ? '' : service.key === 'bale' ? '' : service.key === 'swiateczne' ? '' : ''}
+                  </div>
+                  <div className="mu-card-title">{service.title}</div>
+                  <div className="mu-card-desc">{service.description}</div>
                 </div>
                 <div className="mu-card-ft">
-                  {e.features.map((f) => (
+                  {service.features.map((f: any) => (
                     <div key={f} className="mu-feat">
                       <div className="mu-check">
-                        <svg width="7" height="7" viewBox="0 0 10 10" fill="none">
+                        <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
                           <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </div>
@@ -226,26 +444,25 @@ export default function MusicPage() {
           </div>
         </section>
 
-        <div className="mu-section" style={{ paddingBottom:"4rem" }}>
-          <div className="div-h"/>
+        {/* Divider */}
+        <div className="mu-wrap" style={{ paddingBottom:"4rem" }}>
+          <div className="mu-divider"/>
         </div>
 
         {/* ── EQUIPMENT ── */}
-        <section className="mu-section" style={{ paddingBottom:"5rem" }}>
-          <p className="sec-lbl">Sprzęt i zaplecze</p>
-          <h2 className="sec-title">Profesjonalne wyposażenie</h2>
-          <p className="sec-sub" style={{ marginBottom:"2.5rem" }}>
-            Przywozimy wszystko co potrzebne — montujemy, obsługujemy i demontujemy.
-          </p>
+        <section className="mu-wrap" style={{ paddingBottom:"5rem" }}>
+          <div className="fl d1">
+            <div className="mu-eyebrow">Sprzęt i zaplecze</div>
+            <h2 className="mu-sec-title">Profesjonalne wyposażenie</h2>
+            <p className="mu-sec-sub">
+              Przywozimy wszystko co potrzebne — montujemy, obsługujemy i demontujemy.
+            </p>
+          </div>
+
           <div className="mu-eq-grid">
-            {EQUIPMENT.map((eq) => (
-              <div key={eq.title} className="mu-eq-cell">
-                <div className="mu-eq-icon">
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-                    <circle cx="10" cy="10" r="3" fill="#ff4fa3"/>
-                    <circle cx="10" cy="10" r="7" stroke="#ff4fa3" strokeOpacity="0.4" strokeWidth="1.5"/>
-                  </svg>
-                </div>
+            {EQUIPMENT.map((eq, i) => (
+              <div key={eq.title} className="mu-eq-cell fu" style={{ animationDelay:`${0.1 + i * 0.09}s` }}>
+                <div className="mu-eq-icon-box">{eq.icon}</div>
                 <div className="mu-eq-title">{eq.title}</div>
                 <div className="mu-eq-desc">{eq.desc}</div>
               </div>
@@ -253,40 +470,24 @@ export default function MusicPage() {
           </div>
         </section>
 
-        <div className="mu-section" style={{ paddingBottom:"4rem" }}>
-          <div className="div-h"/>
+        {/* Divider */}
+        <div className="mu-wrap" style={{ paddingBottom:"4rem" }}>
+          <div className="mu-divider"/>
         </div>
 
         {/* ── CTA ── */}
-        <section className="mu-section" style={{ paddingBottom:"8rem" }}>
-          <div style={{
-            borderRadius:"1.25rem",
-            border:"1px solid rgba(240,23,122,0.18)",
-            background:"rgba(255,255,255,0.025)",
-            padding:"3.5rem 2.5rem", textAlign:"center",
-            position:"relative", overflow:"hidden",
-          }}>
+        <section className="mu-wrap" style={{ paddingBottom:"8rem" }}>
+          <div className="mu-cta fu d2">
             <div style={{
               position:"absolute", inset:0, pointerEvents:"none",
-              background:"radial-gradient(ellipse 70% 80% at 50% 120%,rgba(240,23,122,0.1) 0%,transparent 65%)",
+              background:"radial-gradient(ellipse 70% 80% at 50% 110%,rgba(240,23,122,0.1) 0%,transparent 65%)",
             }}/>
-            <h2 style={{
-              fontFamily:"var(--font-display)", fontSize:"clamp(1.6rem,3.5vw,2.4rem)",
-              fontWeight:700, color:"#fff", lineHeight:1.1,
-              letterSpacing:"-0.02em", marginBottom:"0.875rem", position:"relative",
-            }}>
-              Chcesz wyjątkową oprawę muzyczną?
-            </h2>
-            <p style={{
-              color:"rgba(255,255,255,0.5)", fontSize:"0.95rem", lineHeight:1.75,
-              maxWidth:"420px", margin:"0 auto 2rem", position:"relative",
-            }}>
+            <h2 className="mu-cta-title">Chcesz wyjątkową oprawę muzyczną?</h2>
+            <p className="mu-cta-desc">
               Skontaktuj się z nami — omówimy szczegóły, dobierzemy repertuar
               i&nbsp;przygotujemy wycenę.
             </p>
-            <a href="/kontakt" className="btn-p" style={{ position:"relative" }}>
-              Wyślij zapytanie →
-            </a>
+            <a href="/kontakt" className="mu-btn">Wyślij zapytanie →</a>
           </div>
         </section>
 

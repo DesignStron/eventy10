@@ -9,24 +9,28 @@ export default function AdminHomePage() {
   const [offer, setOffer] = useState<OfferData | null>(null);
   const [gallery, setGallery] = useState<GalleryData | null>(null);
   const [contact, setContact] = useState<ContactData | null>(null);
+  const [music, setMusic] = useState<any>(null);
 
   useEffect(() => {
     void (async () => {
-      const [o, g, c] = await Promise.all([
+      const [o, g, c, m] = await Promise.all([
         fetch("/api/oferta").then((r) => r.json()),
         fetch("/api/galeria").then((r) => r.json()),
         fetch("/api/kontakt").then((r) => r.json()),
+        fetch("/api/oprawa-muzyczna").then((r) => r.json()),
       ]);
       setOffer(o as OfferData);
       setGallery(g as GalleryData);
       setContact(c as ContactData);
+      setMusic(m);
     })();
   }, []);
 
   const stats = [
     { label: "Oferta", value: offer ? offer.sections.length : null, sub: "sekcje do edycji", href: "/admin/oferta", icon: "✦" },
+    { label: "Oprawa muzyczna", value: music ? music.services.length : null, sub: "usługi do edycji", href: "/admin/oprawa-muzyczna", icon: "" },
     { label: "Galeria", value: gallery ? gallery.images.length : null, sub: "zdjęcia", href: "/admin/galeria", icon: "◻" },
-    { label: "Formularze", value: contact ? contact.messages.length : null, sub: "zgłoszenia", href: "/admin/wiadomosci", icon: "◎" },
+    { label: "Formularze", value: contact ? contact.messages.length : null, sub: "zgłoszenia", href: "/admin/kontakt", icon: "◎" },
   ];
 
   return (
@@ -39,8 +43,8 @@ export default function AdminHomePage() {
           display: block;
           padding: 1.5rem;
           border-radius: 1.25rem;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           text-decoration: none;
           transition: all 200ms ease;
         }
@@ -59,27 +63,27 @@ export default function AdminHomePage() {
           font-weight: 700;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           margin-bottom: 0.5rem;
         }
         .dash-stat-value {
           font-size: 2rem;
           font-weight: 700;
-          color: #fff;
+          color: var(--text);
           line-height: 1;
           font-family: var(--font-display);
         }
         .dash-stat-sub {
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
           margin-top: 0.35rem;
         }
         .dash-tip {
           margin-top: 1.25rem;
           padding: 1.25rem 1.5rem;
           border-radius: 1.25rem;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           display: flex;
           gap: 1rem;
           align-items: flex-start;
@@ -92,22 +96,22 @@ export default function AdminHomePage() {
         .dash-tip-title {
           font-size: 0.8rem;
           font-weight: 700;
-          color: rgba(255,255,255,0.7);
+          color: var(--text);
           margin-bottom: 0.35rem;
         }
         .dash-tip-body {
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
           line-height: 1.7;
         }
         .dash-mono {
           display: inline-block;
           padding: 0.1rem 0.4rem;
           border-radius: 0.35rem;
-          background: rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
           font-family: var(--font-mono);
           font-size: 0.7rem;
-          color: rgba(255,255,255,0.6);
+          color: var(--text-secondary);
         }
       `}</style>
 

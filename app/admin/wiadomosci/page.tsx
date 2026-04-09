@@ -38,8 +38,8 @@ export default function AdminMessagesPage() {
           .am-layout { grid-template-columns: 1fr 2fr; gap: 2rem; }
         }
         .am-panel {
-          background: rgba(0,0,0,0.8);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           border-radius: 1.25rem;
           padding: 1rem;
         }
@@ -48,7 +48,7 @@ export default function AdminMessagesPage() {
           font-weight: 700;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           margin-bottom: 1rem;
         }
         .am-list { display: flex; flex-direction: column; gap: 0.4rem; }
@@ -70,7 +70,7 @@ export default function AdminMessagesPage() {
         .am-item-name {
           font-size: 0.875rem;
           font-weight: 600;
-          color: #fff;
+          color: var(--text);
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -78,7 +78,7 @@ export default function AdminMessagesPage() {
         }
         .am-item-date {
           font-size: 0.7rem;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           margin-top: 0.2rem;
         }
         .am-status {
@@ -89,21 +89,22 @@ export default function AdminMessagesPage() {
           font-weight: 700;
           letter-spacing: 0.04em;
           text-transform: uppercase;
-          background: rgba(255,255,255,0.07);
-          color: rgba(255,255,255,0.4);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           flex-shrink: 0;
         }
         .am-item.active .am-status {
           background: rgba(240,23,122,0.2);
-          color: #ff4fa3;
+          color: var(--pink-light);
         }
         .am-empty {
           padding: 1.5rem 1rem;
           text-align: center;
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           border-radius: 0.75rem;
-          border: 1px dashed rgba(255,255,255,0.08);
+          border: 1px dashed var(--border);
         }
         .am-preview-row {
           display: flex;
@@ -117,22 +118,22 @@ export default function AdminMessagesPage() {
         .am-preview-name {
           font-size: 1rem;
           font-weight: 700;
-          color: #fff;
+          color: var(--text);
           margin-bottom: 0.25rem;
         }
         .am-preview-sub {
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.45);
+          color: var(--text-secondary);
           line-height: 1.6;
         }
         .am-date-badge {
           display: inline-block;
           padding: 0.375rem 0.75rem;
           border-radius: 0.625rem;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface);
+          border: 1px solid var(--border);
           font-size: 0.72rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
           white-space: nowrap;
           flex-shrink: 0;
           font-family: var(--font-mono);
@@ -149,12 +150,12 @@ export default function AdminMessagesPage() {
           font-weight: 700;
           letter-spacing: 0.1em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-muted);
           margin-bottom: 0.75rem;
         }
         .am-message-text {
           font-size: 0.875rem;
-          color: rgba(255,255,255,0.75);
+          color: var(--text);
           line-height: 1.8;
           white-space: pre-wrap;
         }
@@ -187,29 +188,29 @@ export default function AdminMessagesPage() {
           justify-content: center;
           height: 2.5rem;
           border-radius: 9999px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.65);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 0.8rem;
           font-weight: 600;
           text-decoration: none;
           transition: all 200ms ease;
         }
-        .am-btn-outline:hover { background: rgba(255,255,255,0.09); color: #fff; }
+        .am-btn-outline:hover { background: var(--surface-elevated); color: var(--text); }
         .am-form-link {
           display: inline-flex;
           align-items: center;
           padding: 0.3rem 0.75rem;
           border-radius: 9999px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.4);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 0.7rem;
           font-weight: 600;
           text-decoration: none;
           transition: all 180ms ease;
         }
-        .am-form-link:hover { color: rgba(255,255,255,0.7); }
+        .am-form-link:hover { color: var(--text); }
       `}</style>
 
       <div className="am-layout">

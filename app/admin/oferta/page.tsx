@@ -14,8 +14,17 @@ type SaveState =
 function labelForKey(key: OfferKey) {
   if (key === "urodziny") return "Urodziny";
   if (key === "szkolne") return "Szkolne";
-  return "Firmowe";
+  if (key === "firmowe") return "Firmowe";
+  if (key === "animacje") return "Animacje";
+  if (key === "komunie") return "Komunie";
+  if (key === "wesela") return "Wesela";
+  if (key === "pikniki") return "Pikniki";
+  if (key === "bale") return "Bale";
+  if (key === "mikolajki") return "Mikołajki";
+  return key;
 }
+
+const ALL_KEYS: OfferKey[] = ["urodziny", "szkolne", "firmowe", "animacje", "komunie", "wesela", "pikniki", "bale", "mikolajki"];
 
 export default function AdminOfferPage() {
   const [data, setData] = useState<OfferData | null>(null);
@@ -40,6 +49,47 @@ export default function AdminOfferPage() {
       return {
         ...prev,
         sections: prev.sections.map((s) => (s.key === key ? { ...s, ...patch } : s)),
+      };
+    });
+  }
+
+  function addNewSection() {
+    if (!data) return;
+    
+    // Find available keys
+    const usedKeys = new Set(data.sections.map(s => s.key));
+    const availableKey = ALL_KEYS.find(key => !usedKeys.has(key));
+    
+    if (!availableKey) {
+      setSave({ state: "error", message: "Wszystkie kategorie są już dodane." });
+      return;
+    }
+    
+    const newSection: OfferSection = {
+      key: availableKey,
+      title: `Nowa oferta - ${labelForKey(availableKey)}`,
+      description: "Opis nowej oferty...",
+      price: "0 PLN",
+      bullets: ["Usługa 1", "Usługa 2"]
+    };
+    
+    setData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: [...prev.sections, newSection]
+      };
+    });
+  }
+
+  function removeSection(key: OfferKey) {
+    if (!data) return;
+    
+    setData(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        sections: prev.sections.filter(s => s.key !== key)
       };
     });
   }
@@ -74,8 +124,8 @@ export default function AdminOfferPage() {
     >
       <style>{`
         .ao-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           border-radius: 1.25rem;
           padding: 1.5rem;
         }
@@ -96,17 +146,17 @@ export default function AdminOfferPage() {
         .ao-section-title {
           font-size: 0.875rem;
           font-weight: 700;
-          color: #fff;
+          color: var(--text);
         }
         .ao-key-pill {
           display: inline-block;
           padding: 0.2rem 0.6rem;
           border-radius: 9999px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--surface);
+          border: 1px solid var(--border);
           font-size: 0.65rem;
           font-weight: 700;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
           font-family: var(--font-mono);
           letter-spacing: 0.04em;
         }
@@ -125,22 +175,22 @@ export default function AdminOfferPage() {
           gap: 0.4rem;
           font-size: 0.8rem;
           font-weight: 600;
-          color: rgba(255,255,255,0.5);
+          color: var(--text-secondary);
         }
         .ao-input {
           height: 2.75rem;
           width: 100%;
           border-radius: 0.75rem;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--surface);
+          border: 1px solid var(--border);
           padding: 0 1rem;
           font-size: 0.875rem;
-          color: #fff;
+          color: var(--text);
           outline: none;
           transition: border-color 180ms ease, background 180ms ease;
           box-sizing: border-box;
         }
-        .ao-input::placeholder { color: rgba(255,255,255,0.2); }
+        .ao-input::placeholder { color: var(--text-muted); }
         .ao-input:focus {
           border-color: rgba(240,23,122,0.5);
           background: rgba(240,23,122,0.06);
@@ -149,11 +199,11 @@ export default function AdminOfferPage() {
           width: 100%;
           min-height: 7rem;
           border-radius: 0.75rem;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--surface);
+          border: 1px solid var(--border);
           padding: 0.75rem 1rem;
           font-size: 0.875rem;
-          color: #fff;
+          color: var(--text);
           outline: none;
           resize: vertical;
           transition: border-color 180ms ease, background 180ms ease;
@@ -167,7 +217,7 @@ export default function AdminOfferPage() {
         .ao-bullets-label {
           font-size: 0.8rem;
           font-weight: 600;
-          color: rgba(255,255,255,0.5);
+          color: var(--text-secondary);
           margin-bottom: 0.5rem;
         }
         .ao-bullets-grid {
@@ -190,9 +240,9 @@ export default function AdminOfferPage() {
           margin-top: 1rem;
           padding: 0.75rem 1rem;
           border-radius: 0.75rem;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.6);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 0.8rem;
           font-weight: 500;
         }
@@ -240,9 +290,14 @@ export default function AdminOfferPage() {
               {data ? `Ostatnia aktualizacja: ${new Date(data.updatedAt).toLocaleString()}` : "Wczytywanie…"}
             </div>
           </div>
-          <button onClick={onSave} disabled={!data || save.state === "saving"} className="ao-btn-save">
-            {save.state === "saving" ? "Zapisywanie…" : "Zapisz zmiany"}
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <button onClick={addNewSection} disabled={!data || save.state === "saving"} className="ao-btn-save" style={{ background: "linear-gradient(135deg, #10b981, #059669)" }}>
+              + Dodaj ofertę
+            </button>
+            <button onClick={onSave} disabled={!data || save.state === "saving"} className="ao-btn-save">
+              {save.state === "saving" ? "Zapisywanie…" : "Zapisz zmiany"}
+            </button>
+          </div>
         </div>
 
         {save.state === "error" && <div className="ao-msg-error">{save.message}</div>}
@@ -253,7 +308,12 @@ export default function AdminOfferPage() {
             <div key={s.key} className="ao-section">
               <div className="ao-section-header">
                 <span className="ao-section-title">{labelForKey(s.key)}</span>
-                <span className="ao-key-pill">{s.key}</span>
+                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                  <span className="ao-key-pill">{s.key}</span>
+                  <button onClick={() => removeSection(s.key)} disabled={save.state === "saving"} className="ao-btn-save" style={{ background: "linear-gradient(135deg, #ef4444, #dc2626)", height: "2rem", padding: "0 1rem", fontSize: "0.75rem" }}>
+                    Usuń
+                  </button>
+                </div>
               </div>
 
               <div className="ao-grid">
@@ -269,8 +329,8 @@ export default function AdminOfferPage() {
                 <label className="ao-label">
                   Cena od (zł)
                   <input
-                    value={s.priceFromPLN}
-                    onChange={(e) => updateSection(s.key, { priceFromPLN: Number(e.target.value || 0) })}
+                    value={s.price}
+                    onChange={(e) => updateSection(s.key, { price: e.target.value })}
                     inputMode="numeric"
                     className="ao-input"
                   />

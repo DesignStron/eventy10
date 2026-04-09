@@ -44,7 +44,22 @@ export default function RootLayout({
       lang="pl"
       className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable}`}
       style={{ height: "100%" }}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const theme = localStorage.getItem('theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', theme);
+                document.documentElement.classList.toggle('theme-light', theme === 'light');
+                document.documentElement.classList.toggle('theme-dark', theme === 'dark');
+              })();
+            `,
+          }}
+        />
+      </head>
       <body style={{ minHeight: "100%", display: "flex", flexDirection: "column", margin: 0 }}>
         <SiteHeader />
         <main style={{ flex: 1 }}>{children}</main>

@@ -7,8 +7,9 @@ import { useState } from "react";
 const NAV = [
   { href: "/admin", label: "Pulpit", icon: "◈" },
   { href: "/admin/oferta", label: "Oferta", icon: "✦" },
+  { href: "/admin/oprawa-muzyczna", label: "Oprawa muzyczna", icon: "" },
   { href: "/admin/galeria", label: "Galeria", icon: "◻" },
-  { href: "/admin/wiadomosci", label: "Formularze", icon: "◎" },
+  { href: "/admin/kontakt", label: "Kontakt", icon: "" },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -29,7 +30,7 @@ export default function AdminShell({
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <div style={{ background: "#060508", minHeight: "100vh" }}>
+    <div style={{ background: "var(--surface)", minHeight: "100vh" }}>
       <style>{`
         .as-topbar {
           display: flex;
@@ -65,14 +66,14 @@ export default function AdminShell({
           font-family: var(--font-display);
           font-size: 1.25rem;
           font-weight: 700;
-          color: #fff;
+          color: var(--text);
           letter-spacing: -0.02em;
           margin: 0;
         }
         .as-page-desc {
           margin-top: 0.375rem;
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
           line-height: 1.65;
           max-width: 36rem;
         }
@@ -133,8 +134,8 @@ export default function AdminShell({
         /* sidebar */
         .as-sidebar {
           border-radius: 1.25rem;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           padding: 0.875rem;
           position: sticky;
           top: 6rem;
@@ -144,7 +145,7 @@ export default function AdminShell({
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.25);
+          color: var(--text-muted);
           padding: 0.25rem 0.5rem;
           margin-bottom: 0.5rem;
         }
@@ -158,18 +159,18 @@ export default function AdminShell({
           font-weight: 500;
           text-decoration: none;
           transition: all 180ms ease;
-          color: rgba(255,255,255,0.55);
+          color: var(--text-secondary);
           border: 1px solid transparent;
           margin-bottom: 0.2rem;
         }
         .as-nav-link:hover {
-          background: rgba(255,255,255,0.06);
-          color: rgba(255,255,255,0.85);
+          background: var(--surface-elevated);
+          color: var(--text);
         }
         .as-nav-link.active {
           background: rgba(240,23,122,0.12);
           border-color: rgba(240,23,122,0.25);
-          color: #ff4fa3;
+          color: var(--pink-light);
           font-weight: 700;
         }
         .as-nav-icon {
@@ -190,7 +191,7 @@ export default function AdminShell({
           background: rgba(240,23,122,0.05);
           border: 1px solid rgba(240,23,122,0.12);
           font-size: 0.7rem;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           line-height: 1.6;
         }
       `}</style>

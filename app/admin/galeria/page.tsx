@@ -1,15 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 
 import AdminShell from "@/components/admin/admin-shell";
+import { supabase } from "@/lib/supabase";
 import type { GalleryData, OfferKey } from "@/lib/types";
 
 type CreateState = {
   title: string;
   url: string;
   category: OfferKey | "inne";
+  file?: File;
 };
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -24,6 +26,7 @@ export default function AdminGalleryPage() {
   const [form, setForm] = useState<CreateState>({ title: "", url: "", category: "inne" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     void (async () => {
@@ -33,23 +36,102 @@ export default function AdminGalleryPage() {
     })();
   }, []);
 
-  const canAdd = useMemo(() => form.title.trim() && form.url.trim(), [form]);
+  const canAdd = useMemo(() => form.title.trim() && (form.url.trim() || form.file), [form]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setForm(prev => ({ ...prev, file }));
+    }
+  };
+
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    console.log('📤 Starting upload for:', file.name, 'Size:', file.size, 'Type:', file.type);
+    
+    try {
+      // Create unique filename
+      const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
+      
+      // Upload to Supabase Storage directly as File
+      const { data, error } = await supabase.storage
+        .from('gallery-images')
+        .upload(fileName, file, {
+          contentType: file.type,
+          cacheControl: '3600',
+          upsert: false
+        });
+      
+      if (error) {
+        console.error('❌ Supabase storage upload error:', error);
+        throw error;
+      }
+      
+      // Get public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('gallery-images')
+        .getPublicUrl(fileName);
+      
+      console.log('✅ Upload completed, public URL:', publicUrl);
+      return publicUrl;
+    } catch (error) {
+      console.error('❌ Upload error:', error);
+      throw error;
+    }
+  };
 
   async function addImage() {
     setError(null);
-    if (!canAdd) { setError("Uzupełnij tytuł i URL zdjęcia."); return; }
+    if (!canAdd) { setError("Uzupełnij tytuł i wybierz plik lub podaj URL."); return; }
     setBusy(true);
     try {
+      let imageUrl = form.url;
+      
+      console.log('🔍 Debug - form state:', {
+        title: form.title,
+        url: form.url,
+        category: form.category,
+        hasFile: !!form.file,
+        fileName: form.file?.name
+      });
+      
+      // If file is selected, upload it first
+      if (form.file && !form.url) {
+        console.log('📤 Uploading file:', form.file.name);
+        imageUrl = await uploadToCloudinary(form.file);
+        console.log('✅ Upload completed, URL:', imageUrl);
+      }
+      
+      const submitData = {
+        title: form.title,
+        url: imageUrl,
+        category: form.category
+      };
+      
+      console.log('📤 Submitting data:', submitData);
+      
       const res = await fetch("/api/galeria", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(submitData),
       });
       const json = (await res.json()) as GalleryData;
-      if (!res.ok) { setError("Nie udało się dodać zdjęcia."); return; }
+      console.log('📥 API response:', { status: res.status, data: json });
+      
+      if (!res.ok) { 
+        console.error('❌ API error response:', json);
+        setError("Nie udało się dodać zdjęcia."); 
+        return; 
+      }
+      
+      console.log('✅ Image added successfully');
       setData(json);
       setForm({ title: "", url: "", category: "inne" });
-    } catch {
+      // Clear file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('❌ Add image error:', error);
       setError("Błąd połączenia.");
     } finally {
       setBusy(false);
@@ -78,8 +160,8 @@ export default function AdminGalleryPage() {
     >
       <style>{`
         .ag-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.08);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           border-radius: 1.25rem;
           padding: 1.5rem;
         }
@@ -88,7 +170,7 @@ export default function AdminGalleryPage() {
           font-weight: 700;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.45);
+          color: var(--text-secondary);
           margin-bottom: 1.25rem;
         }
         .ag-label {
@@ -97,25 +179,29 @@ export default function AdminGalleryPage() {
           gap: 0.4rem;
           font-size: 0.8rem;
           font-weight: 600;
-          color: rgba(255,255,255,0.6);
+          color: var(--text-secondary);
         }
         .ag-input {
           height: 2.75rem;
           width: 100%;
           border-radius: 0.75rem;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--surface);
+          border: 1px solid var(--border);
           padding: 0 1rem;
           font-size: 0.875rem;
-          color: #fff;
+          color: var(--text);
           outline: none;
           transition: border-color 180ms ease, background 180ms ease;
           box-sizing: border-box;
         }
-        .ag-input::placeholder { color: rgba(255,255,255,0.25); }
+        .ag-input::placeholder { color: var(--text-muted); }
         .ag-input:focus {
           border-color: rgba(240,23,122,0.5);
           background: rgba(240,23,122,0.06);
+        }
+        .ag-input option {
+          background: var(--surface);
+          color: var(--text);
         }
         .ag-input-grid {
           display: grid;
@@ -132,7 +218,7 @@ export default function AdminGalleryPage() {
           border-radius: 0.75rem;
           background: rgba(240,23,122,0.1);
           border: 1px solid rgba(240,23,122,0.3);
-          color: #ff4fa3;
+          color: var(--pink-light);
           font-size: 0.8rem;
           font-weight: 500;
         }
@@ -164,9 +250,9 @@ export default function AdminGalleryPage() {
           height: 2.5rem;
           padding: 0 1.25rem;
           border-radius: 9999px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.65);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 0.8rem;
           font-weight: 600;
           text-decoration: none;
@@ -174,8 +260,8 @@ export default function AdminGalleryPage() {
           white-space: nowrap;
         }
         .ag-btn-outline:hover {
-          background: rgba(255,255,255,0.09);
-          color: #fff;
+          background: var(--surface-elevated);
+          color: var(--text);
         }
         .ag-img-grid {
           display: grid;
@@ -188,23 +274,23 @@ export default function AdminGalleryPage() {
         .ag-img-card {
           border-radius: 1rem;
           overflow: hidden;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
           transition: border-color 200ms ease;
         }
-        .ag-img-card:hover { border-color: rgba(255,255,255,0.14); }
+        .ag-img-card:hover { border-color: var(--border); }
         .ag-img-meta { padding: 0.875rem 1rem; }
         .ag-img-title {
           font-size: 0.875rem;
           font-weight: 600;
-          color: #fff;
+          color: var(--text);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
         }
         .ag-img-id {
           font-size: 0.65rem;
-          color: rgba(255,255,255,0.28);
+          color: var(--text-muted);
           margin-top: 0.2rem;
           font-family: var(--font-mono);
         }
@@ -216,9 +302,9 @@ export default function AdminGalleryPage() {
           height: 2.25rem;
           margin-top: 0.75rem;
           border-radius: 0.625rem;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.08);
-          color: rgba(255,255,255,0.5);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 0.75rem;
           font-weight: 600;
           cursor: pointer;
@@ -227,7 +313,7 @@ export default function AdminGalleryPage() {
         .ag-btn-delete:hover:not(:disabled) {
           background: rgba(240,23,122,0.12);
           border-color: rgba(240,23,122,0.3);
-          color: #ff4fa3;
+          color: var(--pink-light);
         }
         .ag-btn-delete:disabled { opacity: 0.4; cursor: not-allowed; }
         .ag-pill {
@@ -236,7 +322,7 @@ export default function AdminGalleryPage() {
           border-radius: 9999px;
           background: rgba(240,23,122,0.15);
           border: 1px solid rgba(240,23,122,0.25);
-          color: #ff4fa3;
+          color: var(--pink-light);
           font-size: 0.6rem;
           font-weight: 700;
           letter-spacing: 0.06em;
@@ -249,6 +335,33 @@ export default function AdminGalleryPage() {
           border: 1px dashed rgba(240,23,122,0.2);
           background: rgba(240,23,122,0.03);
           margin-top: 1.25rem;
+        }
+        .ag-file-input {
+          height: 2.75rem;
+          width: 100%;
+          border-radius: 0.75rem;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          padding: 0 1rem;
+          font-size: 0.875rem;
+          color: var(--text);
+          outline: none;
+          transition: border-color 180ms ease, background 180ms ease;
+          box-sizing: border-box;
+          cursor: pointer;
+        }
+        .ag-file-input:hover {
+          border-color: rgba(240,23,122,0.5);
+          background: rgba(240,23,122,0.06);
+        }
+        .ag-file-input::file-selector-button {
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
+          color: var(--text);
+          padding: 0.25rem 0.75rem;
+          border-radius: 0.375rem;
+          margin-right: 0.5rem;
+          cursor: pointer;
         }
       `}</style>
 
@@ -293,6 +406,22 @@ export default function AdminGalleryPage() {
                 placeholder="https://images.unsplash.com/..."
               />
             </label>
+
+            <label className="ag-label span-2">
+              Lub wybierz plik z komputera
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileSelect}
+                className="ag-file-input"
+              />
+              {form.file && (
+                <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginTop: "0.25rem" }}>
+                  Wybrano: {form.file.name} ({Math.round(form.file.size / 1024)}KB)
+                </div>
+              )}
+            </label>
           </div>
 
           {error && <div className="ag-error">{error}</div>}
@@ -317,7 +446,7 @@ export default function AdminGalleryPage() {
           >
             <div>
               <div className="ag-section-title" style={{ marginBottom: "0.1rem" }}>Lista zdjęć</div>
-              <div style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.35)" }}>
+              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                 {data ? `${data.images.length} elementów` : "Wczytywanie…"}
               </div>
             </div>
@@ -364,10 +493,10 @@ export default function AdminGalleryPage() {
           {data && data.images.length === 0 && (
             <div className="ag-empty">
               <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>📸</div>
-              <div style={{ fontWeight: 700, color: "#fff", fontSize: "0.9rem", marginBottom: "0.35rem" }}>
+              <div style={{ fontWeight: 700, color: "var(--text)", fontSize: "0.9rem", marginBottom: "0.35rem" }}>
                 Brak zdjęć
               </div>
-              <div style={{ fontSize: "0.8rem", color: "rgba(255,255,255,0.4)" }}>
+              <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
                 Dodaj pierwsze zdjęcie powyżej.
               </div>
             </div>
