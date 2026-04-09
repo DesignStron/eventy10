@@ -36,7 +36,7 @@ export default function AdminHomePage() {
   return (
     <AdminShell
       title="Pulpit"
-      description="Podgląd danych demo. Przejdź do sekcji, aby edytować treści."
+      description="Zarządzaj treścią strony. Przejdź do sekcji, aby edytować dane."
     >
       <style>{`
         .dash-stat {
@@ -78,41 +78,6 @@ export default function AdminHomePage() {
           color: var(--text-secondary);
           margin-top: 0.35rem;
         }
-        .dash-tip {
-          margin-top: 1.25rem;
-          padding: 1.25rem 1.5rem;
-          border-radius: 1.25rem;
-          background: var(--surface-elevated);
-          border: 1px solid var(--border);
-          display: flex;
-          gap: 1rem;
-          align-items: flex-start;
-        }
-        .dash-tip-icon {
-          font-size: 1.1rem;
-          flex-shrink: 0;
-          margin-top: 0.1rem;
-        }
-        .dash-tip-title {
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: var(--text);
-          margin-bottom: 0.35rem;
-        }
-        .dash-tip-body {
-          font-size: 0.8rem;
-          color: var(--text-secondary);
-          line-height: 1.7;
-        }
-        .dash-mono {
-          display: inline-block;
-          padding: 0.1rem 0.4rem;
-          border-radius: 0.35rem;
-          background: var(--surface-elevated);
-          font-family: var(--font-mono);
-          font-size: 0.7rem;
-          color: var(--text-secondary);
-        }
       `}</style>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
@@ -126,16 +91,6 @@ export default function AdminHomePage() {
         ))}
       </div>
 
-      <div className="dash-tip">
-        <span className="dash-tip-icon">💡</span>
-        <div>
-          <div className="dash-tip-title">Wersja demo</div>
-          <div className="dash-tip-body">
-            Panel działa bez autoryzacji. Dane zapisują się lokalnie w folderze{" "}
-            <span className="dash-mono">data/</span> — możesz je podmienić lub podpiąć pod prawdziwą bazę.
-          </div>
-        </div>
-      </div>
     </AdminShell>
   );
 }

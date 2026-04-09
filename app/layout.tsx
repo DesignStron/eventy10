@@ -43,7 +43,7 @@ export default function RootLayout({
     <html
       lang="pl"
       className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable}`}
-      style={{ height: "100%" }}
+      style={{ height: "100vh", width: "100%" }}
       suppressHydrationWarning
     >
       <head>
@@ -60,7 +60,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body style={{ minHeight: "100%", display: "flex", flexDirection: "column", margin: 0 }}>
+      <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column", margin: 0, overflowX: "hidden" }}>
         <SiteHeader />
         <main style={{ flex: 1 }}>{children}</main>
         <SiteFooter />

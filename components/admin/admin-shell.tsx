@@ -184,16 +184,6 @@ export default function AdminShell({
           font-size: 0.7rem;
           opacity: 0.4;
         }
-        .as-nav-tip {
-          margin-top: 0.75rem;
-          padding: 0.75rem;
-          border-radius: 0.75rem;
-          background: rgba(240,23,122,0.05);
-          border: 1px solid rgba(240,23,122,0.12);
-          font-size: 0.7rem;
-          color: var(--text-muted);
-          line-height: 1.6;
-        }
       `}</style>
 
       <div style={{ maxWidth: "75rem", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
@@ -203,7 +193,7 @@ export default function AdminShell({
           <div>
             <div className="as-badge">
               <span className="as-dot" />
-              Panel admina · Demo
+              Panel admina
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
               <h1 className="as-page-title">{title}</h1>
@@ -247,9 +237,6 @@ export default function AdminShell({
                 );
               })}
             </nav>
-            <div className="as-nav-tip">
-              Dane zapisywane lokalnie w <code style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "rgba(255,255,255,0.5)" }}>data/</code>. Zmiany widoczne na stronie publicznej.
-            </div>
           </aside>
 
           {/* Content */}
