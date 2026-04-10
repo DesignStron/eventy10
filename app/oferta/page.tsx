@@ -3,6 +3,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 export const metadata = { title: "Oferta" };
+export const dynamic = 'force-dynamic';
 
 const FALLBACK: OfferData = { updatedAt: new Date().toISOString(), sections: [] };
 

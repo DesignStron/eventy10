@@ -40,11 +40,23 @@ export default function AdminOfferPage() {
   const [showUrlInput, setShowUrlInput] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    void (async () => {
-      const res = await fetch("/api/oferta");
-      const json = (await res.json()) as OfferData;
-      setData(json);
-    })();
+    const fetchData = async () => {
+      try {
+        const res = await fetch("/api/oferta");
+        const json = (await res.json()) as OfferData;
+        setData(json);
+      } catch (error) {
+        // Silent error handling
+      }
+    };
+
+    // Initial fetch
+    fetchData();
+
+    // Refresh every 5 seconds
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const canSave = useMemo(() => {

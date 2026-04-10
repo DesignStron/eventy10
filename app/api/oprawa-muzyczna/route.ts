@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { revalidatePath } from 'next/cache'
 
 type MusicService = {
   key: string;
@@ -36,6 +37,10 @@ export async function GET() {
       image: item.image || ''
     }))
 
+    // Revalidate cache for public pages
+    revalidatePath('/oprawa-muzyczna');
+    revalidatePath('/admin/oprawa-muzyczna');
+    
     return NextResponse.json({
       updatedAt: new Date().toISOString(),
       services
@@ -54,6 +59,10 @@ export async function PUT(request: NextRequest) {
     if (!services || !Array.isArray(services)) {
       return NextResponse.json({ error: 'Invalid services data' }, { status: 400 })
     }
+
+    // Revalidate cache before updating
+    revalidatePath('/oprawa-muzyczna')
+    revalidatePath('/admin/oprawa-muzyczna')
 
     // Clear existing data
     const { error: deleteError } = await supabase

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { revalidatePath } from 'next/cache'
 import { OfferData, OfferSection } from '@/lib/types'
 
 export async function GET() {
@@ -25,6 +26,10 @@ export async function GET() {
       images: item.images || []
     }))
 
+    // Revalidate cache for public pages
+    revalidatePath('/oferta');
+    revalidatePath('/admin/oferta');
+    
     return NextResponse.json({
       updatedAt: new Date().toISOString(),
       sections
@@ -43,6 +48,10 @@ export async function PUT(request: NextRequest) {
     if (!sections || !Array.isArray(sections)) {
       return NextResponse.json({ error: 'Invalid sections data' }, { status: 400 })
     }
+
+    // Revalidate cache before updating
+    revalidatePath('/oferta')
+    revalidatePath('/admin/oferta')
 
     // Clear existing data
     const { error: deleteError } = await supabase

@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 
 export const metadata = { title: "Oprawa muzyczna" };
+export const dynamic = 'force-dynamic';
 
 const EQUIPMENT = [
   { icon:"", title:"Nagłośnienie",    desc:"Systemy głośnikowe dostosowane do wielkości i charakteru pomieszczenia." },

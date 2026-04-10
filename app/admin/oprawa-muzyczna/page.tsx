@@ -82,7 +82,7 @@ export default function AdminMusicPage() {
   const [showUrlInput, setShowUrlInput] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    void (async () => {
+    const fetchData = async () => {
       try {
         const res = await fetch("/api/oprawa-muzyczna");
         if (res.ok) {
@@ -96,13 +96,17 @@ export default function AdminMusicPage() {
           });
         }
       } catch (error) {
-        console.error("Failed to fetch music data:", error);
         setData({
           updatedAt: new Date().toISOString(),
           services: DEFAULT_SERVICES
         });
       }
-    })();
+    };
+
+    // Refresh every 5 seconds
+    const interval = setInterval(fetchData, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const canSave = useMemo(() => {
