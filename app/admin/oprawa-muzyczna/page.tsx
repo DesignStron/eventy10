@@ -103,10 +103,7 @@ export default function AdminMusicPage() {
       }
     };
 
-    // Refresh every 5 seconds
-    const interval = setInterval(fetchData, 5000);
-
-    return () => clearInterval(interval);
+    // No auto-refresh - only fetch on mount
   }, []);
 
   const canSave = useMemo(() => {

@@ -52,11 +52,6 @@ export default function AdminOfferPage() {
 
     // Initial fetch
     fetchData();
-
-    // Refresh every 5 seconds
-    const interval = setInterval(fetchData, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const canSave = useMemo(() => {
