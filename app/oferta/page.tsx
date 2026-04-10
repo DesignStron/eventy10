@@ -103,10 +103,12 @@ export default async function OfferPage() {
 
   const sections: OfferSection[] = (dbData || []).map((item: any) => ({
     key: item.key,
+    keyLabel: item.keyLabel || item.key,
     title: item.title,
     description: item.description,
-    price: item.price,
+    price: item.price || "",
     bullets: item.bullets || [],
+    images: item.images || [],
   }));
 
   const offerData: OfferData = { updatedAt: new Date().toISOString(), sections };
