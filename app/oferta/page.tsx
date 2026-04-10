@@ -540,6 +540,145 @@ export default async function OfferPage() {
           background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.22);
           color:var(--pink);
         }
+
+        /* ═══════════════════════════════════════════════════════════════
+           RESPONSIVE STYLES - MOBILE OPTIMIZATION
+           ═══════════════════════════════════════════════════════════════ */
+        @media (max-width: 768px) {
+          /* Kontener strony */
+          .page-bg > div { padding: 4rem 1rem 5rem !important; }
+
+          /* Hero section */
+          .offer-hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem) !important; line-height: 1.15 !important; }
+          .offer-hero-title br { display: none; }
+          .offer-hero-desc { font-size: 0.9rem !important; max-width: 100% !important; }
+
+          /* Nawigacja - scrollowane pille */
+          .offer-nav-wrap {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            padding-bottom: 0.5rem !important;
+            gap: 0.4rem !important;
+          }
+          .offer-nav-wrap::-webkit-scrollbar { display: none; }
+          .offer-nav-pill {
+            flex-shrink: 0 !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 0.8rem !important;
+          }
+
+          /* Karty ofert */
+          .offer-card { border-radius: 1.25rem !important; }
+
+          /* Header karty - układ pionowy na mobilnych */
+          .offer-card-head {
+            padding: 1.5rem 1.25rem 1.25rem !important;
+            flex-direction: column !important;
+            gap: 1rem !important;
+          }
+          .offer-card-head-inner { width: 100% !important; }
+
+          /* Ikona i badge */
+          .offer-icon-box {
+            width: 2.75rem !important;
+            height: 2.75rem !important;
+          }
+
+          /* Tytuł karty */
+          .offer-title {
+            font-size: clamp(1.25rem, 5vw, 1.6rem) !important;
+            line-height: 1.2 !important;
+            margin-bottom: 0.5rem !important;
+          }
+
+          /* Opis karty */
+          .offer-desc {
+            font-size: 0.85rem !important;
+            line-height: 1.6 !important;
+            max-width: 100% !important;
+          }
+
+          /* CENA - kluczowa poprawka */
+          .offer-price-box {
+            width: 100% !important;
+            min-width: unset !important;
+            padding: 1rem 1.25rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 0.75rem !important;
+          }
+          .offer-price-label {
+            font-size: 0.65rem !important;
+            margin-bottom: 0 !important;
+          }
+          .offer-price-value {
+            font-size: 1.5rem !important;
+          }
+
+          /* Bullety - jedna kolumna */
+          .offer-bullets {
+            padding: 1.25rem !important;
+            grid-template-columns: 1fr !important;
+            gap: 0.5rem !important;
+          }
+          .offer-bullet {
+            padding: 0.75rem 0.9rem !important;
+          }
+          .offer-bullet-text {
+            font-size: 0.8rem !important;
+            line-height: 1.45 !important;
+          }
+
+          /* CTA przyciski - pełna szerokość */
+          .offer-cta-row {
+            padding: 1.25rem !important;
+            flex-direction: column !important;
+            gap: 0.6rem !important;
+          }
+          .offer-btn-primary,
+          .offer-btn-ghost {
+            width: 100% !important;
+            justify-content: center !important;
+            height: 2.6rem !important;
+            font-size: 0.8rem !important;
+          }
+
+          /* Bottom CTA */
+          .offer-bottom-cta {
+            padding: 2.5rem 1.5rem !important;
+            margin-top: 2.5rem !important;
+          }
+          .offer-bottom-cta-title { font-size: clamp(1.3rem, 5vw, 1.8rem) !important; }
+          .offer-bottom-cta-desc { font-size: 0.85rem !important; }
+        }
+
+        /* Bardzo małe ekrany - poniżej 380px */
+        @media (max-width: 380px) {
+          .offer-title { font-size: 1.15rem !important; }
+          .offer-price-value { font-size: 1.25rem !important; }
+          .offer-icon-box {
+            width: 2.5rem !important;
+            height: 2.5rem !important;
+          }
+          .offer-badge {
+            font-size: 0.55rem !important;
+            padding: 0.25rem 0.65rem !important;
+          }
+        }
+
+        /* Tablety - medium screens */
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .offer-card-head {
+            padding: 2rem 1.75rem 1.75rem !important;
+          }
+          .offer-bullets {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+        }
       `}</style>
 
       <div className="page-bg noise offerta-page">
