@@ -59,7 +59,7 @@ export async function PUT(request: NextRequest) {
     const { error: deleteError } = await supabase
       .from('music_services')
       .delete()
-      .neq('id', 0)
+      .neq('key', 'impossible-key-that-does-not-exist')
 
     if (deleteError) {
       console.error('Music DELETE error:', deleteError)

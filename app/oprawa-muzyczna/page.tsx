@@ -496,7 +496,20 @@ export default async function MusicPage() {
               <div key={service.key} className="mu-card fu" style={{ animationDelay:`${0.08 + i * 0.1}s` }}>
                 <div className="mu-card-hd">
                   <div className="mu-card-icon" style={{ animationDelay:`${i * 1.2}s` }}>
-                    {service.key === 'studniowki' ? '' : service.key === 'wesela' ? '' : service.key === 'urodziny' ? '' : service.key === 'firmowe' ? '' : service.key === 'bale' ? '' : service.key === 'swiateczne' ? '' : ''}
+                    {service.image ? (
+                      <img 
+                        src={service.image} 
+                        alt={service.title}
+                        style={{ 
+                          width: "100%", 
+                          height: "100%", 
+                          objectFit: "cover",
+                          borderRadius: "0.875rem"
+                        }}
+                      />
+                    ) : (
+                      service.key === 'studniowki' ? '🎓' : service.key === 'wesela' ? '💍' : service.key === 'urodziny' ? '🎂' : service.key === 'firmowe' ? '💼' : service.key === 'bale' ? '🎭' : service.key === 'swiateczne' ? '✨' : '🎵'
+                    )}
                   </div>
                   <div className="mu-card-title">{service.title}</div>
                   <div className="mu-card-desc">{service.description}</div>

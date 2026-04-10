@@ -27,11 +27,12 @@ const CAT_ICONS: Record<string, string> = {
 };
 
 function SectionCard({ s }: { s: OfferSection }) {
-  const label = CAT_LABELS[s.key] ?? s.key;
-  const icon  = CAT_ICONS[s.key] ?? "✦";
+  const label = CAT_LABELS[s.category] ?? s.categoryLabel ?? s.key;
+  const icon  = CAT_ICONS[s.category] ?? CAT_ICONS[s.key] ?? "✦";
+  const firstImage = s.images?.[0];
 
   return (
-    <article id={s.key} className="offer-card" style={{ scrollMarginTop:"6rem" }}>
+    <article id={s.key} className="offer-card">
       <style>{`
         #${s.key}:hover { border-color:rgba(240,23,122,0.3) !important; box-shadow:0 24px 80px rgba(240,23,122,0.1), 0 4px 24px rgba(0,0,0,0.25) !important; }
         html[data-theme="light"] #${s.key}:hover { border-color:rgba(240,23,122,0.35) !important; box-shadow:0 24px 80px rgba(240,23,122,0.12), 0 4px 24px rgba(0,0,0,0.08) !important; }
@@ -42,7 +43,20 @@ function SectionCard({ s }: { s: OfferSection }) {
         <div className="offer-card-head-inner">
           <div style={{ display:"flex", alignItems:"center", gap:"1rem", marginBottom:"1rem" }}>
             <div className="offer-icon-box">
-              <span style={{ fontSize:"1.3rem" }}>{icon}</span>
+              {firstImage ? (
+                <img 
+                  src={firstImage} 
+                  alt={s.title}
+                  style={{ 
+                    width: "100%", 
+                    height: "100%", 
+                    objectFit: "cover",
+                    borderRadius: "1rem"
+                  }}
+                />
+              ) : (
+                <span style={{ fontSize:"1.3rem" }}>{icon}</span>
+              )}
             </div>
             <span className="offer-badge">{label}</span>
           </div>
@@ -84,16 +98,64 @@ function SectionCard({ s }: { s: OfferSection }) {
   );
 }
 
-const NAV_ITEMS = [
-  { key:"urodziny",         label:"Urodziny",          icon:"🎂" },
-  { key:"animacje",         label:"Animacje",           icon:"🎪" },
-  { key:"komunie",          label:"Komunie",            icon:"✨" },
-  { key:"wesela",           label:"Wesela",             icon:"💍" },
-  { key:"pikniki",          label:"Pikniki",            icon:"🌿" },
-  { key:"bale",             label:"Bale",               icon:"🎭" },
-  { key:"mikolajki",        label:"Mikołajki",          icon:"🎅" },
-  { key:"oprawa-muzyczna",  label:"Oprawa muzyczna",    icon:"🎵", href:"/oprawa-muzyczna" },
-];
+type NavItem = {
+  key: string;
+  label: string;
+  icon: string;
+  href?: string;
+};
+
+// Dynamiczne nav items - beda generowane z bazy danych
+const getNavItems = (sections: OfferSection[]): NavItem[] => {
+  const categoryIcons: Record<string, string> = {
+    urodziny: "🎂",
+    animacje: "🎪",
+    komunie: "✨",
+    wesela: "💍",
+    pikniki: "🌿",
+    bale: "🎭",
+    mikolajki: "🎅",
+    oferta: "📦"
+  };
+  
+  // Unikalne kategorie z bazy - ale dla 'oferta' pokaz wszystkie oferty
+  const categoryMap = new Map<string, NavItem[]>();
+  
+  sections.forEach(s => {
+    const navItem: NavItem = {
+      key: s.key, // Użyj pełnego key dla linku
+      label: s.categoryLabel || s.title,
+      icon: categoryIcons[s.category] || "✦"
+    };
+    
+    if (!categoryMap.has(s.category)) {
+      categoryMap.set(s.category, []);
+    }
+    categoryMap.get(s.category)!.push(navItem);
+  });
+  
+  // Zbierz wszystkie nav items
+  const allNavItems: NavItem[] = [];
+  
+  categoryMap.forEach((items, category) => {
+    if (category === 'oferta') {
+      // Dla 'oferta' dodaj wszystkie osobno
+      allNavItems.push(...items);
+    } else {
+      // Dla innych kategorii dodaj tylko pierwszą (unikalna)
+      allNavItems.push(items[0]);
+    }
+  });
+  
+  // Sortuj alfabetycznie
+  const sortedCategories = allNavItems.sort((a, b) => a.label.localeCompare(b.label));
+  
+  // Dodaj always oprawa muzyczna na koncu
+  return [
+    ...sortedCategories,
+    { key: "oprawa-muzyczna", label: "Oprawa muzyczna", icon: "🎵", href: "/oprawa-muzyczna" }
+  ];
+};
 
 export default async function OfferPage() {
   const { data: dbData, error } = await supabase
@@ -103,7 +165,8 @@ export default async function OfferPage() {
 
   const sections: OfferSection[] = (dbData || []).map((item: any) => ({
     key: item.key,
-    keyLabel: item.keyLabel || item.key,
+    category: item.category || item.key,
+    categoryLabel: item.category_label || item.keyLabel || item.key,
     title: item.title,
     description: item.description,
     price: item.price || "",
@@ -507,7 +570,7 @@ export default async function OfferPage() {
 
             {/* Nav pills */}
             <div className="offer-nav-wrap fu d3">
-              {NAV_ITEMS.map((n) => (
+              {getNavItems(sections).map((n) => (
                 <a
                   key={n.key}
                   href={n.href ?? `#${n.key}`}

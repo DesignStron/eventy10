@@ -1,8 +1,9 @@
 export type OfferKey = "urodziny" | "szkolne" | "firmowe" | "animacje" | "komunie" | "wesela" | "pikniki" | "bale" | "mikolajki";
 
 export type OfferSection = {
-  key: string;
-  keyLabel: string;
+  key: string; // ID for internal use (e.g., oferta-1234567890)
+  category: string; // Category slug (e.g., urodziny, wesela)
+  categoryLabel: string; // Display name (e.g., Urodziny, Wesela)
   title: string;
   description: string;
   price: string;

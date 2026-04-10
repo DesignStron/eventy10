@@ -20,6 +20,21 @@ const nextConfig: NextConfig = {
         hostname: "qbcjyecssttdmvmtswcy.supabase.co",
         pathname: "/storage/v1/object/public/**",
       },
+      {
+        protocol: "https",
+        hostname: "scontent-waw2-2.xx.fbcdn.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "scontent-*.fbcdn.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "fbcdn.net",
+        pathname: "/**",
+      },
     ],
   },
 };

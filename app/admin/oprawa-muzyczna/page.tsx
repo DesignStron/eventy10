@@ -78,6 +78,8 @@ const DEFAULT_SERVICES: MusicService[] = [
 export default function AdminMusicPage() {
   const [data, setData] = useState<MusicData | null>(null);
   const [save, setSave] = useState<SaveState>({ state: "idle" });
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [showUrlInput, setShowUrlInput] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     void (async () => {
@@ -145,7 +147,7 @@ export default function AdminMusicPage() {
       if (!prev) return prev;
       return {
         ...prev,
-        services: [...prev.services, newService]
+        services: [newService, ...prev.services]
       };
     });
   }
@@ -160,6 +162,62 @@ export default function AdminMusicPage() {
         services: prev.services.filter(s => s.key !== key)
       };
     });
+  }
+
+  async function handleImageUpload(key: string, file: File) {
+    if (!file) return;
+    setUploading(key);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const json = await res.json();
+      if (res.ok && json.url) {
+        setData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            services: prev.services.map((s) =>
+              s.key === key ? { ...s, image: json.url } : s
+            )
+          };
+        });
+      } else {
+        setSave({ state: "error", message: "Błąd uploadu zdjęcia" });
+      }
+    } catch {
+      setSave({ state: "error", message: "Błąd uploadu zdjęcia" });
+    } finally {
+      setUploading(null);
+    }
+  }
+
+  async function handleImageUrl(key: string, imageUrl: string) {
+    if (!imageUrl.trim()) return;
+    setUploading(key);
+    try {
+      const formData = new FormData();
+      formData.append("imageUrl", imageUrl.trim());
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const json = await res.json();
+      if (res.ok && json.url) {
+        setData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            services: prev.services.map((s) =>
+              s.key === key ? { ...s, image: json.url } : s
+            )
+          };
+        });
+      } else {
+        setSave({ state: "error", message: "Błąd dodawania linku do zdjęcia" });
+      }
+    } catch {
+      setSave({ state: "error", message: "Błąd dodawania linku do zdjęcia" });
+    } finally {
+      setUploading(null);
+    }
   }
 
   async function onSave() {
@@ -438,15 +496,68 @@ export default function AdminMusicPage() {
                     />
                   </label>
 
-                  <label className="am-label am-span-2">
-                    Zdjęcie (URL)
-                    <input
-                      value={service.image || ""}
-                      onChange={(e) => updateService(service.key, { image: e.target.value })}
-                      className="am-input"
-                      placeholder="https://example.com/image.jpg"
-                    />
-                  </label>
+                  <div className="am-label am-span-2">
+                    <span>Zdjęcie</span>
+                    <div className="am-upload-options" style={{ marginTop: "0.5rem" }}>
+                      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                        <button 
+                          className={`ao-upload-type-btn ${!showUrlInput[service.key] ? 'active' : ''}`}
+                          onClick={() => setShowUrlInput(prev => ({ ...prev, [service.key]: false }))}
+                          style={{ flex: 1 }}
+                        >
+                          📁 Z komputera
+                        </button>
+                        <button 
+                          className={`ao-upload-type-btn ${showUrlInput[service.key] ? 'active' : ''}`}
+                          onClick={() => setShowUrlInput(prev => ({ ...prev, [service.key]: true }))}
+                          style={{ flex: 1 }}
+                        >
+                          🔗 Z linku
+                        </button>
+                      </div>
+                      
+                      {!showUrlInput[service.key] ? (
+                        <label className="ao-upload-btn">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: "none" }}
+                            onChange={(e) => e.target.files?.[0] && handleImageUpload(service.key, e.target.files[0])}
+                          />
+                          {uploading === service.key ? "Przesyłanie..." : "Wybierz plik"}
+                        </label>
+                      ) : (
+                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                          <input
+                            type="text"
+                            placeholder="Wklej link do zdjęcia..."
+                            className="am-input"
+                            style={{ flex: 1 }}
+                            onKeyPress={(e) => {
+                              if (e.key === 'Enter') {
+                                e.currentTarget.blur();
+                                handleImageUrl(service.key, e.currentTarget.value);
+                                e.currentTarget.value = '';
+                              }
+                            }}
+                          />
+                          <button
+                            className="am-btn-add"
+                            onClick={(e) => {
+                              const input = e.currentTarget.parentElement?.querySelector('input');
+                              if (input?.value.trim()) {
+                                handleImageUrl(service.key, input.value);
+                                input.value = '';
+                              }
+                            }}
+                            disabled={uploading === service.key}
+                          >
+                            Dodaj
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
 
                   <label className="am-label am-span-2">
                     Opis

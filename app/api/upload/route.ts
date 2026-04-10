@@ -5,7 +5,20 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
+    const imageUrl = formData.get('imageUrl') as string
 
+    // Handle URL input
+    if (imageUrl && !file) {
+      // Validate URL
+      try {
+        new URL(imageUrl)
+        return NextResponse.json({ url: imageUrl })
+      } catch {
+        return NextResponse.json({ error: 'Invalid image URL' }, { status: 400 })
+      }
+    }
+
+    // Handle file upload
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
@@ -23,11 +36,11 @@ export async function POST(request: NextRequest) {
     // Generate unique filename
     const ext = file.name.split('.').pop() || 'jpg'
     const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${ext}`
-    const path = `offers/${filename}`
+    const path = `offer-images/${filename}`
 
     // Upload to Supabase Storage
     const { error: uploadError } = await supabase.storage
-      .from('images')
+      .from('offer-images')
       .upload(path, file, {
         contentType: file.type,
         upsert: false
@@ -40,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     // Get public URL
     const { data: { publicUrl } } = supabase.storage
-      .from('images')
+      .from('offer-images')
       .getPublicUrl(path)
 
     return NextResponse.json({ url: publicUrl })

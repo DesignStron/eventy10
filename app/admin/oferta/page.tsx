@@ -11,7 +11,8 @@ type SaveState =
 
 type OfferSection = {
   key: string;
-  keyLabel: string;
+  category: string;
+  categoryLabel: string;
   title: string;
   description: string;
   price: string;
@@ -36,6 +37,7 @@ export default function AdminOfferPage() {
   const [editingKey, setEditingKey] = useState<string | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<DeleteConfirm>({ show: false, key: "", title: "" });
   const [uploading, setUploading] = useState<string | null>(null);
+  const [showUrlInput, setShowUrlInput] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     void (async () => {
@@ -62,19 +64,26 @@ export default function AdminOfferPage() {
 
   function addNewSection() {
     if (!data) return;
-    const newKey = `oferta-${Date.now()}`;
+    
+    // Proste dodanie - domyślna kategoria
+    const selectedKey = "oferta";
+    const selectedLabel = "Nowa oferta";
+    const newKey = `${selectedKey}-${Date.now()}`;
+    
     const newSection: OfferSection = {
       key: newKey,
-      keyLabel: "Nowa kategoria",
-      title: "Tytuł oferty",
+      category: selectedKey,
+      categoryLabel: selectedLabel,
+      title: "Tytuł nowej oferty",
       description: "Opis nowej oferty...",
       price: "0 PLN",
       bullets: ["Usługa 1"],
       images: []
     };
+    
     setData((prev) => {
       if (!prev) return prev;
-      return { ...prev, sections: [...prev.sections, newSection] };
+      return { ...prev, sections: [newSection, ...prev.sections] };
     });
     setEditingKey(newKey);
   }
@@ -144,6 +153,34 @@ export default function AdminOfferPage() {
       }
     } catch {
       setSave({ state: "error", message: "Błąd uploadu zdjęcia" });
+    } finally {
+      setUploading(null);
+    }
+  }
+
+  async function handleImageUrl(key: string, imageUrl: string) {
+    if (!imageUrl.trim()) return;
+    setUploading(key);
+    try {
+      const formData = new FormData();
+      formData.append("imageUrl", imageUrl.trim());
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const json = await res.json();
+      if (res.ok && json.url) {
+        setData((prev) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            sections: prev.sections.map((s) =>
+              s.key === key ? { ...s, images: [...(s.images || []), json.url] } : s
+            )
+          };
+        });
+      } else {
+        setSave({ state: "error", message: "Błąd dodawania linku do zdjęcia" });
+      }
+    } catch {
+      setSave({ state: "error", message: "Błąd dodawania linku do zdjęcia" });
     } finally {
       setUploading(null);
     }
@@ -571,7 +608,7 @@ export default function AdminOfferPage() {
             return (
               <div key={s.key} className={`ao-section ${isEditing ? "editing" : ""} ${isLocked ? "readonly" : ""}`}>
                 <div className="ao-section-header">
-                  <span className="ao-section-title">{s.keyLabel || s.title}</span>
+                  <span className="ao-section-title">{s.categoryLabel || s.title}</span>
                   <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                     <span className="ao-key-pill">{s.key}</span>
                     <button 
@@ -582,7 +619,7 @@ export default function AdminOfferPage() {
                       {isEditing ? "Zakończ edycję" : "Edytuj"}
                     </button>
                     <button 
-                      onClick={() => askRemoveSection(s.key, s.keyLabel || s.title)} 
+                      onClick={() => askRemoveSection(s.key, s.categoryLabel || s.title)} 
                       disabled={save.state === "saving"} 
                       className="ao-btn-delete"
                     >
@@ -596,8 +633,8 @@ export default function AdminOfferPage() {
                     <label className="ao-label">
                       Nazwa kategorii (widoczna w menu)
                       <input
-                        value={s.keyLabel}
-                        onChange={(e) => updateSection(s.key, { keyLabel: e.target.value })}
+                        value={s.categoryLabel}
+                        onChange={(e) => updateSection(s.key, { categoryLabel: e.target.value })}
                         className="ao-input"
                         placeholder="Np. Urodziny, Wesela..."
                       />
@@ -638,15 +675,65 @@ export default function AdminOfferPage() {
                           </div>
                         ))}
                       </div>
-                      <label className="ao-upload-btn">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          style={{ display: "none" }}
-                          onChange={(e) => e.target.files?.[0] && handleFileUpload(s.key, e.target.files[0])}
-                        />
-                        {uploading === s.key ? "Przesyłanie..." : "+ Dodaj zdjęcie"}
-                      </label>
+                      <div className="ao-upload-options" style={{ marginTop: "0.5rem" }}>
+                        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                          <button 
+                            className={`ao-upload-type-btn ${!showUrlInput[s.key] ? 'active' : ''}`}
+                            onClick={() => setShowUrlInput(prev => ({ ...prev, [s.key]: false }))}
+                            style={{ flex: 1 }}
+                          >
+                            📁 Z komputera
+                          </button>
+                          <button 
+                            className={`ao-upload-type-btn ${showUrlInput[s.key] ? 'active' : ''}`}
+                            onClick={() => setShowUrlInput(prev => ({ ...prev, [s.key]: true }))}
+                            style={{ flex: 1 }}
+                          >
+                            🔗 Z linku
+                          </button>
+                        </div>
+                        
+                        {!showUrlInput[s.key] ? (
+                          <label className="ao-upload-btn">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              style={{ display: "none" }}
+                              onChange={(e) => e.target.files?.[0] && handleFileUpload(s.key, e.target.files[0])}
+                            />
+                            {uploading === s.key ? "Przesyłanie..." : "Wybierz plik"}
+                          </label>
+                        ) : (
+                          <div style={{ display: "flex", gap: "0.5rem" }}>
+                            <input
+                              type="text"
+                              placeholder="Wklej link do zdjęcia..."
+                              className="ao-input"
+                              style={{ flex: 1 }}
+                              onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                  e.currentTarget.blur();
+                                  handleImageUrl(s.key, e.currentTarget.value);
+                                  e.currentTarget.value = '';
+                                }
+                              }}
+                            />
+                            <button
+                              className="ao-btn-add"
+                              onClick={(e) => {
+                                const input = e.currentTarget.parentElement?.querySelector('input');
+                                if (input?.value.trim()) {
+                                  handleImageUrl(s.key, input.value);
+                                  input.value = '';
+                                }
+                              }}
+                              disabled={uploading === s.key}
+                            >
+                              Dodaj
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     <label className="ao-label span-2">

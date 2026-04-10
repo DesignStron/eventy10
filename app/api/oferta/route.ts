@@ -16,7 +16,8 @@ export async function GET() {
 
     const sections: OfferSection[] = (data || []).map(item => ({
       key: item.key,
-      keyLabel: item.key_label || item.title,
+      category: item.category || item.key,
+      categoryLabel: item.category_label || item.key_label || item.title,
       title: item.title,
       description: item.description,
       price: item.price,
@@ -47,7 +48,7 @@ export async function PUT(request: NextRequest) {
     const { error: deleteError } = await supabase
       .from('offer')
       .delete()
-      .neq('id', 0) // Delete all records
+      .neq('key', 'impossible-key-that-does-not-exist') // Delete all records
 
     if (deleteError) {
       console.error('Offer DELETE error:', deleteError)
@@ -57,7 +58,8 @@ export async function PUT(request: NextRequest) {
     // Insert new data
     const offerData = sections.map(section => ({
       key: section.key,
-      key_label: section.keyLabel,
+      category: section.category || section.key,
+      category_label: section.categoryLabel,
       title: section.title,
       description: section.description,
       price: section.price,
