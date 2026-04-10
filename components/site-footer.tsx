@@ -123,19 +123,19 @@ export default function SiteFooter() {
           {/* brand */}
           <div>
             <Link href="/" style={{ display:"inline-flex",alignItems:"center",gap:"0.65rem",textDecoration:"none",marginBottom:"1.1rem" }}>
-              <div className="ft-logo-mark">RE</div>
+              <div className="ft-logo-mark">PP</div>
               <div>
-                <div style={{ fontFamily:"var(--font-display)",fontWeight:700,fontSize:"1rem",color:"var(--text)",lineHeight:1.2,letterSpacing:"-0.02em" }}>
-                  Różowy Event
+                <div style={{ fontFamily:"var(--font-display)",fontWeight:700,fontSize:"1rem",color:"var(--text)",lineHeight:1.6,letterSpacing:"-0.02em",padding:"2px 0" }}>
+                  Pinky Party
                 </div>
-                <div style={{ fontSize:"0.57rem",color:"var(--text-muted)",letterSpacing:"0.1em",textTransform:"uppercase",fontWeight:500 }}>
-                  Organizacja imprez
+                <div style={{ fontSize:"0.57rem",color:"var(--text-muted)",letterSpacing:"0.1em",textTransform:"uppercase",fontWeight:500,lineHeight:1.6 }}>
+                  Animacje & Eventy
                 </div>
               </div>
             </Link>
 
             <p style={{ color:"var(--text-secondary)",fontSize:"0.84rem",lineHeight:1.8,maxWidth:"21rem" }}>
-              Tworzymy niezapomniane wydarzenia z&nbsp;energią i&nbsp;klasą —
+              Tworzymy niezapomniane wydarzenia z&nbsp;energią i&nbsp;klasą -
               od urodzin dla dzieci po imprezy firmowe i&nbsp;szkolne.
             </p>
 
@@ -181,8 +181,8 @@ export default function SiteFooter() {
             <div className="ft-col-title">Kontakt</div>
 
             {[
-              { lbl:"Telefon", val:"+48 000 000 000", href:"tel:+48000000000" },
-              { lbl:"E-mail",  val:"kontakt@rozowyevent.pl", href:"mailto:kontakt@rozowyevent.pl" },
+              { lbl:"Telefon", val:"+48 792 987 499", href:"tel:+48792987499" },
+              { lbl:"E-mail",  val:"pinkyparty.eventy@gmail.com", href:"mailto:pinkyparty.eventy@gmail.com" },
               { lbl:"Obszar",  val:"Łódź i okolice", href:null },
             ].map((c) => (
               <div key={c.lbl} style={{ marginBottom:"0.875rem" }}>
@@ -194,20 +194,52 @@ export default function SiteFooter() {
               </div>
             ))}
 
-            <div style={{
-              marginTop:"1.1rem", display:"inline-flex", alignItems:"center", gap:"0.5rem",
-              padding:"0.5rem 0.8rem", borderRadius:"0.625rem",
-              background:"var(--surface-elevated)", border:"1px solid var(--border)",
-            }}>
-              <span style={{ fontSize:"0.9rem" }}>⚡</span>
-              <div>
-                <div style={{ fontSize:"0.62rem",fontWeight:700,color:"var(--pink)",letterSpacing:"0.04em",textTransform:"uppercase" }}>
-                  Szybka odpowiedź
-                </div>
-                <div style={{ fontSize:"0.68rem",color:"var(--text-muted)" }}>
-                  Wycena w 24h
-                </div>
+            {/* Social Media */}
+            <div style={{ marginTop:"1.1rem" }}>
+              <div className="ft-contact-lbl" style={{ marginBottom:"0.5rem" }}>Social Media</div>
+              <div style={{ display:"flex", gap:"0.5rem" }}>
+                <a 
+                  href="https://www.instagram.com/pinkyparty.eventy" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    width:"2.2rem", height:"2.2rem", borderRadius:"0.5rem",
+                    background:"var(--surface-elevated)", border:"1px solid var(--border)",
+                    fontSize:"1rem", textDecoration:"none", transition:"all 180ms ease"
+                  }}
+                  title="Instagram"
+                >📷</a>
+                <a 
+                  href="https://www.facebook.com/pinkyparty.eventy" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    width:"2.2rem", height:"2.2rem", borderRadius:"0.5rem",
+                    background:"var(--surface-elevated)", border:"1px solid var(--border)",
+                    fontSize:"1rem", textDecoration:"none", transition:"all 180ms ease"
+                  }}
+                  title="Facebook"
+                >📘</a>
+                <a 
+                  href="https://www.youtube.com/@PinkyPartyAnimacjeEventy" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{
+                    display:"flex", alignItems:"center", justifyContent:"center",
+                    width:"2.2rem", height:"2.2rem", borderRadius:"0.5rem",
+                    background:"var(--surface-elevated)", border:"1px solid var(--border)",
+                    fontSize:"1rem", textDecoration:"none", transition:"all 180ms ease"
+                  }}
+                  title="YouTube"
+                >▶️</a>
               </div>
+            </div>
+
+            {/* NIP/REGON */}
+            <div style={{ marginTop:"0.75rem", fontSize:"0.65rem", color:"var(--text-muted)" }}>
+              NIP: 8961648798 | REGON: 540977001
             </div>
           </div>
         </div>
@@ -217,10 +249,10 @@ export default function SiteFooter() {
 
       <div className="ft-bottom">
         <div style={{ fontSize:"0.75rem",color:"var(--text-muted)" }}>
-          © {new Date().getFullYear()} Różowy Event. Wszelkie prawa zastrzeżone.
+          © {new Date().getFullYear()} Pinky Party Animacje & Eventy. Wszelkie prawa zastrzeżone.
         </div>
         <div style={{ fontSize:"0.7rem",color:"var(--text-muted)",fontFamily:"var(--font-mono)" }}>
-          Projekt i realizacja — z pasją
+          Projekt i realizacja - z pasją
         </div>
       </div>
     </footer>

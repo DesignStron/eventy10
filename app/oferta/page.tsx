@@ -1,5 +1,6 @@
 import type { OfferData, OfferSection } from "@/lib/types";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export const metadata = { title: "Oferta" };
 
@@ -95,9 +96,20 @@ const NAV_ITEMS = [
 ];
 
 export default async function OfferPage() {
-  const res = await fetch('http://localhost:3000/api/oferta', { cache: 'no-store' });
-  const data = await res.json();
-  const offerData: OfferData = data || FALLBACK;
+  const { data: dbData, error } = await supabase
+    .from('offer')
+    .select('*')
+    .order('created_at', { ascending: true });
+
+  const sections: OfferSection[] = (dbData || []).map((item: any) => ({
+    key: item.key,
+    title: item.title,
+    description: item.description,
+    price: item.price,
+    bullets: item.bullets || [],
+  }));
+
+  const offerData: OfferData = { updatedAt: new Date().toISOString(), sections };
 
   return (
     <>
@@ -351,7 +363,7 @@ export default async function OfferPage() {
         .offer-hero-title {
           font-family:var(--font-display);
           font-size:clamp(2.6rem,5.5vw,4.5rem);
-          font-weight:700; line-height:1.06; letter-spacing:-0.03em;
+          font-weight:700; line-height:1.25; letter-spacing:-0.03em;
           color:#fff; margin:0 0 1.5rem;
         }
         html[data-theme="light"] .offer-hero-title { color:#0d0b10; }
@@ -487,7 +499,7 @@ export default async function OfferPage() {
             </h1>
 
             <p className="offer-hero-desc fu d2">
-              Specjalizujemy się w różnych typach wydarzeń — od przyjęć prywatnych
+              Specjalizujemy się w różnych typach wydarzeń - od przyjęć prywatnych
               po eventy firmowe. Każdą usługę dopasowujemy indywidualnie.
             </p>
 
@@ -510,7 +522,7 @@ export default async function OfferPage() {
           <div className="offer-divider"/>
 
           {/* ── SECTIONS HEADER ── */}
-          {data.sections.length > 0 && (
+          {offerData.sections.length > 0 && (
             <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"2rem", flexWrap:"wrap", gap:"1rem" }}>
               <div>
                 <div className="offer-section-eyebrow">Nasze usługi</div>
@@ -550,7 +562,7 @@ export default async function OfferPage() {
                       </div>
                       <h2 className="offer-title">{label}</h2>
                       <p className="offer-desc">
-                        Treść tej sekcji zostanie uzupełniona — skontaktuj się, aby dowiedzieć się więcej.
+                        Treść tej sekcji zostanie uzupełniona - skontaktuj się, aby dowiedzieć się więcej.
                       </p>
                     </div>
                   </div>
@@ -583,7 +595,7 @@ export default async function OfferPage() {
             }}/>
             <h2 className="offer-bottom-cta-title">Nie widzisz tego czego szukasz?</h2>
             <p className="offer-bottom-cta-desc">
-              Skontaktuj się z nami — organizujemy również niestandardowe wydarzenia.
+              Skontaktuj się z nami - organizujemy również niestandardowe wydarzenia.
             </p>
             <Link href="/kontakt" className="offer-btn-primary" style={{
               display:"inline-flex", alignItems:"center", gap:"0.5rem",

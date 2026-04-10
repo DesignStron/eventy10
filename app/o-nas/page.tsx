@@ -4,7 +4,7 @@ const VALUES = [
   {
     icon: "✦",
     title: "Dopasowanie do grupy",
-    desc: "Każde wydarzenie projektujemy od zera — biorąc pod uwagę wiek, charakter i oczekiwania uczestników.",
+    desc: "Każde wydarzenie projektujemy od zera - biorąc pod uwagę wiek, charakter i oczekiwania uczestników.",
     gradient: "from-pink-500/20 to-rose-500/10",
   },
   {
@@ -16,7 +16,7 @@ const VALUES = [
   {
     icon: "◉",
     title: "Sprawna logistyka",
-    desc: "Przejmujemy pełną odpowiedzialność — od planowania po realizację. Ty tylko cieszysz się imprezą.",
+    desc: "Przejmujemy pełną odpowiedzialność - od planowania po realizację. Ty tylko cieszysz się imprezą.",
     gradient: "from-rose-500/20 to-pink-400/10",
   },
   {
@@ -38,7 +38,7 @@ const PROCESS = [
   { n: "01", title: "Konsultacja",   desc: "Rozmawiamy o Twoich potrzebach, grupie docelowej i budżecie.", color: "#f0177a" },
   { n: "02", title: "Koncepcja",     desc: "Przygotowujemy indywidualny scenariusz wydarzenia i wycenę.",  color: "#e0156e" },
   { n: "03", title: "Przygotowanie", desc: "Kompletujemy atrakcje, sprzęt i koordynujemy wszystkie szczegóły.", color: "#d01462" },
-  { n: "04", title: "Realizacja",    desc: "Przyjeżdżamy i prowadzimy event — profesjonalnie i z pełną energią.", color: "#c01256" },
+  { n: "04", title: "Realizacja",    desc: "Przyjeżdżamy i prowadzimy event - profesjonalnie i z pełną energią.", color: "#c01256" },
 ];
 
 export default function AboutPage() {
@@ -127,7 +127,7 @@ export default function AboutPage() {
         .hero-title {
           font-family:var(--font-display);
           font-size:clamp(2.8rem,6.5vw,5.5rem);
-          font-weight:700; color:#fff; line-height:1.04;
+          font-weight:700; color:#fff; line-height:1.25;
           letter-spacing:-0.03em; margin-bottom:1.5rem;
         }
         html[data-theme="light"] .hero-title { color:#0d0b10; }
@@ -559,7 +559,7 @@ export default function AboutPage() {
 
           {/* Description */}
           <p className="hero-desc fu d3">
-            Różowy Event to zespół z ponad 10-letnim doświadczeniem w organizacji
+            Pinky Party to zespół z ponad 10-letnim doświadczeniem w organizacji
             imprez dla dzieci, firm i instytucji. Robimy to z pełnym zaangażowaniem
             i dbałością o każdy detal.
           </p>
@@ -621,7 +621,7 @@ export default function AboutPage() {
             <p className="sec-eyebrow">Jak pracujemy</p>
             <h2 className="sec-heading">Od pomysłu<br/>do realizacji</h2>
             <p className="sec-body">
-              Nasz proces jest prosty i przejrzysty — żebyś wiedział/a dokładnie,
+              Nasz proces jest prosty i przejrzysty - żebyś wiedział/a dokładnie,
               czego się spodziewać na każdym etapie.
             </p>
           </div>

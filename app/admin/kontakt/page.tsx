@@ -86,7 +86,7 @@ export default function AdminContactPage() {
           font-weight: 700;
           letter-spacing: 0.06em;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
           margin-bottom: 0.25rem;
         }
         .ac-count {
@@ -96,7 +96,7 @@ export default function AdminContactPage() {
         }
         .ac-meta {
           font-size: 0.75rem;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-secondary);
         }
         .ac-messages {
           display: grid;
@@ -122,15 +122,15 @@ export default function AdminContactPage() {
         }
         .ac-message-email {
           font-size: 0.875rem;
-          color: rgba(255,255,255,0.6);
+          color: var(--text-secondary);
         }
         .ac-message-time {
           font-size: 0.75rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
         }
         .ac-message-phone {
           font-size: 0.875rem;
-          color: rgba(255,255,255,0.5);
+          color: var(--text-secondary);
           margin-bottom: 0.5rem;
         }
         .ac-message-content {
@@ -142,7 +142,7 @@ export default function AdminContactPage() {
         .ac-empty {
           text-align: center;
           padding: 3rem 1rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-secondary);
         }
         .ac-empty-icon {
           font-size: 3rem;
@@ -154,7 +154,7 @@ export default function AdminContactPage() {
         }
         .ac-empty-sub {
           font-size: 0.875rem;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-secondary);
         }
       `}</style>
 

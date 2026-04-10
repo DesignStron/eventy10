@@ -95,7 +95,7 @@ export default async function GalleryPage() {
         .gal-hero-title {
           font-family:var(--font-display);
           font-size:clamp(2.6rem,5.5vw,4.5rem);
-          font-weight:700; color:#fff; line-height:1.06;
+          font-weight:700; color:#fff; line-height:1.25;
           letter-spacing:-0.028em; margin-bottom:1.25rem;
         }
         html[data-theme="light"] .gal-hero-title { color:#0d0b10; }
@@ -344,7 +344,7 @@ export default async function GalleryPage() {
             </h1>
 
             <p className="gal-hero-desc fu d2">
-              Każde zdjęcie to kawałek historii — imprez, uśmiechów
+              Każde zdjęcie to kawałek historii - imprez, uśmiechów
               i&nbsp;momentów, które zostały w&nbsp;pamięci.
             </p>
 

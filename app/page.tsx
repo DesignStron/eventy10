@@ -263,7 +263,7 @@ export default function Home() {
                 fontSize:"clamp(1rem,1.8vw,1.12rem)",
                 lineHeight:1.85,maxWidth:"46ch",marginBottom:"2.5rem",
               }}>
-                Ponad 10 lat doświadczenia w tworzeniu wyjątkowych wydarzeń —
+                Ponad 10 lat doświadczenia w tworzeniu wyjątkowych wydarzeń -
                 od animacji dla dzieci po imprezy firmowe i eventy szkolne.
               </p>
 
@@ -352,7 +352,7 @@ export default function Home() {
                 color:"rgba(255,255,255,.5)",fontSize:"1.02rem",lineHeight:1.78,
                 maxWidth:"38ch",marginBottom:"2.5rem",
               }}>
-                Napisz do nas — przygotujemy indywidualny scenariusz
+                Napisz do nas - przygotujemy indywidualny scenariusz
                 i&nbsp;wycenę dopasowaną do Twoich potrzeb.
               </p>
 
@@ -373,7 +373,7 @@ function StatCell({ num, suffix, label, delay }: { num:number; suffix:string; la
   const { val, ref } = useCounter(num);
   return (
     <div ref={ref} className="stat-cell" style={{animationDelay:delay}}>
-      {/* .home-stat-num from globals.css — respects light/dark theme */}
+      {/* .home-stat-num from globals.css - respects light/dark theme */}
       <div className="home-stat-num stat-n">{val}{suffix}</div>
       <div className="home-stat-lbl stat-l">{label}</div>
     </div>

@@ -16,10 +16,12 @@ export async function GET() {
 
     const sections: OfferSection[] = (data || []).map(item => ({
       key: item.key,
+      keyLabel: item.key_label || item.title,
       title: item.title,
       description: item.description,
       price: item.price,
-      bullets: item.bullets || []
+      bullets: item.bullets || [],
+      images: item.images || []
     }))
 
     return NextResponse.json({
@@ -55,10 +57,12 @@ export async function PUT(request: NextRequest) {
     // Insert new data
     const offerData = sections.map(section => ({
       key: section.key,
+      key_label: section.keyLabel,
       title: section.title,
       description: section.description,
       price: section.price,
-      bullets: section.bullets
+      bullets: section.bullets,
+      images: section.images || []
     }))
 
     const { error: insertError } = await supabase

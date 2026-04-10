@@ -279,7 +279,7 @@ export default function ContactForm() {
         {/* Form header */}
         <div>
           <h2 className="cf-form-title">Wyślij zapytanie</h2>
-          <p className="cf-form-sub">Wypełnij formularz — odezwiemy się w ciągu 24h z wyceną.</p>
+          <p className="cf-form-sub">Wypełnij formularz - odezwiemy się w ciągu 24h z wyceną.</p>
         </div>
 
         <div className="cf-inner-divider"/>

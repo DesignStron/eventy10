@@ -100,7 +100,7 @@ export default function SiteHeader() {
           position: sticky;
           top: 0;
           z-index: 100;
-          transition: background 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+          transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
         }
         .header-root.scrolled {
           background: rgba(6,5,8,0.92);
@@ -161,8 +161,9 @@ export default function SiteHeader() {
           font-weight: 700;
           font-size: 1rem;
           color: #fff;
-          line-height: 1.2;
+          line-height: 1.6;
           letter-spacing: -0.02em;
+          padding: 2px 0;
         }
         .logo-text-sub {
           font-size: 0.6rem;
@@ -170,6 +171,7 @@ export default function SiteHeader() {
           letter-spacing: 0.12em;
           text-transform: uppercase;
           font-weight: 500;
+          line-height: 1.6;
         }
 
         /* ── DESKTOP NAV ── */
@@ -294,7 +296,7 @@ export default function SiteHeader() {
           font-size: 0.875rem;
           font-weight: 500;
           text-decoration: none;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
           color: rgba(255,255,255,0.7);
           border: 1px solid transparent;
           letter-spacing: 0.01em;
@@ -332,7 +334,7 @@ export default function SiteHeader() {
           cursor: pointer;
           box-shadow: 0 4px 16px rgba(240,23,122,0.4);
           letter-spacing: 0.02em;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
           white-space: nowrap;
         }
         .cta-btn:hover {
@@ -356,7 +358,7 @@ export default function SiteHeader() {
           background: rgba(255,255,255,0.06);
           border: 1px solid rgba(255,255,255,0.1);
           cursor: pointer;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
           flex-shrink: 0;
           padding: 0;
         }
@@ -376,7 +378,7 @@ export default function SiteHeader() {
           height: 1.5px;
           background: #fff;
           border-radius: 2px;
-          transition: all 250ms cubic-bezier(0.16,1,0.3,1);
+          transition: all 150ms cubic-bezier(0.16,1,0.3,1);
           transform-origin: center;
         }
         .hamburger.open .bar:nth-child(1) {
@@ -421,7 +423,7 @@ export default function SiteHeader() {
           border-left: 1px solid rgba(240,23,122,0.15);
           box-shadow: -16px 0 80px rgba(0,0,0,0.7);
           transform: translateX(100%);
-          transition: transform 350ms cubic-bezier(0.16,1,0.3,1);
+          transition: transform 200ms cubic-bezier(0.16,1,0.3,1);
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -467,7 +469,7 @@ export default function SiteHeader() {
           cursor: pointer;
           color: rgba(255,255,255,0.7);
           font-size: 1rem;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
         }
         .drawer-close:hover {
           background: rgba(240,23,122,0.15);
@@ -495,12 +497,12 @@ export default function SiteHeader() {
           font-weight: 500;
           color: rgba(255,255,255,0.75);
           border: 1px solid transparent;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
           position: relative;
           overflow: hidden;
           transform: translateX(20px);
           opacity: 0;
-          animation: slideIn 300ms cubic-bezier(0.16,1,0.3,1) forwards;
+          animation: slideIn 200ms cubic-bezier(0.16,1,0.3,1) forwards;
         }
         .drawer-link:hover {
           background: rgba(255,255,255,0.07);
@@ -534,7 +536,7 @@ export default function SiteHeader() {
           justify-content: center;
           font-size: 0.85rem;
           flex-shrink: 0;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
         }
         .drawer-link.active .drawer-icon {
           background: rgba(240,23,122,0.2);
@@ -543,7 +545,7 @@ export default function SiteHeader() {
         .drawer-arrow {
           font-size: 0.7rem;
           opacity: 0.3;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
         }
         .drawer-link:hover .drawer-arrow,
         .drawer-link.active .drawer-arrow { opacity: 0.7; transform: translateX(2px); }
@@ -571,7 +573,7 @@ export default function SiteHeader() {
           color: #fff;
           box-shadow: 0 4px 20px rgba(240,23,122,0.4);
           letter-spacing: 0.02em;
-          transition: all 200ms ease;
+          transition: all 150ms ease;
         }
         .drawer-cta:hover { box-shadow: 0 6px 28px rgba(240,23,122,0.6); }
         .drawer-admin {
@@ -589,7 +591,7 @@ export default function SiteHeader() {
           color: rgba(255,255,255,0.3);
           border: 1px solid rgba(255,255,255,0.06);
           background: rgba(255,255,255,0.02);
-          transition: all 200ms ease;
+          transition: all 150ms ease;
         }
         .drawer-admin:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
         .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
@@ -640,10 +642,10 @@ export default function SiteHeader() {
         <div className="header-inner">
           {/* Logo */}
           <Link href="/" className="logo">
-            <div className="logo-mark">RE</div>
+            <div className="logo-mark">PP</div>
             <div className="logo-text">
-              <div className="logo-text-name">Różowy Event</div>
-              <div className="logo-text-sub">Organizacja imprez</div>
+              <div className="logo-text-name" style={{ lineHeight: 1.4, padding: '2px 0' }}>Pinky Party</div>
+              <div className="logo-text-sub" style={{ lineHeight: 1.4 }}>Animacje & Eventy</div>
             </div>
           </Link>
 

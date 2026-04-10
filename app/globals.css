@@ -59,6 +59,7 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
 }
 
 html[data-theme="light"] body {
@@ -138,7 +139,7 @@ html[data-theme="light"] .noise::after {
 .card-dark {
   background: rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.05);
-  transition: background 260ms ease, border-color 260ms ease, transform 260ms ease, box-shadow 260ms ease;
+  transition: background 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
 }
 .card-dark:hover {
   background: rgba(255,255,255,0.04);
@@ -163,7 +164,7 @@ html[data-theme="light"] .card-dark:hover {
   background: #fff;
   border: 1px solid rgba(0,0,0,0.07);
   box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
 }
 .card-white:hover {
   transform: translateY(-3px);
@@ -426,23 +427,26 @@ html[data-theme="light"] .offerta-page h1 span[style*="color:var(--pink-light)"]
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 6vw, 5rem);
   font-weight: 700;
-  line-height: 1.05;
+  line-height: 1.25;
   letter-spacing: -0.02em;
+  padding: 0.1em 0;
 }
 
 .heading-lg {
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 4vw, 3rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.25;
   letter-spacing: -0.015em;
+  padding: 0.1em 0;
 }
 
 .heading-md {
   font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.5vw, 1.875rem);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.35;
+  padding: 0.1em 0;
 }
 
 /* ─── PINK ACCENT TEXT ───────────────────────────────────────────────── */
@@ -495,7 +499,7 @@ html[data-theme="light"] .badge-pink {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 1.25rem;
   padding: 1rem 1.25rem;
-  transition: border-color 220ms, transform 220ms;
+  transition: border-color 150ms, transform 150ms;
 }
 .stat-box:hover {
   border-color: rgba(240,23,122,0.4);
@@ -697,7 +701,7 @@ html[data-theme="light"] .h1 em {
   background-size: 0% 2px;
   background-position: left bottom;
   background-repeat: no-repeat;
-  transition: background-size 300ms ease;
+  transition: background-size 150ms ease;
 }
 .underline-pink:hover { background-size: 100% 2px; }
 
@@ -766,7 +770,7 @@ html[data-theme="light"] .h1 em {
 
 /* ─── MINIMALIST UTILITY CLASSES ───────────────────────────────────────── */
 .hover-lift {
-  transition: transform 200ms ease, box-shadow 200ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 .hover-lift:hover {
   transform: translateY(-1px);
@@ -893,7 +897,7 @@ html[data-theme="light"] .h1 em {
 .border-pink {
   border: 1.5px solid rgba(240,23,122,0.3);
 }
-/* ─── ABOUT PAGE — LIGHT THEME DEEP FIXES ─────────────────────────────────── */
+/* ─── ABOUT PAGE - LIGHT THEME DEEP FIXES ─────────────────────────────────── */
  
 /* Hero inline color overrides */
 html[data-theme="light"] .hero-title,
@@ -951,7 +955,7 @@ html[data-theme="light"] .val-card:hover {
   box-shadow: 0 20px 60px rgba(240, 23, 122, 0.12), 0 4px 20px rgba(0, 0, 0, 0.06) !important;
 }
  
-/* Orb decorations in light mode — reduce opacity */
+/* Orb decorations in light mode - reduce opacity */
 html[data-theme="light"] .orb {
   opacity: 0.4;
 }

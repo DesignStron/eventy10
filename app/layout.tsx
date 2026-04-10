@@ -27,8 +27,8 @@ const dmMono = DM_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Różowy Event — Organizacja Imprez",
-    template: "%s — Różowy Event",
+    default: "Pinky Party Animacje & Eventy",
+    template: "%s - Pinky Party",
   },
   description:
     "Nowoczesna organizacja imprez: urodziny dla dzieci, eventy szkolne i imprezy firmowe. Profesjonalnie, dynamicznie i z energią.",

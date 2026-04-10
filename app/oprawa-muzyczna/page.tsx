@@ -1,65 +1,139 @@
+import { supabase } from "@/lib/supabase";
+
 export const metadata = { title: "Oprawa muzyczna" };
 
 const EQUIPMENT = [
-  { icon:"", title:"Naglosnienie",    desc:"Systemy gonikowe dostosowane do wielkoci i charakteru pomieszczenia." },
-  { icon:"", title:"Oswietlenie",     desc:"Profesjonalne zestawy wiate — od subtelnego tla po pen show." },
-  { icon:"", title:"DJ i prowadzcy", desc:"Doswiadczony DJ z bogatym repertuarem i umiejtnociami MC." },
-  { icon:"", title:"Mikrofony",       desc:"Bezprzewodowe mikrofony dla prowadzcych i goci." },
-  { icon:"", title:"Efekty",          desc:"Dym, konfetti, banki mydlane i inne efekty specjalne na yczenie." },
-  { icon:"", title:"Transport",       desc:"Pen montaz i demontaz sprztu — bez stresu dla organizatora." },
+  { icon:"", title:"Nagłośnienie",    desc:"Systemy głośnikowe dostosowane do wielkości i charakteru pomieszczenia." },
+  { icon:"", title:"Oświetlenie",     desc:"Profesjonalne zestawy świateł - od subtelnego tła po pełen show." },
+  { icon:"", title:"DJ i prowadzący", desc:"Doświadczony DJ z bogatym repertuarem i umiejętnościami MC." },
+  { icon:"", title:"Mikrofony",       desc:"Bezprzewodowe mikrofony dla prowadzących i gości." },
+  { icon:"", title:"Efekty",          desc:"Dym, konfetti, bańki mydlane i inne efekty specjalne na życzenie." },
+  { icon:"", title:"Transport",       desc:"Pełny montaż i demontaż sprzętu - bez stresu dla organizatora." },
 ];
+
+type MusicService = {
+  key: string;
+  categoryLabel: string;
+  title: string;
+  description: string;
+  features: string[];
+  image?: string;
+}
 
 async function fetchMusicData() {
   try {
-    const res = await fetch('http://localhost:3000/api/oprawa-muzyczna', { cache: 'no-store' });
-    if (res.ok) {
-      return await res.json();
+    const { data, error } = await supabase
+      .from('music_services')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      return {
+        updatedAt: new Date().toISOString(),
+        services: [
+          {
+            key: "studniowki",
+            categoryLabel: "Studniówki",
+            title: "Studniówki",
+            description: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
+            features: ["Repertuar taneczny i okolicznościowy", "Profesjonalne prowadzenie imprezy", "Oświetlenie i efekty świetlne", "Współpraca z fotografem"]
+          },
+          {
+            key: "wesela",
+            categoryLabel: "Wesela",
+            title: "Wesela",
+            description: "Kompleksowa oprawa muzyczna wesela - od pierwszego tańca po oczepiny. Dbamy o każdy moment tego wyjątkowego dnia.",
+            features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjęcia", "Zabawy i konkursy weselne", "Sprzęt nagłośnieniowy i oświetlenie"]
+          },
+          {
+            key: "urodziny",
+            categoryLabel: "Urodziny",
+            title: "Urodziny i przyjęcia",
+            description: "Muzyczna oprawa przyjęć urodzinowych, rocznic i spotkań rodzinnych. Dopasujemy klimat do charakteru imprezy i gości.",
+            features: ["Różne gatunki muzyczne", "Możliwość dedykacji i życzeń", "Nagłośnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"]
+          },
+          {
+            key: "firmowe",
+            categoryLabel: "Eventy firmowe",
+            title: "Eventy firmowe",
+            description: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
+            features: ["Muzyka tła i taneczna", "Prowadzenie programu", "Nagłośnienie konferencji", "Oświetlenie sceniczne"]
+          },
+          {
+            key: "bale",
+            categoryLabel: "Bale",
+            title: "Bale karnawałowe",
+            description: "Dynamiczna oprawa muzyczna balów karnawałowych dla dzieci i dorosłych. Wiele gatunków i klimatów w jednym wieczorze.",
+            features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Światła i efekty specjalne", "Współpraca z animatorami"]
+          },
+          {
+            key: "swiateczne",
+            categoryLabel: "Świąteczne",
+            title: "Eventy świąteczne",
+            description: "Magiczna atmosfera świąt Bożego Narodzenia z odpowiednią oprawą muzyczną. Kolędy, nowoczesne hity i klimatyczne aranżacje.",
+            features: ["Repertuar świąteczny", "Oświetlenie dekoracyjne", "Możliwość nagłośnienia na zewnątrz", "Współpraca z Mikołajem"]
+          }
+        ]
+      };
     }
+
+    const services: MusicService[] = (data || []).map((item: any) => ({
+      key: item.key,
+      categoryLabel: item.category_label || item.title,
+      title: item.title,
+      description: item.description,
+      features: item.features || [],
+      image: item.image || ''
+    }));
+
+    return {
+      updatedAt: new Date().toISOString(),
+      services
+    };
   } catch (error) {
     console.error('Failed to fetch music data:', error);
+    return {
+      updatedAt: new Date().toISOString(),
+      services: [
+        {
+          key: "studniowki",
+          title: "Studniówki",
+          description: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
+          features: ["Repertuar taneczny i okoliczosciowy", "Profesjonalne prowadzenie imprezy", "Oswietlenie i efekty swietlne", "Wspolpraca z fotografem"]
+        },
+        {
+          key: "wesela",
+          title: "Wesela",
+          description: "Kompleksowa oprawa muzyczna wesela - od pierwszego taca po oczepiny. Dbamy o kazdy moment tego wyjatkowego dnia.",
+          features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjcia", "Zabawy i konkursy weselne", "Sprzet naglosnieniowy i oswietlenie"]
+        },
+        {
+          key: "urodziny",
+          title: "Urodziny i przyjcia",
+          description: "Muzyczna oprawa przyjec urodzinowych, rocznic i spotkan rodzinnych. Dopasujemy klimat do charakteru imprezy i gosci.",
+          features: ["Rózne gatunki muzyczne", "Mozliwosc dedykacji i zyczen", "Naglosnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"]
+        },
+        {
+          key: "firmowe",
+          title: "Eventy firmowe",
+          description: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
+          features: ["Muzyka tla i taneczna", "Prowadzenie programu", "Naglosnienie konferencji", "Oswietlenie sceniczne"]
+        },
+        {
+          key: "bale",
+          title: "Bale karnawaowe",
+          description: "Dynamiczna oprawa muzyczna balów karnawaowych dla dzieci i doroslych. Wiele gatunków i klimatów w jednym wieczorze.",
+          features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Swiatla i efekty specjalne", "Wspolpraca z animatorami"]
+        },
+        {
+          key: "swiateczne",
+          title: "Eventy witeczne",
+          description: "Magiczna atmosfera swiat Bozego Narodzenia z odpowiednia oprawa muzyczna. Koledy, nowoczesne hity i klimatyczne aranacje.",
+          features: ["Repertuar witeczny", "Oswietlenie dekoracyjne", "Mozliwosc naglosnienia na zewnatrz", "Wspolpraca z Mikolajem"]
+        }
+      ]
+    };
   }
-  // Fallback data
-  return {
-    updatedAt: new Date().toISOString(),
-    services: [
-      {
-        key: "studniowki",
-        title: "Studniówki",
-        description: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
-        features: ["Repertuar taneczny i okoliczosciowy", "Profesjonalne prowadzenie imprezy", "Oswietlenie i efekty swietlne", "Wspolpraca z fotografem"]
-      },
-      {
-        key: "wesela",
-        title: "Wesela",
-        description: "Kompleksowa oprawa muzyczna wesela — od pierwszego taca po oczepiny. Dbamy o kazdy moment tego wyjatkowego dnia.",
-        features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjcia", "Zabawy i konkursy weselne", "Sprzet naglosnieniowy i oswietlenie"]
-      },
-      {
-        key: "urodziny",
-        title: "Urodziny i przyjcia",
-        description: "Muzyczna oprawa przyjec urodzinowych, rocznic i spotkan rodzinnych. Dopasujemy klimat do charakteru imprezy i gosci.",
-        features: ["Rózne gatunki muzyczne", "Mozliwosc dedykacji i zyczen", "Naglosnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"]
-      },
-      {
-        key: "firmowe",
-        title: "Eventy firmowe",
-        description: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
-        features: ["Muzyka tla i taneczna", "Prowadzenie programu", "Naglosnienie konferencji", "Oswietlenie sceniczne"]
-      },
-      {
-        key: "bale",
-        title: "Bale karnawaowe",
-        description: "Dynamiczna oprawa muzyczna balów karnawaowych dla dzieci i doroslych. Wiele gatunków i klimatów w jednym wieczorze.",
-        features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Swiatla i efekty specjalne", "Wspolpraca z animatorami"]
-      },
-      {
-        key: "swiateczne",
-        title: "Eventy witeczne",
-        description: "Magiczna atmosfera swiat Bozego Narodzenia z odpowiednia oprawa muzyczna. Koledy, nowoczesne hity i klimatyczne aranacje.",
-        features: ["Repertuar witeczny", "Oswietlenie dekoracyjne", "Mozliwosc naglosnienia na zewnatrz", "Wspolpraca z Mikolajem"]
-      }
-    ]
-  };
 }
 
 export default async function MusicPage() {
@@ -99,7 +173,7 @@ export default async function MusicPage() {
         .mu-hero-title {
           font-family:var(--font-display);
           font-size:clamp(2.6rem,5.5vw,4.5rem);
-          font-weight:700; color:#fff; line-height:1.06;
+          font-weight:700; color:#fff; line-height:1.25;
           letter-spacing:-0.028em; margin-bottom:1.35rem;
         }
         html[data-theme="light"] .mu-hero-title { color:#0d0b10; }
@@ -402,7 +476,7 @@ export default async function MusicPage() {
           </h1>
 
           <p className="mu-hero-desc fu d2">
-            Zapewniamy kompleksową obsługę muzyczną dla każdego typu wydarzenia —
+            Zapewniamy kompleksową obsługę muzyczną dla każdego typu wydarzenia -
             od kameralnych przyjęć po wielkie imprezy plenerowe.
           </p>
         </section>
@@ -455,7 +529,7 @@ export default async function MusicPage() {
             <div className="mu-eyebrow">Sprzęt i zaplecze</div>
             <h2 className="mu-sec-title">Profesjonalne wyposażenie</h2>
             <p className="mu-sec-sub">
-              Przywozimy wszystko co potrzebne — montujemy, obsługujemy i demontujemy.
+              Przywozimy wszystko co potrzebne - montujemy, obsługujemy i demontujemy.
             </p>
           </div>
 
@@ -484,7 +558,7 @@ export default async function MusicPage() {
             }}/>
             <h2 className="mu-cta-title">Chcesz wyjątkową oprawę muzyczną?</h2>
             <p className="mu-cta-desc">
-              Skontaktuj się z nami — omówimy szczegóły, dobierzemy repertuar
+              Skontaktuj się z nami - omówimy szczegóły, dobierzemy repertuar
               i&nbsp;przygotujemy wycenę.
             </p>
             <a href="/kontakt" className="mu-btn">Wyślij zapytanie →</a>

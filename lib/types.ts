@@ -1,11 +1,13 @@
 export type OfferKey = "urodziny" | "szkolne" | "firmowe" | "animacje" | "komunie" | "wesela" | "pikniki" | "bale" | "mikolajki";
 
 export type OfferSection = {
-  key: OfferKey;
+  key: string;
+  keyLabel: string;
   title: string;
   description: string;
   price: string;
   bullets: string[];
+  images: string[];
 };
 
 export type OfferData = {

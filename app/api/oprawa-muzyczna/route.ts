@@ -1,74 +1,96 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 
-// In-memory storage for now (can be moved to Supabase later)
-let musicData = {
-  updatedAt: new Date().toISOString(),
-  services: [
-    {
-      key: "studniowki",
-      title: "Studniówki",
-      description: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
-      features: ["Repertuar taneczny i okoliczosciowy", "Profesjonalne prowadzenie imprezy", "Oswietlenie i efekty swietlne", "Wspolpraca z fotografem"]
-    },
-    {
-      key: "wesela",
-      title: "Wesela",
-      description: "Kompleksowa oprawa muzyczna wesela - od pierwszego tancza po oczepiny. Dbamy o kazdy moment tego wyjatkowego dnia.",
-      features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjecia", "Zabawy i konkursy weselne", "Sprzet naglosnieniowy i oswietlenie"]
-    },
-    {
-      key: "urodziny",
-      title: "Urodziny i przyjecia",
-      description: "Muzyczna oprawa przyjec urodzinowych, rocznic i spotkan rodzinnych. Dopasujemy klimat do charakteru imprezy i gosci.",
-      features: ["Rózne gatunki muzyczne", "Mozliwosc dedykacji i zyczen", "Naglosnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"]
-    },
-    {
-      key: "firmowe",
-      title: "Eventy firmowe",
-      description: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
-      features: ["Muzyka tla i taneczna", "Prowadzenie programu", "Naglosnienie konferencji", "Oswietlenie sceniczne"]
-    },
-    {
-      key: "bale",
-      title: "Bale karnawaowe",
-      description: "Dynamiczna oprawa muzyczna balów karnawaowych dla dzieci i doroslych. Wiele gatunków i klimatów w jednym wieczorze.",
-      features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Swiatla i efekty specjalne", "Wspolpraca z animatorami"]
-    },
-    {
-      key: "swiateczne",
-      title: "Eventy swiateczne",
-      description: "Magiczna atmosfera swiat Bozego Narodzenia z odpowiednia oprawa muzyczna. Koledy, nowoczesne hity i klimatyczne aranacje.",
-      features: ["Repertuar swiateczny", "Oswietlenie dekoracyjne", "Mozliwosc naglosnienia na zewnatrz", "Wspolpraca z Mikolajem"]
-    }
-  ]
-};
+type MusicService = {
+  key: string;
+  categoryLabel: string;
+  title: string;
+  description: string;
+  features: string[];
+  image?: string;
+}
+
+type MusicData = {
+  updatedAt: string;
+  services: MusicService[];
+}
 
 export async function GET() {
   try {
-    return NextResponse.json(musicData);
+    const { data, error } = await supabase
+      .from('music_services')
+      .select('*')
+      .order('created_at', { ascending: true })
+
+    if (error) {
+      console.error('Music GET error:', error)
+      return NextResponse.json({ error: 'Failed to fetch music services' }, { status: 500 })
+    }
+
+    const services: MusicService[] = (data || []).map(item => ({
+      key: item.key,
+      categoryLabel: item.category_label || item.title,
+      title: item.title,
+      description: item.description,
+      features: item.features || [],
+      image: item.image || ''
+    }))
+
+    return NextResponse.json({
+      updatedAt: new Date().toISOString(),
+      services
+    })
   } catch (error) {
-    console.error('Music GET error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Music GET error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    const body = await request.json();
-    
-    if (!body || !body.services) {
-      return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+    const body: MusicData = await request.json()
+    const { services } = body
+
+    if (!services || !Array.isArray(services)) {
+      return NextResponse.json({ error: 'Invalid services data' }, { status: 400 })
     }
 
-    // Update the in-memory data
-    musicData = {
-      ...body,
-      updatedAt: new Date().toISOString()
-    };
+    // Clear existing data
+    const { error: deleteError } = await supabase
+      .from('music_services')
+      .delete()
+      .neq('id', 0)
 
-    return NextResponse.json(musicData);
+    if (deleteError) {
+      console.error('Music DELETE error:', deleteError)
+      return NextResponse.json({ error: 'Failed to clear music data' }, { status: 500 })
+    }
+
+    // Insert new data
+    const musicData = services.map(service => ({
+      key: service.key,
+      category_label: service.categoryLabel,
+      title: service.title,
+      description: service.description,
+      features: service.features,
+      image: service.image || ''
+    }))
+
+    const { error: insertError } = await supabase
+      .from('music_services')
+      .insert(musicData)
+
+    if (insertError) {
+      console.error('Music INSERT error:', insertError)
+      return NextResponse.json({ error: 'Failed to save music data' }, { status: 500 })
+    }
+
+    return NextResponse.json({
+      updatedAt: new Date().toISOString(),
+      services
+    })
   } catch (error) {
-    console.error('Music PUT error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Music PUT error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

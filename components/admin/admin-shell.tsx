@@ -83,9 +83,9 @@ export default function AdminShell({
           gap: 0.4rem;
           padding: 0.5rem 1.1rem;
           border-radius: 9999px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.6);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 0.8rem;
           font-weight: 600;
           text-decoration: none;
@@ -94,8 +94,9 @@ export default function AdminShell({
           flex-shrink: 0;
         }
         .as-back-btn:hover {
-          background: rgba(255,255,255,0.09);
-          color: #fff;
+          background: rgba(240,23,122,0.08);
+          border-color: rgba(240,23,122,0.3);
+          color: var(--pink);
         }
 
         /* mobile nav toggle */
@@ -106,9 +107,9 @@ export default function AdminShell({
           width: 2.25rem;
           height: 2.25rem;
           border-radius: 0.625rem;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.7);
+          background: var(--surface);
+          border: 1px solid var(--border);
+          color: var(--text-secondary);
           font-size: 1.1rem;
           cursor: pointer;
           transition: all 200ms ease;

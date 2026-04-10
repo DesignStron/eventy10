@@ -3,10 +3,10 @@ import ContactForm from "@/components/contact-form";
 export const metadata = { title: "Kontakt" };
 
 const CONTACT_ITEMS = [
-  { label: "Telefon",           value: "+48 000 000 000",       href: "tel:+48000000000",              icon: "📞" },
-  { label: "E-mail",            value: "kontakt@rozowyevent.pl", href: "mailto:kontakt@rozowyevent.pl", icon: "✉️" },
-  { label: "Obszar działania",  value: "Łódź i okolice",         href: null,                            icon: "📍" },
-  { label: "Czas odpowiedzi",   value: "Do 24 godzin",           href: null,                            icon: "⚡" },
+  { label: "Telefon",           value: "+48 792 987 499",              href: "tel:+48792987499",                       icon: "📞" },
+  { label: "E-mail",            value: "pinkyparty.eventy@gmail.com",  href: "mailto:pinkyparty.eventy@gmail.com",      icon: "✉️" },
+  { label: "Obszar działania",  value: "Łódź i okolice",               href: null,                                      icon: "📍" },
+  { label: "Czas odpowiedzi",   value: "Do 24 godzin",                 href: null,                                      icon: "⚡" },
 ];
 
 export default function ContactPage() {
@@ -44,7 +44,7 @@ export default function ContactPage() {
         .kt-hero-title {
           font-family:var(--font-display);
           font-size:clamp(2.6rem,5.5vw,4.5rem);
-          font-weight:700; color:#fff; line-height:1.06;
+          font-weight:700; color:#fff; line-height:1.25;
           letter-spacing:-0.028em; margin-bottom:1.35rem;
         }
         html[data-theme="light"] .kt-hero-title { color:#0d0b10; }
@@ -261,7 +261,7 @@ export default function ContactPage() {
           </div>
 
           <h1 className="kt-hero-title fu d1">
-            Napisz do nas —<br/>
+            Napisz do nas -<br/>
             <span className="kt-hero-accent">wrócimy z wyceną</span>
           </h1>
 
@@ -309,7 +309,7 @@ export default function ContactPage() {
             <div style={{ flex:1, position:"relative" }}>
               <div className="kt-promise-title">Odpiszemy w ciągu 24 godzin</div>
               <div className="kt-promise-desc">
-                Skontaktuj się z nami — przygotujemy bezpłatną wycenę i indywidualny scenariusz
+                Skontaktuj się z nami - przygotujemy bezpłatną wycenę i indywidualny scenariusz
                 dopasowany do Twojego wydarzenia.
               </div>
             </div>

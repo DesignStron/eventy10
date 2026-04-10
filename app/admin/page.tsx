@@ -10,27 +10,32 @@ export default function AdminHomePage() {
   const [gallery, setGallery] = useState<GalleryData | null>(null);
   const [contact, setContact] = useState<ContactData | null>(null);
   const [music, setMusic] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     void (async () => {
-      const [o, g, c, m] = await Promise.all([
-        fetch("/api/oferta").then((r) => r.json()),
-        fetch("/api/galeria").then((r) => r.json()),
-        fetch("/api/kontakt").then((r) => r.json()),
-        fetch("/api/oprawa-muzyczna").then((r) => r.json()),
-      ]);
-      setOffer(o as OfferData);
-      setGallery(g as GalleryData);
-      setContact(c as ContactData);
-      setMusic(m);
+      try {
+        const [o, g, c, m] = await Promise.all([
+          fetch("/api/oferta").then((r) => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/galeria").then((r) => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/kontakt").then((r) => r.ok ? r.json() : null).catch(() => null),
+          fetch("/api/oprawa-muzyczna").then((r) => r.ok ? r.json() : null).catch(() => null),
+        ]);
+        setOffer(o);
+        setGallery(g);
+        setContact(c);
+        setMusic(m);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
   const stats = [
-    { label: "Oferta", value: offer ? offer.sections.length : null, sub: "sekcje do edycji", href: "/admin/oferta", icon: "✦" },
-    { label: "Oprawa muzyczna", value: music ? music.services.length : null, sub: "usługi do edycji", href: "/admin/oprawa-muzyczna", icon: "" },
-    { label: "Galeria", value: gallery ? gallery.images.length : null, sub: "zdjęcia", href: "/admin/galeria", icon: "◻" },
-    { label: "Formularze", value: contact ? contact.messages.length : null, sub: "zgłoszenia", href: "/admin/kontakt", icon: "◎" },
+    { label: "Oferta", value: offer?.sections?.length ?? null, sub: "sekcje do edycji", href: "/admin/oferta", icon: "✦" },
+    { label: "Oprawa muzyczna", value: music?.services?.length ?? null, sub: "usługi do edycji", href: "/admin/oprawa-muzyczna", icon: "" },
+    { label: "Galeria", value: gallery?.images?.length ?? null, sub: "zdjęcia", href: "/admin/galeria", icon: "◻" },
+    { label: "Formularze", value: contact?.messages?.length ?? null, sub: "zgłoszenia", href: "/admin/kontakt", icon: "◎" },
   ];
 
   return (
@@ -85,7 +90,7 @@ export default function AdminHomePage() {
           <a key={s.href} href={s.href} className="dash-stat">
             <div className="dash-stat-icon">{s.icon}</div>
             <div className="dash-stat-label">{s.label}</div>
-            <div className="dash-stat-value">{s.value ?? "…"}</div>
+            <div className="dash-stat-value">{loading ? "…" : (s.value ?? "-")}</div>
             <div className="dash-stat-sub">{s.sub}</div>
           </a>
         ))}

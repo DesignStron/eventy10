@@ -6,9 +6,11 @@ import AdminShell from "@/components/admin/admin-shell";
 
 type MusicService = {
   key: string;
+  categoryLabel: string;
   title: string;
   description: string;
   features: string[];
+  image?: string;
 };
 
 type MusicData = {
@@ -25,39 +27,51 @@ type SaveState =
 const DEFAULT_SERVICES: MusicService[] = [
   {
     key: "studniowki",
+    categoryLabel: "Studniówki",
     title: "Studniówki",
     description: "Elegancka oprawa muzyczna i prowadzenie wieczoru. Dobieramy repertuar dopasowany do gustu maturzystów i tradycji.",
-    features: ["Repertuar taneczny i okoliczosciowy", "Profesjonalne prowadzenie imprezy", "Oswietlenie i efekty swietlne", "Wspolpraca z fotografem"]
+    features: ["Repertuar taneczny i okolicznościowy", "Profesjonalne prowadzenie imprezy", "Oświetlenie i efekty świetlne", "Współpraca z fotografem"],
+    image: ""
   },
   {
     key: "wesela",
+    categoryLabel: "Wesela",
     title: "Wesela",
-    description: "Kompleksowa oprawa muzyczna wesela - od pierwszego tancza po oczepiny. Dbamy o kazdy moment tego wyjatkowego dnia.",
-    features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjecia", "Zabawy i konkursy weselne", "Sprzet naglosnieniowy i oswietlenie"]
+    description: "Kompleksowa oprawa muzyczna wesela - od pierwszego tańca po oczepiny. Dbamy o każdy moment tego wyjątkowego dnia.",
+    features: ["Konsultacja i dobór repertuaru", "Prowadzenie ceremonii i przyjęcia", "Zabawy i konkursy weselne", "Sprzęt nagłośnieniowy i oświetlenie"],
+    image: ""
   },
   {
     key: "urodziny",
-    title: "Urodziny i przyjecia",
-    description: "Muzyczna oprawa przyjec urodzinowych, rocznic i spotkan rodzinnych. Dopasujemy klimat do charakteru imprezy i gosci.",
-    features: ["Rózne gatunki muzyczne", "Mozliwosc dedykacji i zyczen", "Naglosnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"]
+    categoryLabel: "Urodziny",
+    title: "Urodziny i przyjęcia",
+    description: "Muzyczna oprawa przyjęć urodzinowych, rocznic i spotkań rodzinnych. Dopasujemy klimat do charakteru imprezy i gości.",
+    features: ["Różne gatunki muzyczne", "Możliwość dedykacji i życzeń", "Nagłośnienie dostosowane do sali", "Opcjonalnie animacje dla dzieci"],
+    image: ""
   },
   {
     key: "firmowe",
+    categoryLabel: "Eventy firmowe",
     title: "Eventy firmowe",
     description: "Profesjonalna oprawa muzyczna na imprezy integracyjne, bankiety, gale i konferencje.",
-    features: ["Muzyka tla i taneczna", "Prowadzenie programu", "Naglosnienie konferencji", "Oswietlenie sceniczne"]
+    features: ["Muzyka tła i taneczna", "Prowadzenie programu", "Nagłośnienie konferencji", "Oświetlenie sceniczne"],
+    image: ""
   },
   {
     key: "bale",
-    title: "Bale karnawaowe",
-    description: "Dynamiczna oprawa muzyczna balów karnawaowych dla dzieci i doroslych. Wiele gatunków i klimatów w jednym wieczorze.",
-    features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Swiatla i efekty specjalne", "Wspolpraca z animatorami"]
+    categoryLabel: "Bale",
+    title: "Bale karnawałowe",
+    description: "Dynamiczna oprawa muzyczna balów karnawałowych dla dzieci i dorosłych. Wiele gatunków i klimatów w jednym wieczorze.",
+    features: ["Repertuar taneczny i zabawowy", "Konkursy muzyczne z nagrodami", "Światła i efekty specjalne", "Współpraca z animatorami"],
+    image: ""
   },
   {
     key: "swiateczne",
-    title: "Eventy swiateczne",
-    description: "Magiczna atmosfera swiat Bozego Narodzenia z odpowiednia oprawa muzyczna. Koledy, nowoczesne hity i klimatyczne aranacje.",
-    features: ["Repertuar swiateczny", "Oswietlenie dekoracyjne", "Mozliwosc naglosnienia na zewnatrz", "Wspolpraca z Mikolajem"]
+    categoryLabel: "Świąteczne",
+    title: "Eventy świąteczne",
+    description: "Magiczna atmosfera świąt Bożego Narodzenia z odpowiednią oprawą muzyczną. Kolędy, nowoczesne hity i klimatyczne aranżacje.",
+    features: ["Repertuar świąteczny", "Oświetlenie dekoracyjne", "Możliwość nagłośnienia na zewnątrz", "Współpraca z Mikołajem"],
+    image: ""
   }
 ];
 
@@ -120,9 +134,11 @@ export default function AdminMusicPage() {
     const newKey = `service-${Date.now()}`;
     const newService: MusicService = {
       key: newKey,
-      title: "Nowa usuga",
-      description: "Opis nowej usugi muzycznej",
-      features: [""]
+      categoryLabel: "Nowa kategoria",
+      title: "Nowa usługa",
+      description: "Opis nowej usługi muzycznej",
+      features: [""],
+      image: ""
     };
     
     setData(prev => {
@@ -149,7 +165,7 @@ export default function AdminMusicPage() {
   async function onSave() {
     if (!data) return;
     if (!canSave) {
-      setSave({ state: "error", message: "Uzupeenij tytu i opis w kazdej usludze." });
+      setSave({ state: "error", message: "Uzupełnij tytuł i opis w każdej usłudze." });
       return;
     }
     setSave({ state: "saving" });
@@ -161,13 +177,13 @@ export default function AdminMusicPage() {
       });
       const json = (await res.json()) as MusicData;
       if (!res.ok) {
-        setSave({ state: "error", message: "Nie udao si zapisa danych." });
+        setSave({ state: "error", message: "Nie udało się zapisać danych." });
         return;
       }
       setData(json);
       setSave({ state: "saved", at: new Date().toLocaleTimeString() });
     } catch {
-      setSave({ state: "error", message: "Bd poczenia." });
+      setSave({ state: "error", message: "Błąd połączenia." });
     } finally {
       setTimeout(() => setSave({ state: "idle" }), 2000);
     }
@@ -361,7 +377,7 @@ export default function AdminMusicPage() {
         .am-btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
         .am-meta {
           font-size: 0.75rem;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-secondary);
         }
       `}</style>
 
@@ -370,8 +386,8 @@ export default function AdminMusicPage() {
           {/* Header row */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
             <div>
-              <div style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "rgba(255,255,255,0.4)", marginBottom: "0.25rem" }}>
-                Usugi muzyczne
+              <div style={{ fontSize: "0.8rem", fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "var(--text-secondary)", marginBottom: "0.25rem" }}>
+                Usługi muzyczne
               </div>
               <div className="am-meta">
                 {data ? `Ostatnia aktualizacja: ${new Date(data.updatedAt).toLocaleString()}` : "Wczytywanie..."}
@@ -386,29 +402,49 @@ export default function AdminMusicPage() {
           {save.state === "saved" && <div className="am-msg-saved">Zapisano ({save.at})</div>}
 
           <button onClick={addNewService} disabled={save.state === "saving"} className="am-btn-add" style={{ width: "100%", marginBottom: "1rem" }}>
-            + Dodaj now opraw muzyczn
+            + Dodaj nową oprawę muzyczną
           </button>
 
           <div style={{ display: "grid", gap: "1rem", marginTop: "0.5rem" }}>
             {data?.services.map((service) => (
               <div key={service.key} className="am-service">
                 <div className="am-service-header">
-                  <span className="am-service-title">{service.title}</span>
+                  <span className="am-service-title">{service.categoryLabel || service.title}</span>
                   <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
                     <span className="am-key-pill">{service.key}</span>
                     <button onClick={() => removeService(service.key)} disabled={save.state === "saving"} className="am-btn-remove" style={{ height: "2rem", padding: "0 1rem", fontSize: "0.75rem" }}>
-                      Usu
+                      Usuń
                     </button>
                   </div>
                 </div>
 
                 <div className="am-grid">
                   <label className="am-label am-span-2">
-                    Tytu
+                    Nazwa kategorii (widoczna w menu)
+                    <input
+                      value={service.categoryLabel}
+                      onChange={(e) => updateService(service.key, { categoryLabel: e.target.value })}
+                      className="am-input"
+                      placeholder="Np. Studniówki, Wesela..."
+                    />
+                  </label>
+
+                  <label className="am-label am-span-2">
+                    Tytuł usługi
                     <input
                       value={service.title}
                       onChange={(e) => updateService(service.key, { title: e.target.value })}
                       className="am-input"
+                    />
+                  </label>
+
+                  <label className="am-label am-span-2">
+                    Zdjęcie (URL)
+                    <input
+                      value={service.image || ""}
+                      onChange={(e) => updateService(service.key, { image: e.target.value })}
+                      className="am-input"
+                      placeholder="https://example.com/image.jpg"
                     />
                   </label>
 
@@ -422,7 +458,7 @@ export default function AdminMusicPage() {
                   </label>
 
                   <div className="am-label am-span-3">
-                    <div className="am-features-label">Cechy usugi</div>
+                    <div className="am-features-label">Cechy usługi</div>
                     {service.features.map((feature, index) => (
                       <div key={index} className="am-feature-input">
                         <input
@@ -433,7 +469,7 @@ export default function AdminMusicPage() {
                             updateServiceFeatures(service.key, newFeatures);
                           }}
                           className="am-input"
-                          placeholder="Cecha usugi..."
+                          placeholder="Cecha usługi..."
                         />
                         <button
                           onClick={() => {
@@ -442,7 +478,7 @@ export default function AdminMusicPage() {
                           }}
                           className="am-btn-remove"
                         >
-                          Usu
+                          Usuń
                         </button>
                       </div>
                     ))}
@@ -453,7 +489,7 @@ export default function AdminMusicPage() {
                       }}
                       className="am-btn-add"
                     >
-                      + Dodaj cech
+                      + Dodaj cechę
                     </button>
                   </div>
                 </div>

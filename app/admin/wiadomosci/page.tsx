@@ -62,7 +62,7 @@ export default function AdminMessagesPage() {
           cursor: pointer;
           transition: all 180ms ease;
         }
-        .am-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.08); }
+        .am-item:hover { background: var(--surface-elevated); border-color: var(--border); }
         .am-item.active {
           background: rgba(240,23,122,0.12);
           border-color: rgba(240,23,122,0.3);
@@ -267,7 +267,7 @@ export default function AdminMessagesPage() {
 
               <div className="am-actions">
                 <a
-                  href={`mailto:${encodeURIComponent(selected.email)}?subject=${encodeURIComponent("Różowy Event — odpowiedź na zapytanie")}`}
+                  href={`mailto:${encodeURIComponent(selected.email)}?subject=${encodeURIComponent("Pinky Party - odpowiedź na zapytanie")}`}
                   className="am-btn-primary"
                 >
                   Odpowiedz mailem
@@ -280,7 +280,7 @@ export default function AdminMessagesPage() {
           ) : (
             <div style={{ padding: "2rem 0", textAlign: "center" }}>
               <div style={{ fontSize: "1.5rem", marginBottom: "0.75rem", opacity: 0.4 }}>◎</div>
-              <div style={{ fontSize: "0.875rem", color: "rgba(255,255,255,0.35)" }}>
+              <div style={{ fontSize: "0.875rem", color: "var(--text-secondary)" }}>
                 Wybierz zgłoszenie z listy.
               </div>
             </div>
