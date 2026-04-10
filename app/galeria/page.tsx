@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { GalleryData, GalleryImage } from "@/lib/types";
+import { supabase } from "@/lib/supabase";
 
 export const metadata = { title: "Galeria" };
 
@@ -42,20 +43,40 @@ function ImageCard({ img, index }: { img: GalleryImage; index: number }) {
   );
 }
 
-async function fetchGalleryData() {
+async function fetchGalleryData(): Promise<GalleryData> {
   try {
-    const res = await fetch('http://localhost:3000/api/galeria', { cache: 'no-store' });
-    if (res.ok) {
-      return await res.json();
+    const { data, error } = await supabase
+      .from('gallery')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Gallery fetch error:', error);
+      return {
+        updatedAt: new Date().toISOString(),
+        images: []
+      };
     }
+
+    const images: GalleryImage[] = (data || []).map(item => ({
+      id: item.id,
+      title: item.title,
+      url: item.url,
+      category: item.category,
+      created_at: item.created_at
+    }));
+
+    return {
+      updatedAt: new Date().toISOString(),
+      images
+    };
   } catch (error) {
     console.error('Failed to fetch gallery data:', error);
+    return {
+      updatedAt: new Date().toISOString(),
+      images: []
+    };
   }
-  // Fallback data
-  return {
-    updatedAt: new Date().toISOString(),
-    images: []
-  };
 }
 
 export default async function GalleryPage() {
