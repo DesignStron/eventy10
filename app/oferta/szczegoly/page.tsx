@@ -151,9 +151,12 @@ export default function OfferDetailsPage() {
         }
         @media(max-width:900px){
           .od-hg{grid-template-columns:1fr;min-height:auto;padding:4rem 0 2rem;gap:2.5rem;}
-          .od-hg-img{order:2;}
+          .od-hg-img{order:2;width:100%;max-width:500px;margin:0 auto;}
           .od-hg-txt{order:1;}
-          .od-img-card{aspect-ratio:16/9 !important;animation:none !important;}
+          .od-img-card{aspect-ratio:3/4 !important;max-height:70vh;animation:none !important;}
+        }
+        @media(max-width:600px){
+          .od-img-card{aspect-ratio:1/1 !important;max-height:60vh;}
         }
 
         /* ── HEADLINE ── */
