@@ -278,7 +278,7 @@ export default function Home() {
                 fontSize:"clamp(1rem,1.8vw,1.12rem)",
                 lineHeight:1.85,maxWidth:"46ch",marginBottom:"2.5rem",
               }}>
-                Ponad 10 lat doświadczenia w tworzeniu wyjątkowych wydarzeń -
+                Ponad 8 lat doświadczenia w tworzeniu wyjątkowych wydarzeń -
                 od animacji dla dzieci po imprezy firmowe i eventy szkolne.
               </p>
 
