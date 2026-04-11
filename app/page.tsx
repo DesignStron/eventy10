@@ -303,45 +303,57 @@ export default function Home() {
             <div className="hg-img fu d5" style={{position:"relative"}}>
               <div className="img-glow"/>
               <div className="img-card" style={{position:"relative",zIndex:1}}>
-                <img
-                  src={heroImage || "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1800&q=80"}
-                  alt="Realizacja wydarzenia"
-                  style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
-                />
-                <div style={{
-                  position:"absolute",inset:0,
-                  background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
-                }}/>
-                <div style={{
-                  position:"absolute",left:"1.4rem",right:"1.4rem",bottom:"1.6rem",
-                  display:"flex",flexDirection:"column",gap:".75rem",
-                }}>
-                  <span style={{
-                    display:"inline-flex",alignItems:"center",gap:".4rem",
-                    padding:".28rem .8rem",borderRadius:"9999px",
-                    background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.32)",
-                    backdropFilter:"blur(10px)",
-                    fontSize:".62rem",fontWeight:700,letterSpacing:".09em",
-                    textTransform:"uppercase",color:"#fff",width:"fit-content",
+                {heroImage ? (
+                  <>
+                    <img
+                      src={heroImage}
+                      alt="Realizacja wydarzenia"
+                      style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
+                    />
+                    <div style={{
+                      position:"absolute",inset:0,
+                      background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
+                    }}/>
+                    <div style={{
+                      position:"absolute",left:"1.4rem",right:"1.4rem",bottom:"1.6rem",
+                      display:"flex",flexDirection:"column",gap:".75rem",
+                    }}>
+                      <span style={{
+                        display:"inline-flex",alignItems:"center",gap:".4rem",
+                        padding:".28rem .8rem",borderRadius:"9999px",
+                        background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.32)",
+                        backdropFilter:"blur(10px)",
+                        fontSize:".62rem",fontWeight:700,letterSpacing:".09em",
+                        textTransform:"uppercase",color:"#fff",width:"fit-content",
+                      }}>
+                        ✦ Nasze realizacje
+                      </span>
+                      <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
+                        <Link href="/galeria" className="btn-img-w">
+                          Zobacz galerię <span className="ar">→</span>
+                        </Link>
+                        <Link href="/oferta" className="btn-img-g">
+                          Oferta <span className="ar">→</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{
+                    width:"100%",height:"100%",
+                    background:"linear-gradient(135deg,rgba(240,23,122,.08) 0%,rgba(240,23,122,.02) 100%)",
+                    display:"flex",alignItems:"center",justifyContent:"center",
                   }}>
-                    ✦ Nasze realizacje
-                  </span>
-                  <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
-                    <Link href="/galeria" className="btn-img-w">
-                      Zobacz galerię <span className="ar">→</span>
-                    </Link>
-                    <Link href="/oferta" className="btn-img-g">
-                      Oferta <span className="ar">→</span>
-                    </Link>
+                    <span style={{fontSize:"4rem",animation:"dot 1.5s ease-in-out infinite"}}>✦</span>
                   </div>
-                </div>
+                )}
               </div>
             </div>
 
           </div>{/* end .hg */}
 
           {/* ══ BANNER ════════════════════════════ */}
-          <div style={{paddingBottom:"8rem"}}>
+          <div style={{ paddingBottom: "8rem" }}>
             <div className="bnr">
               <span style={{
                 display:"inline-flex",alignItems:"center",gap:".42rem",
