@@ -12,19 +12,22 @@ const CATEGORY_LABELS: Record<string, string> = {
   szkolne:  "Eventy szkolne",
   firmowe:  "Firmowe",
   inne:     "Inne",
+  studniowki: "Studniówki",
+  wesela:   "Wesela",
+  bale:     "Bale",
+  swiateczne: "Świąteczne",
 };
 
 function ImageCard({ img, index }: { img: GalleryImage; index: number }) {
   return (
     <div className="gal-item" style={{ animationDelay: `${0.04 + (index % 12) * 0.055}s` }}>
       <div className="gal-img-wrap">
-        <Image
+        {/* Używamy zwykłego <img> zamiast Next Image, żeby zachować naturalne proporcje */}
+        <img
           src={img.url}
           alt={img.title}
-          width={800}
-          height={600}
           className="gal-img"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          loading="lazy"
         />
 
         {/* Overlay */}
@@ -180,8 +183,12 @@ export default async function GalleryPage() {
         }
 
         /* ── MASONRY GRID ── */
+        /* Używamy CSS columns dla prawdziwego masonry z naturalnymi proporcjami */
         .gal-grid {
-          columns:1; column-gap:1rem;
+          columns:1;
+          column-gap:1rem;
+          orphans:1;
+          widows:1;
         }
         @media(min-width:540px)  { .gal-grid { columns:2; } }
         @media(min-width:900px)  { .gal-grid { columns:3; } }
@@ -189,8 +196,12 @@ export default async function GalleryPage() {
 
         /* ── ITEM ── */
         .gal-item {
-          break-inside:avoid; margin-bottom:1rem;
+          break-inside:avoid;
+          page-break-inside:avoid;
+          -webkit-column-break-inside:avoid;
+          margin-bottom:1rem;
           animation:fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
+          display:block; /* ważne dla column layout */
         }
 
         /* ── IMAGE WRAPPER ── */
@@ -215,12 +226,14 @@ export default async function GalleryPage() {
           box-shadow:0 20px 60px rgba(240,23,122,0.1), 0 4px 16px rgba(0,0,0,0.08);
         }
 
-        /* ── IMAGE ── */
+        /* ── IMAGE – ZACHOWUJE ORYGINALNE PROPORCJE ── */
         .gal-img {
-          width:100%; height:auto; display:block;
+          width:100%;
+          height:auto;       /* kluczowe: brak stałej wysokości = naturalne proporcje */
+          display:block;
           transition:transform 500ms cubic-bezier(0.16,1,0.3,1);
         }
-        .gal-img-wrap:hover .gal-img { transform:scale(1.06); }
+        .gal-img-wrap:hover .gal-img { transform:scale(1.04); }
 
         /* ── OVERLAY ── */
         .gal-overlay {
@@ -257,7 +270,7 @@ export default async function GalleryPage() {
           line-height:1.35; font-family:var(--font-display);
         }
 
-        /* ── CORNER ACCENT (permanent) ── */
+        /* ── CORNER ACCENT ── */
         .gal-corner {
           position:absolute; top:0; right:0;
           width:0; height:0;
@@ -286,9 +299,6 @@ export default async function GalleryPage() {
           background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.22);
           display:flex; align-items:center; justify-content:center; font-size:1.6rem;
           animation:floatY 6s ease-in-out infinite;
-        }
-        html[data-theme="light"] .gal-empty-icon {
-          background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.18);
         }
 
         .gal-empty-title {
@@ -334,6 +344,8 @@ export default async function GalleryPage() {
           background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.2);
           color:var(--pink);
         }
+
+        html[data-theme="light"] .gal-sub-label { color: rgba(13,11,16,0.5) !important; }
       `}</style>
 
       <div className="page-bg noise">
@@ -394,10 +406,13 @@ export default async function GalleryPage() {
           {data.images.length > 0 ? (
             <>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"2rem", flexWrap:"wrap", gap:"1rem" }}>
-                <div style={{
-                  fontFamily:"var(--font-display)", fontSize:"1rem", fontWeight:600,
-                  color:"rgba(255,255,255,0.6)", letterSpacing:"-0.01em",
-                }} className="gal-sub-label">
+                <div
+                  className="gal-sub-label"
+                  style={{
+                    fontFamily:"var(--font-display)", fontSize:"1rem", fontWeight:600,
+                    color:"rgba(255,255,255,0.6)", letterSpacing:"-0.01em",
+                  }}
+                >
                   Przeglądaj kolekcję
                 </div>
                 <span className="gal-count-tag">{data.images.length} realizacji</span>
@@ -425,9 +440,6 @@ export default async function GalleryPage() {
         </div>
       </div>
 
-      <style>{`
-        html[data-theme="light"] .gal-sub-label { color: rgba(13,11,16,0.5) !important; }
-      `}</style>
       <SiteFooter />
     </>
   );

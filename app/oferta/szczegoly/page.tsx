@@ -38,13 +38,10 @@ export default function OfferDetailsPage() {
   const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
-    // Pobierz slug z hash - ostatnia czesc po #
     const hash = window.location.hash.slice(1);
     const parts = hash.split('#');
-    const slug = parts[parts.length - 1]; // Wez ostatnia czesc
-    
-    console.log('Hash parsing debug:', { hash, parts, slug });
-    
+    const slug = parts[parts.length - 1];
+
     if (!slug) { setLoading(false); return; }
 
     const fetchData = async () => {
@@ -52,10 +49,10 @@ export default function OfferDetailsPage() {
         const { data: offerData, error: offerError } = await supabase
           .from("offer").select("*").eq("key", slug).single();
 
-        if (offerError || !offerData) { 
-          console.error('Offer not found:', { offerError, offerData, slug }); 
-          setLoading(false); 
-          return; 
+        if (offerError || !offerData) {
+          console.error('Offer not found:', { offerError, offerData, slug });
+          setLoading(false);
+          return;
         }
 
         setOffer({
@@ -73,7 +70,6 @@ export default function OfferDetailsPage() {
           .from("gallery").select("*").eq("category", slug)
           .order("created_at", { ascending: false });
 
-        console.log('Gallery debug:', { galleryError, galleryData, slug });
         if (!galleryError && galleryData) setGalleryImages(galleryData);
       } catch (e) {
         console.error(e);
@@ -327,37 +323,72 @@ export default function OfferDetailsPage() {
           animation:lineGrow 1.1s cubic-bezier(.16,1,.3,1) .6s both;
         }
 
-        /* ── GALLERY ── */
-        .od-gallery-grid{
-          display:grid;
-          grid-template-columns:repeat(3,1fr);
-          gap:1rem;
+        /* ══════════════════════════════════════════════════════════════════
+           ── GALERIA – MASONRY z naturalnymi proporcjami (CSS columns) ──
+           ══════════════════════════════════════════════════════════════════ */
+        .od-gallery-masonry {
+          columns: 2;
+          column-gap: 1rem;
         }
-        .od-gallery-grid .od-gi:nth-child(5n+1){
-          grid-column:span 2;
-          aspect-ratio:16/9;
+        @media(min-width:900px) {
+          .od-gallery-masonry { columns: 3; }
         }
-        .od-gi{
-          aspect-ratio:4/3;
-          border-radius:1.25rem;
-          overflow:hidden;
-          position:relative;
-          background:var(--surface-elevated);
-          border:1px solid var(--border);
-          transition:transform 300ms,border-color 300ms,box-shadow 300ms;
+        @media(max-width:540px) {
+          .od-gallery-masonry { columns: 1; }
         }
-        .od-gi:hover{
-          transform:scale(1.02);
-          border-color:rgba(240,23,122,.25);
-          box-shadow:0 16px 40px rgba(240,23,122,.1);
+
+        /* Każdy element w kolumnowym masonry */
+        .od-gi {
+          break-inside: avoid;
+          page-break-inside: avoid;
+          -webkit-column-break-inside: avoid;
+          margin-bottom: 1rem;
+          border-radius: 1.25rem;
+          overflow: hidden;
+          position: relative;
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
+          transition: transform 300ms, border-color 300ms, box-shadow 300ms;
+          display: block; /* ważne dla column layout */
         }
-        .od-gi img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 500ms;}
-        .od-gi:hover img{transform:scale(1.05);}
-        @media(max-width:760px){
-          .od-gallery-grid{grid-template-columns:repeat(2,1fr);}
-          .od-gallery-grid .od-gi:nth-child(5n+1){grid-column:span 1;aspect-ratio:4/3;}
+        .od-gi:hover {
+          transform: translateY(-4px);
+          border-color: rgba(240,23,122,.3);
+          box-shadow: 0 16px 48px rgba(240,23,122,.12), 0 4px 16px rgba(0,0,0,.3);
         }
-        @media(max-width:480px){.od-gallery-grid{grid-template-columns:1fr;}}
+
+        /* Zdjęcie zachowuje ORYGINALNE PROPORCJE – brak stałej wysokości */
+        .od-gi img {
+          width: 100%;
+          height: auto;      /* naturalne proporcje */
+          display: block;
+          transition: transform 500ms cubic-bezier(.16,1,.3,1);
+        }
+        .od-gi:hover img { transform: scale(1.04); }
+
+        /* Subtelny overlay z tytułem na hover */
+        .od-gi-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(to top, rgba(6,5,8,.8) 0%, rgba(6,5,8,.15) 40%, transparent 70%);
+          opacity: 0;
+          transition: opacity 300ms ease;
+          display: flex;
+          align-items: flex-end;
+          pointer-events: none;
+        }
+        .od-gi:hover .od-gi-overlay { opacity: 1; }
+
+        .od-gi-label {
+          padding: .75rem 1rem;
+          font-size: .8rem;
+          font-weight: 600;
+          color: #fff;
+          font-family: var(--font-display);
+          transform: translateY(4px);
+          transition: transform 300ms ease;
+        }
+        .od-gi:hover .od-gi-label { transform: translateY(0); }
 
         /* ── CTA BANNER ── */
         .od-bnr{
@@ -429,10 +460,7 @@ export default function OfferDetailsPage() {
           font-size:.95rem;max-width:40ch;line-height:1.7;margin:0;
         }
 
-        /* ── LIGHT THEME — image card glow adjustment ── */
-        html[data-theme="light"] .od-img-glow {
-          opacity: 0.5;
-        }
+        html[data-theme="light"] .od-img-glow { opacity: 0.5; }
         html[data-theme="light"] .od-img-card {
           box-shadow: 0 20px 60px rgba(240,23,122,.15), 0 4px 20px rgba(0,0,0,.08);
           animation: none;
@@ -524,7 +552,6 @@ export default function OfferDetailsPage() {
                   </div>
                 )}
 
-                {/* Gradient overlay – only over photos */}
                 {images[activeImg] && (
                   <div style={{
                     position: "absolute", inset: 0,
@@ -533,7 +560,6 @@ export default function OfferDetailsPage() {
                   }}/>
                 )}
 
-                {/* Bottom label + thumbs */}
                 <div style={{
                   position: "absolute", left: "1.4rem", right: "1.4rem", bottom: "1.6rem",
                   display: "flex", flexDirection: "column", gap: ".75rem", zIndex: 2,
@@ -568,7 +594,7 @@ export default function OfferDetailsPage() {
             </div>
           </div>
 
-          {/* ══ GALLERY ═══════════════════════════════════════════════════ */}
+          {/* ══ GALLERY – MASONRY Z NATURALNYMI PROPORCJAMI ═════════════ */}
           {galleryImages.length > 0 && (
             <div style={{ paddingBottom: "6rem" }}>
               <div className="div-pink" style={{ marginBottom: "4rem" }}/>
@@ -583,13 +609,19 @@ export default function OfferDetailsPage() {
                   Realizacje
                 </div>
                 <h2 className="od-sec-h2">Galeria zdjęć</h2>
-                <p className="od-sec-p">Zajrzyj za kulisy naszych wydarzeń.</p>
+                <p className="od-sec-p">
+                  {galleryImages.length} {galleryImages.length === 1 ? "zdjęcie" : galleryImages.length < 5 ? "zdjęcia" : "zdjęć"} z naszych realizacji.
+                </p>
               </div>
 
-              <div className="od-gallery-grid">
+              {/* CSS columns masonry – zdjęcia z naturalnymi proporcjami */}
+              <div className="od-gallery-masonry">
                 {galleryImages.map((image) => (
                   <div key={image.id} className="od-gi">
                     <img src={image.url} alt={image.title} loading="lazy"/>
+                    <div className="od-gi-overlay">
+                      <span className="od-gi-label">{image.title}</span>
+                    </div>
                   </div>
                 ))}
               </div>
