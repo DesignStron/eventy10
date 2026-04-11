@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
-import SiteFooter from "@/components/site-footer";
 import SiteHeader from "@/components/site-header";
 
 const playfair = Playfair_Display({
@@ -63,7 +62,6 @@ export default function RootLayout({
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column", margin: 0, overflowX: "hidden" }}>
         <SiteHeader />
         <main style={{ flex: 1 }}>{children}</main>
-        <SiteFooter />
       </body>
     </html>
   );

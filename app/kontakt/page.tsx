@@ -1,11 +1,12 @@
 import ContactForm from "@/components/contact-form";
+import SiteFooter from "@/components/site-footer";
 
 export const metadata = { title: "Kontakt" };
 
 const CONTACT_ITEMS = [
   { label: "Telefon",           value: "+48 792 987 499",              href: "tel:+48792987499",                       icon: "📞" },
   { label: "E-mail",            value: "pinkyparty.eventy@gmail.com",  href: "mailto:pinkyparty.eventy@gmail.com",      icon: "✉️" },
-  { label: "Obszar działania",  value: "Łódź i okolice",               href: null,                                      icon: "📍" },
+  { label: "Obszar działania",  value: "Wrocław i okolice",            href: null,                                      icon: "📍" },
   { label: "Czas odpowiedzi",   value: "Do 24 godzin",                 href: null,                                      icon: "⚡" },
 ];
 
@@ -320,6 +321,7 @@ export default function ContactPage() {
         </section>
 
       </div>
+      <SiteFooter />
     </>
   );
 }

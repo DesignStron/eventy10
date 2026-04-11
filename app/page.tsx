@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import SiteFooter from "@/components/site-footer";
 
 function useCounter(target: number, duration = 1800) {
   const [val, setVal] = useState(0);
@@ -29,11 +31,26 @@ function useCounter(target: number, duration = 1800) {
   return { val, ref };
 }
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1800&q=80";
-
-
 export default function Home() {
+  const [heroImage, setHeroImage] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchHeroImage();
+  }, []);
+
+  const fetchHeroImage = async () => {
+    try {
+      const res = await fetch("/api/site-settings");
+      const json = await res.json();
+      setHeroImage(json.settings?.hero_image || "");
+    } catch (e) {
+      console.error("Failed to fetch hero image:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <style>{`
@@ -190,7 +207,6 @@ export default function Home() {
           font-size:.75rem;font-weight:500;margin-top:.4rem;line-height:1.4;
         }
 
-        
         /* ── BANNER ── */
         .bnr{
           border-radius:1.5rem;
@@ -206,7 +222,6 @@ export default function Home() {
             radial-gradient(ellipse 80% 100% at 50% 120%,rgba(240,23,122,.16) 0%,transparent 60%),
             radial-gradient(ellipse 50% 60% at 90% 0%,rgba(240,23,122,.06) 0%,transparent 55%);
         }
-        /* animated shimmer border */
         .bnr::after{
           content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
           background:linear-gradient(105deg,transparent 30%,rgba(240,23,122,.4) 50%,transparent 70%);
@@ -289,7 +304,7 @@ export default function Home() {
               <div className="img-glow"/>
               <div className="img-card" style={{position:"relative",zIndex:1}}>
                 <img
-                  src={HERO_IMAGE}
+                  src={heroImage || "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=1800&q=80"}
                   alt="Realizacja wydarzenia"
                   style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
                 />
@@ -322,9 +337,9 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
 
-          
+          </div>{/* end .hg */}
+
           {/* ══ BANNER ════════════════════════════ */}
           <div style={{paddingBottom:"8rem"}}>
             <div className="bnr">
@@ -362,8 +377,9 @@ export default function Home() {
             </div>
           </div>
 
-        </div>
-      </div>
+        </div>{/* end inner container */}
+      </div>{/* end .page-bg */}
+      <SiteFooter />
     </>
   );
 }
@@ -373,7 +389,6 @@ function StatCell({ num, suffix, label, delay }: { num:number; suffix:string; la
   const { val, ref } = useCounter(num);
   return (
     <div ref={ref} className="stat-cell" style={{animationDelay:delay}}>
-      {/* .home-stat-num from globals.css - respects light/dark theme */}
       <div className="home-stat-num stat-n">{val}{suffix}</div>
       <div className="home-stat-lbl stat-l">{label}</div>
     </div>

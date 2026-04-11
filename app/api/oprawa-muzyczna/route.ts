@@ -18,17 +18,40 @@ type MusicData = {
 
 export async function GET() {
   try {
+    console.log('Music API: Starting GET request');
+    console.log('Music API: Attempting to fetch from music_services table');
+    
     const { data, error } = await supabase
       .from('music_services')
       .select('*')
       .order('created_at', { ascending: true })
 
+    console.log('Music API: Supabase response:', { data, error });
+    console.log('Music API: Data length:', data?.length || 0);
+
     if (error) {
       console.error('Music GET error:', error)
-      return NextResponse.json({ error: 'Failed to fetch music services' }, { status: 500 })
+      console.error('Music GET error details:', JSON.stringify(error, null, 2));
+      return NextResponse.json({ error: 'Failed to fetch music services', details: error }, { status: 500 })
     }
 
-    const services: MusicService[] = (data || []).map(item => ({
+    // Deduplicate by key - keep the latest entry for each key
+    const uniqueData = data ? data.reduce((acc: any[], item) => {
+      const existingIndex = acc.findIndex(existing => existing.key === item.key);
+      if (existingIndex >= 0) {
+        // Keep the newer one (by created_at)
+        if (new Date(item.created_at) > new Date(acc[existingIndex].created_at)) {
+          acc[existingIndex] = item;
+        }
+      } else {
+        acc.push(item);
+      }
+      return acc;
+    }, []) : [];
+
+    console.log('Music API: After deduplication:', uniqueData.length, 'unique services');
+
+    const services: MusicService[] = uniqueData.map(item => ({
       key: item.key,
       categoryLabel: item.category_label || item.title,
       title: item.title,
@@ -37,17 +60,24 @@ export async function GET() {
       image: item.image || ''
     }))
 
+    console.log('Music API: Processed services:', services.length);
+    console.log('Music API: Services:', services.map(s => ({ key: s.key, title: s.title })));
+
     // Revalidate cache for public pages
     revalidatePath('/oprawa-muzyczna');
     revalidatePath('/admin/oprawa-muzyczna');
     
-    return NextResponse.json({
+    const response = {
       updatedAt: new Date().toISOString(),
       services
-    })
+    };
+    
+    console.log('Music API: Returning response:', response);
+    return NextResponse.json(response)
   } catch (error) {
-    console.error('Music GET error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Music GET catch error:', error)
+    console.error('Music GET catch error details:', JSON.stringify(error, null, 2));
+    return NextResponse.json({ error: 'Internal server error', details: error }, { status: 500 })
   }
 }
 

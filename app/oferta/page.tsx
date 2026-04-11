@@ -1,6 +1,7 @@
 import type { OfferData, OfferSection } from "@/lib/types";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import SiteFooter from "@/components/site-footer";
 
 export const metadata = { title: "Oferta" };
 export const dynamic = 'force-dynamic';
@@ -67,7 +68,7 @@ function SectionCard({ s }: { s: OfferSection }) {
 
         <div className="offer-price-box">
           <div className="offer-price-label">Cena od</div>
-          <div className="offer-price-value">{s.price}<span className="offer-price-unit"> zł</span></div>
+          <div className="offer-price-value">{s.price}<span className="offer-price-unit"></span></div>
         </div>
       </div>
 
@@ -93,6 +94,7 @@ function SectionCard({ s }: { s: OfferSection }) {
       {/* CTA */}
       <div className="offer-cta-row">
         <Link href="/kontakt" className="offer-btn-primary">Zapytaj o wycenę →</Link>
+        <Link href={`/oferta/szczegoly#${s.key}`} className="offer-btn-primary" style={{ background: 'linear-gradient(135deg, #ff6bb5, #f0177a)' }}>Zobacz szczegóły →</Link>
         <Link href="/galeria" className="offer-btn-ghost">Zobacz realizacje</Link>
       </div>
     </article>
@@ -369,7 +371,15 @@ export default async function OfferPage() {
         /* ── CTA ROW ── */
         .offer-cta-row {
           padding:1.5rem 2.25rem; display:flex; gap:0.75rem; flex-wrap:wrap;
-          align-items:center;
+          align-items:center; justify-content:flex-start;
+        }
+        
+        .offer-cta-row .offer-btn-primary:nth-child(2) {
+          background:linear-gradient(135deg,#ff6bb5,#f0177a);
+        }
+        
+        .offer-cta-row .offer-btn-primary:nth-child(2):hover {
+          background:linear-gradient(135deg,#ff8bc7,#ff2d8f);
         }
 
         .offer-btn-primary {
@@ -820,6 +830,7 @@ export default async function OfferPage() {
         html[data-theme="light"] .sec-title-sm { color: #0d0b10 !important; }
         html[data-theme="light"] .offer-count-badge { background: rgba(240,23,122,0.08); }
       `}</style>
+      <SiteFooter />
     </>
   );
 }

@@ -36,12 +36,28 @@ export async function POST(req: Request) {
   try {
     const payload = (await req.json()) as Omit<GalleryImage, "id" | "createdAt">;
 
+    // Pobierz wszystkie kategorie z oferty
+    const { data: ofertaData } = await supabase
+      .from('offer')
+      .select('key')
+      .order('created_at', { ascending: true });
+    
+    const offerCategories = ofertaData?.map(item => item.key) || [];
+    
+    // Dozwolone kategorie (oferta + "inne")
+    const allowedCategories = [...offerCategories, 'inne'];
+    
+    // Fallback do "inne" jesli kategoria nie jest dozwolona
+    const validCategory = allowedCategories.includes(payload.category) 
+      ? payload.category 
+      : 'inne';
+
     const { data, error } = await supabase
       .from('gallery')
       .insert({
         title: payload.title,
         url: payload.url,
-        category: payload.category
+        category: validCategory
       })
       .select()
       .single()

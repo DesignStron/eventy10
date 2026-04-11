@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import SiteFooter from "@/components/site-footer";
 
 export const metadata = { title: "Oprawa muzyczna" };
 export const dynamic = 'force-dynamic';
@@ -494,7 +495,7 @@ export default async function MusicPage() {
 
           <div className="mu-event-grid">
             {musicData.services.map((service: any, i: number) => (
-              <div key={service.key} className="mu-card fu" style={{ animationDelay:`${0.08 + i * 0.1}s` }}>
+              <div key={`${service.key}-${i}`} className="mu-card fu" style={{ animationDelay:`${0.08 + i * 0.1}s` }}>
                 <div className="mu-card-hd">
                   <div className="mu-card-icon" style={{ animationDelay:`${i * 1.2}s` }}>
                     {service.image ? (
@@ -580,6 +581,7 @@ export default async function MusicPage() {
         </section>
 
       </div>
+      <SiteFooter />
     </>
   );
 }

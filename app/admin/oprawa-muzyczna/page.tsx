@@ -80,15 +80,31 @@ export default function AdminMusicPage() {
   const [save, setSave] = useState<SaveState>({ state: "idle" });
   const [uploading, setUploading] = useState<string | null>(null);
   const [showUrlInput, setShowUrlInput] = useState<Record<string, boolean>>({});
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log('Admin: Starting fetch for music services');
       try {
+        console.log('Admin: Making request to /api/oprawa-muzyczna');
         const res = await fetch("/api/oprawa-muzyczna");
+        console.log('Admin: Response status:', res.status);
+        console.log('Admin: Response ok:', res.ok);
+        
         if (res.ok) {
           const json = (await res.json()) as MusicData;
+          console.log('Admin: Received data:', json);
+          console.log('Admin: Services count:', json.services?.length || 0);
           setData(json);
         } else {
+          console.log('Admin: Response not ok, using fallback');
+          const errorText = await res.text();
+          console.log('Admin: Error response:', errorText);
           // Fallback to default data if API doesn't exist yet
           setData({
             updatedAt: new Date().toISOString(),
@@ -96,6 +112,8 @@ export default function AdminMusicPage() {
           });
         }
       } catch (error) {
+        console.error('Admin: Fetch error:', error);
+        console.log('Admin: Using fallback data due to error');
         setData({
           updatedAt: new Date().toISOString(),
           services: DEFAULT_SERVICES
@@ -104,6 +122,8 @@ export default function AdminMusicPage() {
     };
 
     // No auto-refresh - only fetch on mount
+    console.log('Admin: Setting up effect for music services');
+    fetchData();
   }, []);
 
   const canSave = useMemo(() => {
@@ -112,6 +132,7 @@ export default function AdminMusicPage() {
   }, [data]);
 
   function updateService(key: string, patch: Partial<MusicService>) {
+    if (!isMounted) return;
     setData((prev) => {
       if (!prev) return prev;
       return {
@@ -122,6 +143,7 @@ export default function AdminMusicPage() {
   }
 
   function updateServiceFeatures(key: string, features: string[]) {
+    if (!isMounted) return;
     setData((prev) => {
       if (!prev) return prev;
       return {
@@ -132,7 +154,7 @@ export default function AdminMusicPage() {
   }
 
   function addNewService() {
-    if (!data) return;
+    if (!data || !isMounted) return;
     
     const newKey = `service-${Date.now()}`;
     const newService: MusicService = {
@@ -154,7 +176,7 @@ export default function AdminMusicPage() {
   }
 
   function removeService(key: string) {
-    if (!data) return;
+    if (!data || !isMounted) return;
     
     setData(prev => {
       if (!prev) return prev;
@@ -174,15 +196,17 @@ export default function AdminMusicPage() {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const json = await res.json();
       if (res.ok && json.url) {
-        setData((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            services: prev.services.map((s) =>
-              s.key === key ? { ...s, image: json.url } : s
-            )
-          };
-        });
+        if (isMounted) {
+          setData((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              services: prev.services.map((s) =>
+                s.key === key ? { ...s, image: json.url } : s
+              )
+            };
+          });
+        }
       } else {
         setSave({ state: "error", message: "Błąd uploadu zdjęcia" });
       }
@@ -202,15 +226,17 @@ export default function AdminMusicPage() {
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const json = await res.json();
       if (res.ok && json.url) {
-        setData((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            services: prev.services.map((s) =>
-              s.key === key ? { ...s, image: json.url } : s
-            )
-          };
-        });
+        if (isMounted) {
+          setData((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              services: prev.services.map((s) =>
+                s.key === key ? { ...s, image: json.url } : s
+              )
+            };
+          });
+        }
       } else {
         setSave({ state: "error", message: "Błąd dodawania linku do zdjęcia" });
       }
@@ -224,24 +250,39 @@ export default function AdminMusicPage() {
   async function onSave() {
     if (!data) return;
     if (!canSave) {
+      console.log('Admin: Cannot save - validation failed');
       setSave({ state: "error", message: "Uzupełnij tytuł i opis w każdej usłudze." });
       return;
     }
+    
+    console.log('Admin: Starting save operation');
+    console.log('Admin: Data to save:', data);
     setSave({ state: "saving" });
+    
     try {
       const res = await fetch("/api/oprawa-muzyczna", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      
+      console.log('Admin: Save response status:', res.status);
       const json = (await res.json()) as MusicData;
+      console.log('Admin: Save response:', json);
+      
       if (!res.ok) {
+        console.log('Admin: Save failed - not ok response');
         setSave({ state: "error", message: "Nie udało się zapisać danych." });
         return;
       }
-      setData(json);
-      setSave({ state: "saved", at: new Date().toLocaleTimeString() });
-    } catch {
+      
+      console.log('Admin: Save successful');
+      if (isMounted) {
+        setData(json);
+        setSave({ state: "saved", at: new Date().toLocaleTimeString() });
+      }
+    } catch (error) {
+      console.error('Admin: Save error:', error);
       setSave({ state: "error", message: "Błąd połączenia." });
     } finally {
       setTimeout(() => setSave({ state: "idle" }), 2000);
@@ -465,8 +506,8 @@ export default function AdminMusicPage() {
           </button>
 
           <div style={{ display: "grid", gap: "1rem", marginTop: "0.5rem" }}>
-            {data?.services.map((service) => (
-              <div key={service.key} className="am-service">
+            {data?.services.map((service, index) => (
+              <div key={`${service.key}-${index}`} className="am-service">
                 <div className="am-service-header">
                   <span className="am-service-title">{service.categoryLabel || service.title}</span>
                   <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
@@ -564,7 +605,7 @@ export default function AdminMusicPage() {
                     Opis
                     <textarea
                       value={service.description}
-                      onChange={(e) => updateService(service.key, { description: e.target.value })}
+                          onChange={(e) => updateService(service.key, { description: e.target.value })}
                       className="am-textarea"
                     />
                   </label>

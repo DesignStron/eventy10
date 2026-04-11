@@ -1,3 +1,5 @@
+import SiteFooter from "@/components/site-footer";
+
 export const metadata = { title: "O nas" };
 
 const VALUES = [
@@ -29,7 +31,7 @@ const VALUES = [
 
 const STATS = [
   { num: "250+", label: "Zrealizowanych wydarzeń", icon: "🎉" },
-  { num: "10+",  label: "Lat doświadczenia",        icon: "⭐" },
+  { num: "8+",   label: "Lat doświadczenia",        icon: "⭐" },
   { num: "5★",   label: "Średnia ocen klientów",    icon: "💎" },
   { num: "24h",  label: "Czas odpowiedzi",           icon: "⚡" },
 ];
@@ -559,9 +561,13 @@ export default function AboutPage() {
 
           {/* Description */}
           <p className="hero-desc fu d3">
-            Pinky Party to zespół z ponad 10-letnim doświadczeniem w organizacji
-            imprez dla dzieci, firm i instytucji. Robimy to z pełnym zaangażowaniem
-            i dbałością o każdy detal.
+            Pinky Party Animacje & Eventy to firma eventowa prowadzona przez Magdę Gałkowską – animatorkę, DJ-kę, wodzirejkę oraz nauczycielkę edukacji wczesnoszkolnej. To połączenie jest kluczowe, ponieważ oznacza, że firma nie tylko organizuje wydarzenia, ale również doskonale rozumie potrzeby dzieci i młodzieży.
+          </p>
+          <p className="hero-desc fu d4" style={{ marginTop: "1rem" }}>
+            Założycielka posiada około 8 lat doświadczenia w branży eventowej, co przekłada się na profesjonalne podejście do organizacji imprez oraz umiejętność zarządzania grupą uczestników. Każde wydarzenie jest prowadzone z energią, zaangażowaniem oraz dbałością o szczegóły.
+          </p>
+          <p className="hero-desc fu d5" style={{ marginTop: "1rem" }}>
+            Firma współpracowała m.in. z: Aquapark Wrocław, Biedronka, Scania, różne rady osiedli, lokale eventowe i szkoły.
           </p>
         </section>
 
@@ -589,8 +595,9 @@ export default function AboutPage() {
             <p className="sec-eyebrow">Co nas wyróżnia</p>
             <h2 className="sec-heading">Podejście, które<br/>robi różnicę</h2>
             <p className="sec-body">
-              Nie robimy eventów „z szablonu". Każde wydarzenie planujemy od podstaw,
-              dopasowując każdy element do konkretnej grupy i okazji.
+              Pełna personalizacja wydarzeń, doświadczeni animatorzy, połączenie animacji + DJ + warsztatów. 
+              Oferta dla dzieci, młodzieży i firm z możliwością organizacji małych i dużych eventów 
+              oraz profesjonalny sprzęt (audio + światło).
             </p>
           </div>
 
@@ -665,6 +672,7 @@ export default function AboutPage() {
         </section>
 
       </div>
+      <SiteFooter />
     </>
   );
 }

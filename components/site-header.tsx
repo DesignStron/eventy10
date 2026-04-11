@@ -138,24 +138,11 @@ export default function SiteHeader() {
           width: 2.4rem;
           height: 2.4rem;
           border-radius: 0.6rem;
-          background: linear-gradient(135deg, #f0177a 0%, #ff4fa3 100%);
           display: flex;
           align-items: center;
           justify-content: center;
-          font-weight: 900;
-          font-size: 0.8rem;
-          color: #fff;
-          letter-spacing: 0.02em;
-          box-shadow: 0 4px 24px rgba(240,23,122,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
-          position: relative;
           overflow: hidden;
           flex-shrink: 0;
-        }
-        .logo-mark::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
         }
         .logo-text-name {
           font-weight: 700;
@@ -642,7 +629,13 @@ export default function SiteHeader() {
         <div className="header-inner">
           {/* Logo */}
           <Link href="/" className="logo">
-            <div className="logo-mark">PP</div>
+            <div className="logo-mark">
+              <img 
+                src="/Plyta_raster_lowres.png" 
+                alt="Pinky Party Logo" 
+                style={{ width: "100%", height: "100%", objectFit: "cover", aspectRatio: "16/9" }}
+              />
+            </div>
             <div className="logo-text">
               <div className="logo-text-name" style={{ lineHeight: 1.4, padding: '2px 0' }}>Pinky Party</div>
               <div className="logo-text-sub" style={{ lineHeight: 1.4 }}>Animacje & Eventy</div>

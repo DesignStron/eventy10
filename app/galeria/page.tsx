@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { GalleryData, GalleryImage } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
+import SiteFooter from "@/components/site-footer";
 
 export const metadata = { title: "Galeria" };
 
@@ -427,6 +428,7 @@ export default async function GalleryPage() {
       <style>{`
         html[data-theme="light"] .gal-sub-label { color: rgba(13,11,16,0.5) !important; }
       `}</style>
+      <SiteFooter />
     </>
   );
 }

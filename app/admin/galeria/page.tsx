@@ -21,62 +21,212 @@ const CATEGORY_LABELS: Record<string, string> = {
   inne: "Inne",
 };
 
+/* ── Custom Dropdown ───────────────────────────────────────────────────── */
+function CustomSelect({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const selectedLabel = options.find((o) => o.value === value)?.label ?? value;
+
+  return (
+    <>
+      <style>{`
+        .cs-wrap { position: relative; width: 100%; user-select: none; }
+        .cs-trigger {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 2.75rem;
+          width: 100%;
+          border-radius: 0.75rem;
+          background: var(--surface);
+          border: 1px solid var(--border);
+          padding: 0 1rem;
+          font-size: 0.875rem;
+          color: var(--text);
+          cursor: pointer;
+          transition: border-color 180ms ease, background 180ms ease;
+          box-sizing: border-box;
+        }
+        .cs-trigger:hover,
+        .cs-trigger.open {
+          border-color: rgba(240,23,122,0.5);
+          background: rgba(240,23,122,0.06);
+        }
+        .cs-trigger svg {
+          flex-shrink: 0;
+          color: var(--text-muted);
+          transition: transform 200ms ease;
+        }
+        .cs-trigger.open svg { transform: rotate(180deg); }
+
+        .cs-dropdown {
+          position: absolute;
+          top: calc(100% + 6px);
+          left: 0;
+          right: 0;
+          z-index: 999;
+          background: var(--surface-elevated);
+          border: 1px solid var(--border);
+          border-radius: 0.875rem;
+          overflow: hidden;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+          animation: csDropIn 160ms cubic-bezier(.16,1,.3,1) both;
+        }
+        @keyframes csDropIn {
+          from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+          to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .cs-option {
+          display: flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.7rem 1rem;
+          font-size: 0.875rem;
+          color: var(--text);
+          cursor: pointer;
+          transition: background 140ms ease;
+        }
+        .cs-option:hover {
+          background: rgba(240,23,122,0.08);
+          color: var(--pink-light);
+        }
+        .cs-option.selected {
+          background: rgba(240,23,122,0.12);
+          color: var(--pink-light);
+          font-weight: 600;
+        }
+        .cs-option-check {
+          width: 14px;
+          height: 14px;
+          flex-shrink: 0;
+          color: var(--pink);
+          opacity: 0;
+        }
+        .cs-option.selected .cs-option-check { opacity: 1; }
+        .cs-divider {
+          height: 1px;
+          background: var(--border);
+          margin: 0.25rem 0;
+        }
+      `}</style>
+
+      <div className="cs-wrap" ref={ref}>
+        <div
+          className={`cs-trigger${open ? " open" : ""}`}
+          onClick={() => setOpen((o) => !o)}
+          role="combobox"
+          aria-expanded={open}
+        >
+          <span>{selectedLabel}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </div>
+
+        {open && (
+          <div className="cs-dropdown" role="listbox">
+            {options.map((opt, i) => {
+              // Insert divider before "inne"
+              const isDivider = opt.value === "inne" && i > 0;
+              return (
+                <div key={opt.value}>
+                  {isDivider && <div className="cs-divider"/>}
+                  <div
+                    className={`cs-option${value === opt.value ? " selected" : ""}`}
+                    onClick={() => { onChange(opt.value); setOpen(false); }}
+                    role="option"
+                    aria-selected={value === opt.value}
+                  >
+                    {/* checkmark */}
+                    <svg className="cs-option-check" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 13l4 4L19 7"/>
+                    </svg>
+                    {opt.label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+/* ── Main Page ─────────────────────────────────────────────────────────── */
 export default function AdminGalleryPage() {
   const [data, setData] = useState<GalleryData | null>(null);
   const [form, setForm] = useState<CreateState>({ title: "", url: "", category: "inne" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [offerCategories, setOfferCategories] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     void (async () => {
-      const res = await fetch("/api/galeria");
-      const json = (await res.json()) as GalleryData;
-      setData(json);
+      const galeriaRes = await fetch("/api/galeria");
+      const galeriaJson = (await galeriaRes.json()) as GalleryData;
+      setData(galeriaJson);
+
+      try {
+        const ofertaRes = await fetch("/api/oferta");
+        const ofertaJson = await ofertaRes.json();
+        const categories: Record<string, string> = {};
+        ofertaJson.sections?.forEach((section: any) => {
+          categories[section.key] = section.title || section.key;
+        });
+        setOfferCategories(categories);
+      } catch (error) {
+        console.error("Failed to fetch offer categories:", error);
+      }
     })();
   }, []);
+
+  // Build options list for the custom dropdown
+  const categoryOptions = useMemo(() => {
+    const fromOffer = Object.entries(offerCategories).map(([key, label]) => ({
+      value: key,
+      label,
+    }));
+    return [...fromOffer, { value: "inne", label: "Inne" }];
+  }, [offerCategories]);
 
   const canAdd = useMemo(() => form.title.trim() && (form.url.trim() || form.file), [form]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setForm(prev => ({ ...prev, file }));
-    }
+    if (file) setForm((prev) => ({ ...prev, file }));
   };
 
-  const uploadToCloudinary = async (file: File): Promise<string> => {
-    console.log('📤 Starting upload for:', file.name, 'Size:', file.size, 'Type:', file.type);
-    
-    try {
-      // Create unique filename
-      const fileName = `${Date.now()}_${file.name.replace(/\s+/g, '_')}`;
-      
-      // Upload to Supabase Storage directly as File
-      const { data, error } = await supabase.storage
-        .from('gallery-images')
-        .upload(fileName, file, {
-          contentType: file.type,
-          cacheControl: '3600',
-          upsert: false
-        });
-      
-      if (error) {
-        console.error('❌ Supabase storage upload error:', error);
-        throw error;
-      }
-      
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('gallery-images')
-        .getPublicUrl(fileName);
-      
-      console.log('✅ Upload completed, public URL:', publicUrl);
-      return publicUrl;
-    } catch (error) {
-      console.error('❌ Upload error:', error);
-      throw error;
-    }
+  const uploadToStorage = async (file: File): Promise<string> => {
+    const fileName = `${Date.now()}_${file.name.replace(/\s+/g, "_")}`;
+    const { error } = await supabase.storage
+      .from("gallery-images")
+      .upload(fileName, file, { contentType: file.type, cacheControl: "3600", upsert: false });
+    if (error) throw error;
+    const { data: { publicUrl } } = supabase.storage.from("gallery-images").getPublicUrl(fileName);
+    return publicUrl;
   };
 
   async function addImage() {
@@ -85,53 +235,20 @@ export default function AdminGalleryPage() {
     setBusy(true);
     try {
       let imageUrl = form.url;
-      
-      console.log('🔍 Debug - form state:', {
-        title: form.title,
-        url: form.url,
-        category: form.category,
-        hasFile: !!form.file,
-        fileName: form.file?.name
-      });
-      
-      // If file is selected, upload it first
-      if (form.file && !form.url) {
-        console.log('📤 Uploading file:', form.file.name);
-        imageUrl = await uploadToCloudinary(form.file);
-        console.log('✅ Upload completed, URL:', imageUrl);
-      }
-      
-      const submitData = {
-        title: form.title,
-        url: imageUrl,
-        category: form.category
-      };
-      
-      console.log('📤 Submitting data:', submitData);
-      
+      if (form.file && !form.url) imageUrl = await uploadToStorage(form.file);
+
       const res = await fetch("/api/galeria", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(submitData),
+        body: JSON.stringify({ title: form.title, url: imageUrl, category: form.category }),
       });
       const json = (await res.json()) as GalleryData;
-      console.log('📥 API response:', { status: res.status, data: json });
-      
-      if (!res.ok) { 
-        console.error('❌ API error response:', json);
-        setError("Nie udało się dodać zdjęcia."); 
-        return; 
-      }
-      
-      console.log('✅ Image added successfully');
+      if (!res.ok) { setError("Nie udało się dodać zdjęcia."); return; }
+
       setData(json);
       setForm({ title: "", url: "", category: "inne" });
-      // Clear file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    } catch (error) {
-      console.error('❌ Add image error:', error);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch {
       setError("Błąd połączenia.");
     } finally {
       setBusy(false);
@@ -198,10 +315,6 @@ export default function AdminGalleryPage() {
         .ag-input:focus {
           border-color: rgba(240,23,122,0.5);
           background: rgba(240,23,122,0.06);
-        }
-        .ag-input option {
-          background: var(--surface);
-          color: var(--text);
         }
         .ag-input-grid {
           display: grid;
@@ -278,7 +391,6 @@ export default function AdminGalleryPage() {
           border: 1px solid var(--border);
           transition: border-color 200ms ease;
         }
-        .ag-img-card:hover { border-color: var(--border); }
         .ag-img-meta { padding: 0.875rem 1rem; }
         .ag-img-title {
           font-size: 0.875rem;
@@ -382,20 +494,15 @@ export default function AdminGalleryPage() {
               />
             </label>
 
-            <label className="ag-label">
+            {/* ── CUSTOM DROPDOWN instead of <select> ── */}
+            <div className="ag-label">
               Kategoria
-              <select
+              <CustomSelect
                 value={form.category}
-                onChange={(e) => setForm((s) => ({ ...s, category: e.target.value as CreateState["category"] }))}
-                className="ag-input"
-                style={{ cursor: "pointer" }}
-              >
-                <option value="urodziny">Urodziny</option>
-                <option value="szkolne">Szkolne</option>
-                <option value="firmowe">Firmowe</option>
-                <option value="inne">Inne</option>
-              </select>
-            </label>
+                onChange={(v) => setForm((s) => ({ ...s, category: v as CreateState["category"] }))}
+                options={categoryOptions}
+              />
+            </div>
 
             <label className="ag-label span-2">
               URL zdjęcia
@@ -435,24 +542,17 @@ export default function AdminGalleryPage() {
 
         {/* ── IMAGE LIST ── */}
         <div className="ag-card">
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "1rem",
-              flexWrap: "wrap",
-            }}
-          >
+          <div style={{
+            display: "flex", alignItems: "center",
+            justifyContent: "space-between", gap: "1rem", flexWrap: "wrap",
+          }}>
             <div>
               <div className="ag-section-title" style={{ marginBottom: "0.1rem" }}>Lista zdjęć</div>
               <div style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                 {data ? `${data.images.length} elementów` : "Wczytywanie…"}
               </div>
             </div>
-            <a href="/galeria" className="ag-btn-outline">
-              Podgląd publiczny →
-            </a>
+            <a href="/galeria" className="ag-btn-outline">Podgląd publiczny →</a>
           </div>
 
           {data && data.images.length > 0 && (
@@ -467,7 +567,6 @@ export default function AdminGalleryPage() {
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 33vw"
                     />
-                    {/* Category pill overlay */}
                     <div style={{ position: "absolute", top: "0.625rem", left: "0.625rem" }}>
                       <span className="ag-pill">
                         {CATEGORY_LABELS[img.category] ?? img.category}
