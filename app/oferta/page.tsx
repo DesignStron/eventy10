@@ -4,9 +4,7 @@ import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
 
 export const metadata = { title: "Oferta" };
-export const dynamic = 'force-dynamic';
-
-const FALLBACK: OfferData = { updatedAt: new Date().toISOString(), sections: [] };
+export const dynamic = "force-dynamic";
 
 const CAT_LABELS: Record<string, string> = {
   urodziny:  "Urodziny",
@@ -28,153 +26,121 @@ const CAT_ICONS: Record<string, string> = {
   mikolajki: "🎅",
 };
 
-function SectionCard({ s }: { s: OfferSection }) {
-  const label = CAT_LABELS[s.category] ?? s.categoryLabel ?? s.key;
-  const icon  = CAT_ICONS[s.category] ?? CAT_ICONS[s.key] ?? "✦";
-  const firstImage = s.images?.[0];
+function SectionCard({ s, index }: { s: OfferSection; index: number }) {
+  const label     = CAT_LABELS[s.category] ?? s.categoryLabel ?? s.key;
+  const icon      = CAT_ICONS[s.category] ?? CAT_ICONS[s.key] ?? "✦";
+  const hasImages = s.images && s.images.length > 0;
+  const imgRight  = index % 2 !== 0;
 
   return (
-    <article id={s.key} className="offer-card">
-      <style>{`
-        #${s.key}:hover { border-color:rgba(240,23,122,0.3) !important; box-shadow:0 24px 80px rgba(240,23,122,0.1), 0 4px 24px rgba(0,0,0,0.25) !important; }
-        html[data-theme="light"] #${s.key}:hover { border-color:rgba(240,23,122,0.35) !important; box-shadow:0 24px 80px rgba(240,23,122,0.12), 0 4px 24px rgba(0,0,0,0.08) !important; }
-      `}</style>
+    <article id={s.key} className={`sc${imgRight ? " sc--rev" : ""}`}>
 
-      {/* Header */}
-      <div className="offer-card-head">
-        <div className="offer-card-head-inner">
-          <div style={{ display:"flex", alignItems:"center", gap:"1rem", marginBottom:"1rem" }}>
-            <div className="offer-icon-box">
-              {firstImage ? (
-                <img 
-                  src={firstImage} 
-                  alt={s.title}
-                  style={{ 
-                    width: "100%", 
-                    height: "100%", 
-                    objectFit: "cover",
-                    borderRadius: "1rem"
-                  }}
-                />
-              ) : (
-                <span style={{ fontSize:"1.3rem" }}>{icon}</span>
+      {/* ── IMAGE PANEL ── */}
+      {hasImages ? (
+        <div className="sc-img-panel">
+          {/* Wrapper wypełnia panel poza miniaturami; zdjęcie absolute wewnątrz */}
+          <div className="sc-img-main-wrap">
+            <img src={s.images[0]} alt={s.title} className="sc-img-main" />
+          </div>
+          {s.images.length > 1 && (
+            <div className="sc-img-thumbs">
+              {s.images.slice(1, 3).map((src: string, i: number) => (
+                <div key={i} className="sc-img-thumb">
+                  <img src={src} alt={`${s.title} ${i + 2}`} />
+                </div>
+              ))}
+              {s.images.length > 3 && (
+                <div className="sc-img-thumb sc-img-thumb--more">
+                  +{s.images.length - 3}
+                </div>
               )}
             </div>
-            <span className="offer-badge">{label}</span>
-          </div>
-          <h2 className="offer-title">{s.title}</h2>
-          <p className="offer-desc">{s.description}</p>
+          )}
         </div>
-
-        <div className="offer-price-box">
-          <div className="offer-price-label">Cena od</div>
-          <div className="offer-price-value">{s.price}<span className="offer-price-unit"></span></div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="offer-inner-divider"/>
-
-      {/* Bullets */}
-      {s.bullets?.length > 0 && (
-        <div className="offer-bullets">
-          {s.bullets.map((b) => (
-            <div key={b} className="offer-bullet">
-              <span className="offer-bullet-dot">
-                <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
-                  <path d="M1.5 5.5L4 8L8.5 2" stroke="#f0177a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </span>
-              <span className="offer-bullet-text">{b}</span>
-            </div>
-          ))}
+      ) : (
+        <div className="sc-img-panel sc-img-panel--empty">
+          <span className="sc-no-img-icon">{icon}</span>
         </div>
       )}
 
-      {/* CTA */}
-      <div className="offer-cta-row">
-        <Link href="/kontakt" className="offer-btn-primary">Zapytaj o wycenę →</Link>
-        <Link href={`/oferta/szczegoly#${s.key}`} className="offer-btn-primary" style={{ background: 'linear-gradient(135deg, #ff6bb5, #f0177a)' }}>Zobacz szczegóły →</Link>
-        <Link href="/galeria" className="offer-btn-ghost">Zobacz realizacje</Link>
+      {/* ── BODY ── */}
+      <div className="sc-body">
+        <div className="sc-meta">
+          <span className="sc-badge">{label}</span>
+          {s.price && (
+            <div className="sc-price">
+              <span className="sc-price__from">od</span>
+              <span className="sc-price__val">{s.price}</span>
+            </div>
+          )}
+        </div>
+
+        <h2 className="sc-title">{s.title}</h2>
+        <p className="sc-desc">{s.description}</p>
+
+        {s.bullets?.length > 0 && (
+          <ul className="sc-bullets">
+            {s.bullets.map((b: string) => (
+              <li key={b} className="sc-bullet">
+                <span className="sc-bullet__check" aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                    <path d="M1.5 5.5L4 8L8.5 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </span>
+                {b}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="sc-cta">
+          <Link href="/kontakt" className="sc-btn sc-btn--primary">
+            Zapytaj o wycenę
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </Link>
+          <Link href={`/oferta/szczegoly#${s.key}`} className="sc-btn sc-btn--outline">Szczegóły</Link>
+          <Link href="/galeria" className="sc-btn sc-btn--ghost">Galeria</Link>
+        </div>
       </div>
     </article>
   );
 }
 
-type NavItem = {
-  key: string;
-  label: string;
-  icon: string;
-  href?: string;
-};
+type NavItem = { key: string; label: string; icon: string; href?: string };
 
-// Dynamiczne nav items - beda generowane z bazy danych
 const getNavItems = (sections: OfferSection[]): NavItem[] => {
-  const categoryIcons: Record<string, string> = {
-    urodziny: "🎂",
-    animacje: "🎪",
-    komunie: "✨",
-    wesela: "💍",
-    pikniki: "🌿",
-    bale: "🎭",
-    mikolajki: "🎅",
-    oferta: "📦"
+  const icons: Record<string, string> = {
+    urodziny: "🎂", animacje: "🎪", komunie: "✨",
+    wesela: "💍", pikniki: "🌿", bale: "🎭", mikolajki: "🎅",
   };
-  
-  // Unikalne kategorie z bazy - ale dla 'oferta' pokaz wszystkie oferty
-  const categoryMap = new Map<string, NavItem[]>();
-  
+  const seen = new Set<string>();
+  const items: NavItem[] = [];
   sections.forEach(s => {
-    const navItem: NavItem = {
-      key: s.key, // Użyj pełnego key dla linku
-      label: s.categoryLabel || s.title,
-      icon: categoryIcons[s.category] || "✦"
-    };
-    
-    if (!categoryMap.has(s.category)) {
-      categoryMap.set(s.category, []);
-    }
-    categoryMap.get(s.category)!.push(navItem);
-  });
-  
-  // Zbierz wszystkie nav items
-  const allNavItems: NavItem[] = [];
-  
-  categoryMap.forEach((items, category) => {
-    if (category === 'oferta') {
-      // Dla 'oferta' dodaj wszystkie osobno
-      allNavItems.push(...items);
-    } else {
-      // Dla innych kategorii dodaj tylko pierwszą (unikalna)
-      allNavItems.push(items[0]);
+    if (!seen.has(s.category)) {
+      seen.add(s.category);
+      items.push({ key: s.key, label: s.categoryLabel || s.title, icon: icons[s.category] || "✦" });
     }
   });
-  
-  // Sortuj alfabetycznie
-  const sortedCategories = allNavItems.sort((a, b) => a.label.localeCompare(b.label));
-  
-  // Dodaj always oprawa muzyczna na koncu
-  return [
-    ...sortedCategories,
-    { key: "oprawa-muzyczna", label: "Oprawa muzyczna", icon: "🎵", href: "/oprawa-muzyczna" }
-  ];
+  return [...items, { key: "oprawa-muzyczna", label: "Oprawa muzyczna", icon: "🎵", href: "/oprawa-muzyczna" }];
 };
 
 export default async function OfferPage() {
-  const { data: dbData, error } = await supabase
-    .from('offer')
-    .select('*')
-    .order('created_at', { ascending: true });
+  const { data: dbData } = await supabase
+    .from("offer")
+    .select("*")
+    .order("created_at", { ascending: true });
 
   const sections: OfferSection[] = (dbData || []).map((item: any) => ({
-    key: item.key,
-    category: item.category || item.key,
+    key:           item.key,
+    category:      item.category || item.key,
     categoryLabel: item.category_label || item.keyLabel || item.key,
-    title: item.title,
-    description: item.description,
-    price: item.price || "",
-    bullets: item.bullets || [],
-    images: item.images || [],
+    title:         item.title,
+    description:   item.description,
+    price:         item.price || "",
+    bullets:       item.bullets || [],
+    images:        item.images || [],
   }));
 
   const offerData: OfferData = { updatedAt: new Date().toISOString(), sections };
@@ -182,654 +148,431 @@ export default async function OfferPage() {
   return (
     <>
       <style>{`
-        @keyframes pulseDot  { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.4)} }
-        @keyframes fadeUp    { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes floatY    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-        @keyframes lineGrow  { from{width:0} to{width:100%} }
-        @keyframes shimBar   { 0%{background-position:-200% center} 100%{background-position:200% center} }
+        @keyframes fadeUp {
+          from { opacity:0; transform:translateY(28px); }
+          to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes shimmer {
+          0%   { background-position:-200% center; }
+          100% { background-position: 200% center; }
+        }
+        @keyframes pulseDot {
+          0%,100% { opacity:1; transform:scale(1); }
+          50%      { opacity:.4; transform:scale(1.6); }
+        }
+        @keyframes floatIcon {
+          0%,100% { transform:translateY(0) rotate(0deg); }
+          50%      { transform:translateY(-8px) rotate(-4deg); }
+        }
 
-        .fu  { animation: fadeUp 0.75s cubic-bezier(0.16,1,0.3,1) both; }
-        .d1{animation-delay:0.06s} .d2{animation-delay:0.16s}
-        .d3{animation-delay:0.28s} .d4{animation-delay:0.42s}
+        .op-wrap { max-width:78rem; margin:0 auto; padding:7rem 2rem 10rem; }
 
-        /* ── OFFER CARD ── */
-        .offer-card {
-          border-radius:1.5rem;
-          border:1px solid rgba(255,255,255,0.07);
-          background:rgba(255,255,255,0.025);
+        /* ── HERO ── */
+        .op-hero { margin-bottom:5rem; }
+        .op-live-badge {
+          display:inline-flex; align-items:center; gap:.5rem;
+          padding:.35rem 1.1rem; border-radius:9999px;
+          background:rgba(240,23,122,.1); border:1px solid rgba(240,23,122,.28);
+          font-size:.65rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
+          color:#f0177a; margin-bottom:1.5rem;
+          animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both;
+        }
+        html[data-theme="light"] .op-live-badge { color:#c01060; }
+        .op-live-dot {
+          width:6px; height:6px; border-radius:50%; background:#f0177a;
+          animation:pulseDot 2s ease-in-out infinite;
+        }
+        .op-hero-title {
+          font-family:var(--font-display); font-size:clamp(3rem,6vw,5.5rem);
+          font-weight:800; line-height:1.05; letter-spacing:-.04em; color:#fff;
+          margin:0 0 1.75rem; animation:fadeUp .7s .08s cubic-bezier(.16,1,.3,1) both;
+        }
+        html[data-theme="light"] .op-hero-title { color:#0d0b10; }
+        .op-hero-accent {
+          display:block;
+          background:linear-gradient(110deg,#f0177a 0%,#ff8cc8 42%,#f0177a 82%);
+          background-size:220% auto; -webkit-background-clip:text; background-clip:text;
+          -webkit-text-fill-color:transparent; animation:shimmer 4s linear infinite;
+        }
+        .op-hero-sub {
+          font-size:1.1rem; line-height:1.9; color:rgba(255,255,255,.55);
+          max-width:540px; margin:0 0 3rem;
+          animation:fadeUp .7s .16s cubic-bezier(.16,1,.3,1) both;
+        }
+        html[data-theme="light"] .op-hero-sub { color:rgba(13,11,16,.55); }
+
+        /* ── NAV ── */
+        .op-nav { display:flex; flex-wrap:wrap; gap:.5rem; animation:fadeUp .7s .24s cubic-bezier(.16,1,.3,1) both; }
+        .op-nav-pill {
+          display:inline-flex; align-items:center; gap:.45rem; padding:.5rem 1.2rem;
+          border-radius:9999px; font-size:.82rem; font-weight:600; text-decoration:none;
+          border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.65);
+          background:rgba(255,255,255,.04); transition:all 200ms ease; white-space:nowrap;
+        }
+        .op-nav-pill:hover { border-color:rgba(240,23,122,.4); background:rgba(240,23,122,.1); color:#ff6bb5; transform:translateY(-2px); }
+        .op-nav-pill--special { border-color:rgba(240,23,122,.3); background:rgba(240,23,122,.08); color:#ff6bb5; }
+        html[data-theme="light"] .op-nav-pill { color:rgba(13,11,16,.6); background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.1); }
+        html[data-theme="light"] .op-nav-pill:hover,
+        html[data-theme="light"] .op-nav-pill--special { background:rgba(240,23,122,.08); border-color:rgba(240,23,122,.3); color:#c01060; }
+
+        /* ── DIVIDER ── */
+        .op-divider {
+          position:relative; height:1px; margin:3.5rem 0 4rem;
+          background:linear-gradient(90deg,transparent,rgba(240,23,122,.3),transparent);
+        }
+        .op-divider::after {
+          content:''; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+          width:8px; height:8px; border-radius:50%; background:#f0177a;
+          box-shadow:0 0 16px rgba(240,23,122,.8);
+        }
+
+        /* ── SECTION HEAD ── */
+        .op-section-head { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:3rem; flex-wrap:wrap; }
+        .op-eyebrow {
+          font-size:.65rem; font-weight:800; letter-spacing:.16em; text-transform:uppercase;
+          color:#f0177a; display:flex; align-items:center; gap:.6rem; margin-bottom:.5rem;
+        }
+        .op-eyebrow::before { content:''; display:inline-block; width:24px; height:2px; background:#f0177a; border-radius:2px; }
+        .op-section-title { font-family:var(--font-display); font-size:clamp(1.4rem,2.5vw,1.8rem); font-weight:700; color:#fff; margin:0; letter-spacing:-.02em; }
+        html[data-theme="light"] .op-section-title { color:#0d0b10; }
+        .op-count {
+          display:inline-flex; align-items:center; padding:.28rem .85rem; border-radius:9999px;
+          background:rgba(240,23,122,.1); border:1px solid rgba(240,23,122,.22);
+          font-size:.68rem; font-weight:700; color:#ff6bb5; white-space:nowrap;
+        }
+        html[data-theme="light"] .op-count { color:#c01060; }
+
+        /* ── CARDS ── */
+        .op-cards { display:flex; flex-direction:column; gap:2rem; }
+
+        /* ══════════════════════════════════════
+           SECTION CARD
+           Panel ze zdjęciem rozciąga się na
+           pełną wysokość karty (align-items:stretch
+           domyślne w grid). Zdjęcie wypełnia panel
+           z object-fit:contain — zero przycinania.
+        ══════════════════════════════════════ */
+        .sc {
+          display:grid;
+          grid-template-columns:360px 1fr;
+          /* align-items: stretch (domyślne) */
+          border-radius:1.75rem;
+          border:1px solid rgba(255,255,255,.08);
+          background:rgba(255,255,255,.03);
           overflow:hidden;
-          transition:border-color 280ms ease, box-shadow 280ms ease, transform 280ms cubic-bezier(0.16,1,0.3,1);
+          transition:border-color 300ms ease,box-shadow 300ms ease,transform 300ms cubic-bezier(.16,1,.3,1);
         }
-        .offer-card:hover { transform:translateY(-2px); }
+        .sc:hover { transform:translateY(-3px); border-color:rgba(240,23,122,.25); box-shadow:0 28px 80px rgba(240,23,122,.1),0 4px 24px rgba(0,0,0,.3); }
+        html[data-theme="light"] .sc { background:#fff; border-color:rgba(0,0,0,.07); box-shadow:0 2px 20px rgba(0,0,0,.05); }
+        html[data-theme="light"] .sc:hover { border-color:rgba(240,23,122,.28); box-shadow:0 24px 60px rgba(240,23,122,.1),0 4px 16px rgba(0,0,0,.06); }
 
-        html[data-theme="light"] .offer-card {
-          background:#ffffff;
-          border:1px solid rgba(0,0,0,0.07);
-          box-shadow:0 4px 24px rgba(0,0,0,0.05);
-        }
+        .sc--rev { grid-template-columns:1fr 360px; }
+        .sc--rev .sc-img-panel { order:2; }
+        .sc--rev .sc-body      { order:1; }
 
-        /* ── CARD HEAD ── */
-        .offer-card-head {
-          padding:2.25rem 2.25rem 2rem;
-          display:flex; align-items:flex-start;
-          justify-content:space-between; gap:1.5rem; flex-wrap:wrap;
-          position:relative; overflow:hidden;
-        }
-        /* Subtle gradient bg on head */
-        .offer-card-head::before {
-          content:''; position:absolute; inset:0; pointer-events:none;
-          background:radial-gradient(ellipse at 90% -10%, rgba(240,23,122,0.07) 0%, transparent 55%);
-        }
-        html[data-theme="light"] .offer-card-head::before {
-          background:radial-gradient(ellipse at 90% -10%, rgba(240,23,122,0.05) 0%, transparent 55%);
-        }
-        .offer-card-head-inner { flex:1; min-width:0; position:relative; }
+        /* ── IMAGE PANEL ──
+           Panel rozciąga się na pełną wysokość karty.
+           Wewnątrz: wrapper flex:1 + zdjęcie absolute/contain.
+        ── */
+        .sc-img-panel {
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.sc-img-main-wrap {
+  flex:1;
+  overflow:hidden;
+}
 
-        /* ── ICON BOX ── */
-        .offer-icon-box {
-          width:3rem; height:3rem; border-radius:1rem; flex-shrink:0;
-          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.2);
+.sc-img-main {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
+  transition:transform 600ms cubic-bezier(.16,1,.3,1);
+}
+        .sc:hover .sc-img-main { transform:scale(1.03); }
+
+        /* Pasek miniatur */
+        .sc-img-thumbs { display:flex; gap:2px; flex-shrink:0; height:72px; }
+        .sc-img-thumb {
+          flex:1; overflow:hidden; position:relative;
+          background:rgba(0,0,0,.28);
           display:flex; align-items:center; justify-content:center;
-          transition:transform 300ms ease, box-shadow 300ms ease, background 300ms ease;
-          animation:floatY 6s ease-in-out infinite;
         }
-        .offer-card:hover .offer-icon-box {
-          transform:scale(1.08) rotate(-4deg);
-          box-shadow:0 8px 24px rgba(240,23,122,0.3);
-          background:rgba(240,23,122,0.18);
-        }
-        html[data-theme="light"] .offer-icon-box {
-          background:rgba(240,23,122,0.08);
-          border:1px solid rgba(240,23,122,0.18);
-        }
-
-        /* ── BADGE ── */
-        .offer-badge {
-          display:inline-flex; align-items:center;
-          padding:0.28rem 0.85rem; border-radius:9999px;
-          background:rgba(240,23,122,0.12); border:1px solid rgba(240,23,122,0.25);
-          font-size:0.62rem; font-weight:800; letter-spacing:0.12em;
-          text-transform:uppercase; color:var(--pink-light);
-        }
-        html[data-theme="light"] .offer-badge {
-          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.28);
-          color:var(--pink);
+        .sc-img-thumb img {
+  width:100%; height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform 400ms ease;
+}
+        .sc-img-thumb:hover img { transform:scale(1.06); }
+        .sc-img-thumb--more {
+          display:flex; align-items:center; justify-content:center;
+          background:rgba(240,23,122,.18); font-size:1rem; font-weight:700;
+          color:rgba(255,255,255,.8); font-family:var(--font-display);
         }
 
-        /* ── TITLE ── */
-        .offer-title {
-          font-family:var(--font-display);
-          font-size:clamp(1.4rem,2.8vw,1.9rem);
-          font-weight:700; line-height:1.1; letter-spacing:-0.02em;
-          color:#fff; margin:0 0 0.65rem;
+        /* Panel bez zdjęcia */
+        .sc-img-panel--empty {
+          align-items:center; justify-content:center;
+          background:rgba(240,23,122,.05); border-right:1px solid rgba(240,23,122,.1);
         }
-        html[data-theme="light"] .offer-title { color:#0d0b10; }
+        html[data-theme="light"] .sc-img-panel--empty { background:rgba(240,23,122,.04); border-right-color:rgba(240,23,122,.12); }
+        .sc--rev .sc-img-panel--empty { border-right:none; border-left:1px solid rgba(240,23,122,.1); }
+        .sc-no-img-icon { font-size:4rem; animation:floatIcon 7s ease-in-out infinite; filter:drop-shadow(0 8px 24px rgba(240,23,122,.3)); }
 
-        /* ── DESC ── */
-        .offer-desc {
-          color:rgba(255,255,255,0.5); font-size:0.875rem;
-          line-height:1.8; margin:0; max-width:44rem;
+        /* ── BODY ── */
+        .sc-body {
+          padding:2.5rem 2.75rem; display:flex; flex-direction:column;
+          justify-content:center; position:relative; min-width:0;
         }
-        html[data-theme="light"] .offer-desc { color:rgba(13,11,16,0.58); }
-
-        /* ── PRICE BOX ── */
-        .offer-price-box {
-          flex-shrink:0; padding:1.25rem 1.5rem; border-radius:1.125rem;
-          background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.08);
-          text-align:center; min-width:120px; position:relative;
-          transition:border-color 280ms ease, box-shadow 280ms ease;
-        }
-        .offer-card:hover .offer-price-box {
-          border-color:rgba(240,23,122,0.3);
-          box-shadow:0 0 0 3px rgba(240,23,122,0.08);
-        }
-        html[data-theme="light"] .offer-price-box {
-          background:rgba(240,23,122,0.05);
-          border:1px solid rgba(240,23,122,0.15);
-        }
-        html[data-theme="light"] .offer-card:hover .offer-price-box {
-          border-color:rgba(240,23,122,0.35);
-          box-shadow:0 0 0 3px rgba(240,23,122,0.07);
+        .sc-body::before {
+          content:''; position:absolute; inset:0; pointer-events:none;
+          background:radial-gradient(ellipse at 100% 0%,rgba(240,23,122,.06) 0%,transparent 55%);
         }
 
-        .offer-price-label {
-          font-size:0.58rem; font-weight:800; letter-spacing:0.14em;
-          text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:0.4rem;
+        .sc-meta { display:flex; align-items:center; gap:.85rem; margin-bottom:1.2rem; flex-wrap:wrap; }
+        .sc-badge {
+          display:inline-flex; align-items:center; padding:.3rem 1rem; border-radius:9999px;
+          background:rgba(240,23,122,.12); border:1px solid rgba(240,23,122,.28);
+          font-size:.65rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#ff6bb5;
         }
-        html[data-theme="light"] .offer-price-label { color:rgba(13,11,16,0.45); }
+        html[data-theme="light"] .sc-badge { color:#c01060; }
 
-        .offer-price-value {
-          font-family:var(--font-display); font-size:1.9rem;
-          font-weight:700; line-height:1; letter-spacing:-0.03em;
-          background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.75) 100%);
-          -webkit-background-clip:text; background-clip:text;
-          -webkit-text-fill-color:transparent;
+        .sc-price {
+          display:flex; align-items:baseline; gap:.4rem; padding:.5rem 1rem;
+          border-radius:.875rem; background:rgba(0,0,0,.22); border:1px solid rgba(255,255,255,.07);
+          transition:border-color 280ms,box-shadow 280ms;
         }
-        html[data-theme="light"] .offer-price-value {
-          background:linear-gradient(135deg,#0d0b10 0%,var(--pink) 140%);
-          -webkit-background-clip:text; background-clip:text;
-          -webkit-text-fill-color:transparent;
+        .sc:hover .sc-price { border-color:rgba(240,23,122,.28); box-shadow:0 0 0 3px rgba(240,23,122,.06); }
+        html[data-theme="light"] .sc-price { background:rgba(240,23,122,.05); border-color:rgba(240,23,122,.15); }
+        .sc-price__from { font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.35); }
+        html[data-theme="light"] .sc-price__from { color:rgba(13,11,16,.4); }
+        .sc-price__val {
+          font-family:var(--font-display); font-size:1.5rem; font-weight:700; letter-spacing:-.03em;
+          background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.7) 100%);
+          -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
         }
-        .offer-price-unit {
-          font-size:0.9rem; font-weight:500;
-          -webkit-text-fill-color:rgba(255,255,255,0.4);
-        }
-        html[data-theme="light"] .offer-price-unit {
-          -webkit-text-fill-color:rgba(13,11,16,0.45);
-        }
-
-        /* ── INNER DIVIDER ── */
-        .offer-inner-divider {
-          height:1px;
-          background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent);
-        }
-        html[data-theme="light"] .offer-inner-divider {
-          background:linear-gradient(90deg,transparent,rgba(240,23,122,0.12),transparent);
+        html[data-theme="light"] .sc-price__val {
+          background:linear-gradient(135deg,#0d0b10,#f0177a);
+          -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
         }
 
-        /* ── BULLETS ── */
-        .offer-bullets {
-          padding:1.75rem 2.25rem;
-          display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0.65rem;
-          border-bottom:1px solid rgba(255,255,255,0.05);
+        .sc-title {
+          font-family:var(--font-display); font-size:clamp(1.5rem,2.2vw,2rem);
+          font-weight:700; line-height:1.1; letter-spacing:-.03em; color:#fff; margin:0 0 .85rem; position:relative;
         }
-        html[data-theme="light"] .offer-bullets {
-          border-bottom:1px solid rgba(240,23,122,0.08);
+        html[data-theme="light"] .sc-title { color:#0d0b10; }
+
+        .sc-desc { font-size:.95rem; line-height:1.85; color:rgba(255,255,255,.58); margin:0 0 1.75rem; }
+        html[data-theme="light"] .sc-desc { color:rgba(13,11,16,.6); }
+
+        .sc-bullets { list-style:none; padding:0; margin:0 0 1.75rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:.45rem; }
+        .sc-bullet {
+          display:flex; align-items:flex-start; gap:.65rem; padding:.75rem .95rem; border-radius:.875rem;
+          background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.055);
+          font-size:.85rem; font-weight:500; color:rgba(255,255,255,.7); line-height:1.5;
+          transition:background 200ms,border-color 200ms,color 200ms;
+        }
+        .sc-bullet:hover { background:rgba(240,23,122,.07); border-color:rgba(240,23,122,.22); color:rgba(255,255,255,.9); }
+        html[data-theme="light"] .sc-bullet { background:rgba(240,23,122,.03); border-color:rgba(240,23,122,.1); color:rgba(13,11,16,.72); }
+        html[data-theme="light"] .sc-bullet:hover { background:rgba(240,23,122,.07); border-color:rgba(240,23,122,.22); color:#0d0b10; }
+        .sc-bullet__check {
+          width:20px; height:20px; border-radius:50%; background:rgba(240,23,122,.14);
+          border:1px solid rgba(240,23,122,.3); display:flex; align-items:center;
+          justify-content:center; flex-shrink:0; margin-top:1px; color:#f0177a;
         }
 
-        .offer-bullet {
-          display:flex; align-items:flex-start; gap:0.65rem;
-          padding:0.9rem 1rem; border-radius:0.875rem;
-          background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.055);
-          transition:background 220ms ease, border-color 220ms ease;
-        }
-        .offer-bullet:hover {
-          background:rgba(240,23,122,0.06); border-color:rgba(240,23,122,0.2);
-        }
-        html[data-theme="light"] .offer-bullet {
-          background:rgba(240,23,122,0.03); border:1px solid rgba(240,23,122,0.1);
-        }
-        html[data-theme="light"] .offer-bullet:hover {
-          background:rgba(240,23,122,0.07); border-color:rgba(240,23,122,0.22);
-        }
-
-        .offer-bullet-dot {
-          width:20px; height:20px; border-radius:50%; flex-shrink:0;
-          background:rgba(240,23,122,0.12); border:1px solid rgba(240,23,122,0.28);
-          display:flex; align-items:center; justify-content:center; margin-top:1px;
-        }
-        html[data-theme="light"] .offer-bullet-dot {
-          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.25);
-        }
-
-        .offer-bullet-text {
-          font-size:0.83rem; color:rgba(255,255,255,0.68);
-          font-weight:500; line-height:1.55;
-        }
-        html[data-theme="light"] .offer-bullet-text { color:rgba(13,11,16,0.72); }
-
-        /* ── CTA ROW ── */
-        .offer-cta-row {
-          padding:1.5rem 2.25rem; display:flex; gap:0.75rem; flex-wrap:wrap;
-          align-items:center; justify-content:flex-start;
-        }
-        
-        .offer-cta-row .offer-btn-primary:nth-child(2) {
-          background:linear-gradient(135deg,#ff6bb5,#f0177a);
-        }
-        
-        .offer-cta-row .offer-btn-primary:nth-child(2):hover {
-          background:linear-gradient(135deg,#ff8bc7,#ff2d8f);
-        }
-
-        .offer-btn-primary {
-          display:inline-flex; align-items:center; gap:0.4rem;
-          height:2.85rem; padding:0 1.6rem; border-radius:9999px;
-          background:var(--pink); color:#fff; font-size:0.84rem; font-weight:700;
-          text-decoration:none;
-          box-shadow:0 6px 22px rgba(240,23,122,0.38);
-          transition:transform 200ms ease, box-shadow 200ms ease, background 200ms ease;
+        .sc-cta { display:flex; gap:.7rem; flex-wrap:wrap; align-items:center; margin-top:auto; padding-top:.25rem; }
+        .sc-btn {
+          display:inline-flex; align-items:center; gap:.45rem; height:2.85rem; padding:0 1.6rem;
+          border-radius:9999px; font-size:.86rem; font-weight:700; text-decoration:none;
+          transition:transform 200ms ease,box-shadow 200ms ease,background 200ms ease,border-color 200ms ease;
           position:relative; overflow:hidden;
         }
-        .offer-btn-primary::after {
-          content:''; position:absolute; inset:0;
-          background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 60%);
-          pointer-events:none;
-        }
-        .offer-btn-primary:hover {
-          transform:translateY(-2px) scale(1.02);
-          box-shadow:0 12px 36px rgba(240,23,122,0.5);
-          background:var(--pink-light);
-        }
+        .sc-btn::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,.14) 0%,transparent 60%); pointer-events:none; }
+        .sc-btn--primary { background:#f0177a; color:#fff; box-shadow:0 6px 22px rgba(240,23,122,.4); }
+        .sc-btn--primary:hover { transform:translateY(-2px) scale(1.02); box-shadow:0 14px 38px rgba(240,23,122,.55); background:#ff3d8d; }
+        .sc-btn--outline { background:transparent; color:#ff6bb5; border:1.5px solid rgba(240,23,122,.4); }
+        .sc-btn--outline:hover { background:rgba(240,23,122,.1); border-color:#f0177a; transform:translateY(-1px); color:#fff; }
+        html[data-theme="light"] .sc-btn--outline { color:#c01060; }
+        html[data-theme="light"] .sc-btn--outline:hover { color:#c01060; background:rgba(240,23,122,.08); }
+        .sc-btn--ghost { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.6); }
+        .sc-btn--ghost:hover { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.2); color:#fff; transform:translateY(-1px); }
+        html[data-theme="light"] .sc-btn--ghost { border-color:rgba(0,0,0,.12); color:rgba(13,11,16,.6); background:rgba(0,0,0,.03); }
+        html[data-theme="light"] .sc-btn--ghost:hover { background:rgba(0,0,0,.07); color:#0d0b10; }
 
-        .offer-btn-ghost {
-          display:inline-flex; align-items:center;
-          height:2.85rem; padding:0 1.6rem; border-radius:9999px;
-          border:1.5px solid rgba(255,255,255,0.12);
-          color:rgba(255,255,255,0.65); font-size:0.84rem; font-weight:600;
-          text-decoration:none; background:rgba(255,255,255,0.03);
-          transition:border-color 200ms ease, background 200ms ease,
-                      color 200ms ease, transform 200ms ease;
+        /* ── EMPTY STATE ── */
+        .op-empty-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.25rem; }
+        .op-empty-card {
+          border-radius:1.5rem; border:1px solid rgba(255,255,255,.07);
+          background:rgba(255,255,255,.025); padding:2rem;
+          display:flex; flex-direction:column; gap:1.25rem;
+          transition:border-color 250ms,transform 250ms;
         }
-        .offer-btn-ghost:hover {
-          border-color:rgba(240,23,122,0.4); background:rgba(240,23,122,0.07);
-          color:#fff; transform:translateY(-1px);
-        }
-        html[data-theme="light"] .offer-btn-ghost {
-          border:1.5px solid rgba(240,23,122,0.22); color:var(--pink);
-          background:rgba(240,23,122,0.04);
-        }
-        html[data-theme="light"] .offer-btn-ghost:hover {
-          border-color:rgba(240,23,122,0.45); background:rgba(240,23,122,0.1); color:var(--pink);
-        }
-
-        /* ── PAGE HEADER ── */
-        .offer-hero-badge {
-          display:inline-flex; align-items:center; gap:0.5rem;
-          padding:0.38rem 1rem; border-radius:9999px;
-          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.25);
-          font-size:0.63rem; font-weight:800; letter-spacing:0.12em;
-          text-transform:uppercase; color:var(--pink-light);
-        }
-        html[data-theme="light"] .offer-hero-badge {
-          background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.3);
-          color:var(--pink);
-        }
-
-        .offer-hero-title {
-          font-family:var(--font-display);
-          font-size:clamp(2.6rem,5.5vw,4.5rem);
-          font-weight:700; line-height:1.25; letter-spacing:-0.03em;
-          color:#fff; margin:0 0 1.5rem;
-        }
-        html[data-theme="light"] .offer-hero-title { color:#0d0b10; }
-
-        .offer-hero-accent {
-          display:inline-block;
-          background:linear-gradient(105deg,#f0177a 0%,#ff6bb5 50%,#f0177a 80%);
-          background-size:200% auto;
-          -webkit-background-clip:text; background-clip:text;
-          -webkit-text-fill-color:transparent;
-          animation:shimBar 3.5s linear infinite;
-        }
-
-        .offer-hero-desc {
-          color:rgba(255,255,255,0.52); font-size:1rem;
-          line-height:1.85; max-width:500px; margin-bottom:2.75rem;
-        }
-        html[data-theme="light"] .offer-hero-desc { color:rgba(13,11,16,0.58); }
-
-        /* ── NAV PILLS ── */
-        .offer-nav-wrap {
-          display:flex; flex-wrap:wrap; gap:0.5rem;
-        }
-
-        .offer-nav-pill {
-          display:inline-flex; align-items:center; gap:0.4rem;
-          padding:0.45rem 1.1rem; border-radius:9999px;
-          font-size:0.79rem; font-weight:600;
-          color:rgba(255,255,255,0.6); text-decoration:none;
-          background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09);
-          transition:all 200ms ease; white-space:nowrap;
-        }
-        .offer-nav-pill:hover {
-          background:rgba(240,23,122,0.1); border-color:rgba(240,23,122,0.3);
-          color:var(--pink-light); transform:translateY(-1px);
-        }
-        .offer-nav-pill.special {
-          background:rgba(240,23,122,0.1); border-color:rgba(240,23,122,0.28);
-          color:var(--pink-light);
-        }
-        html[data-theme="light"] .offer-nav-pill {
-          color:rgba(13,11,16,0.6); background:rgba(0,0,0,0.04);
-          border:1px solid rgba(0,0,0,0.1);
-        }
-        html[data-theme="light"] .offer-nav-pill:hover {
-          background:rgba(240,23,122,0.08); border-color:rgba(240,23,122,0.3);
-          color:var(--pink);
-        }
-        html[data-theme="light"] .offer-nav-pill.special {
-          background:rgba(240,23,122,0.1); border-color:rgba(240,23,122,0.28);
-          color:var(--pink);
-        }
+        .op-empty-card:hover { border-color:rgba(240,23,122,.25); transform:translateY(-2px); }
+        html[data-theme="light"] .op-empty-card { background:#fff; border-color:rgba(0,0,0,.07); }
 
         /* ── BOTTOM CTA ── */
-        .offer-bottom-cta {
-          margin-top:4rem; border-radius:1.5rem;
-          border:1px solid rgba(240,23,122,0.18);
-          background:rgba(255,255,255,0.025);
-          padding:3.5rem 2.5rem; text-align:center; position:relative; overflow:hidden;
+        .op-bottom-cta {
+          margin-top:5rem; border-radius:2rem; border:1px solid rgba(240,23,122,.2);
+          background:rgba(255,255,255,.025); padding:4.5rem 3rem;
+          text-align:center; position:relative; overflow:hidden;
         }
-        html[data-theme="light"] .offer-bottom-cta {
-          background:#ffffff;
-          border:1px solid rgba(240,23,122,0.2);
-          box-shadow:0 12px 50px rgba(240,23,122,0.1), 0 4px 16px rgba(0,0,0,0.04);
-        }
-        .offer-bottom-cta-title {
-          font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.2rem);
-          font-weight:700; color:#fff; margin-bottom:0.75rem; position:relative;
-        }
-        html[data-theme="light"] .offer-bottom-cta-title { color:#0d0b10; }
-        .offer-bottom-cta-desc {
-          color:rgba(255,255,255,0.48); font-size:0.95rem;
-          line-height:1.8; max-width:400px; margin:0 auto 2rem; position:relative;
-        }
-        html[data-theme="light"] .offer-bottom-cta-desc { color:rgba(13,11,16,0.55); }
+        html[data-theme="light"] .op-bottom-cta { background:#fff; border-color:rgba(240,23,122,.22); box-shadow:0 16px 60px rgba(240,23,122,.1),0 4px 20px rgba(0,0,0,.04); }
+        .op-bottom-cta-bg { position:absolute; inset:0; pointer-events:none; background:radial-gradient(ellipse 65% 90% at 50% 115%,rgba(240,23,122,.12) 0%,transparent 60%); }
+        .op-bottom-cta-title { font-family:var(--font-display); font-size:clamp(1.75rem,3.5vw,2.75rem); font-weight:700; color:#fff; margin:0 0 1rem; letter-spacing:-.03em; position:relative; }
+        html[data-theme="light"] .op-bottom-cta-title { color:#0d0b10; }
+        .op-bottom-cta-desc { font-size:1.05rem; line-height:1.8; color:rgba(255,255,255,.5); max-width:420px; margin:0 auto 2.5rem; position:relative; }
+        html[data-theme="light"] .op-bottom-cta-desc { color:rgba(13,11,16,.55); }
 
-        /* ── FANCY DIVIDER ── */
-        .offer-divider {
-          height:1px; position:relative; overflow:visible; margin:2.5rem 0 3rem;
-          background:linear-gradient(90deg,transparent,rgba(240,23,122,0.25),transparent);
-        }
-        .offer-divider::after {
-          content:''; position:absolute; left:50%; top:50%;
-          transform:translate(-50%,-50%);
-          width:8px; height:8px; border-radius:50%;
-          background:var(--pink); box-shadow:0 0 12px rgba(240,23,122,0.7);
+        /* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+        @media (min-width:769px) and (max-width:1100px) {
+          .sc      { grid-template-columns:300px 1fr; }
+          .sc--rev { grid-template-columns:1fr 300px; }
+          .sc-body { padding:2rem 2.25rem; }
+          .sc-title { font-size:1.55rem; }
+          .sc-img-thumbs { height:64px; }
         }
 
-        /* ── SECTION LABEL ── */
-        .offer-section-eyebrow {
-          display:flex; align-items:center; gap:0.6rem;
-          font-size:0.62rem; font-weight:800; letter-spacing:0.15em;
-          text-transform:uppercase; color:var(--pink); margin-bottom:0.5rem;
-        }
-        .offer-section-eyebrow::before {
-          content:''; display:inline-block; width:22px; height:2px;
-          background:var(--pink); border-radius:2px; flex-shrink:0;
-        }
+        @media (max-width:768px) {
+          .op-wrap { padding:5rem 1.1rem 7rem; }
+          .op-hero-title { font-size:clamp(2.2rem,9vw,3rem); letter-spacing:-.03em; }
+          .op-hero-sub { font-size:.95rem; max-width:100%; }
+          .op-nav { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; padding-bottom:.5rem; }
+          .op-nav::-webkit-scrollbar { display:none; }
+          .op-nav-pill { flex-shrink:0; }
+          .op-divider { margin:2.5rem 0 3rem; }
+          .op-section-head { margin-bottom:2rem; }
+          .op-section-title { font-size:1.25rem; }
 
-        /* count badge */
-        .offer-count-badge {
-          display:inline-flex; align-items:center; justify-content:center;
-          padding:0.2rem 0.6rem; border-radius:9999px;
-          background:rgba(240,23,122,0.1); border:1px solid rgba(240,23,122,0.2);
-          font-size:0.65rem; font-weight:700; color:var(--pink-light);
-        }
-        html[data-theme="light"] .offer-count-badge {
-          background:rgba(240,23,122,0.08); border:1px solid rgba(240,23,122,0.22);
-          color:var(--pink);
-        }
+          .sc, .sc--rev { grid-template-columns:1fr; }
+          .sc--rev .sc-img-panel { order:0; }
+          .sc--rev .sc-body      { order:1; }
 
-        /* ═══════════════════════════════════════════════════════════════
-           RESPONSIVE STYLES - MOBILE OPTIMIZATION
-           ═══════════════════════════════════════════════════════════════ */
-        @media (max-width: 768px) {
-          /* Kontener strony */
-          .page-bg > div { padding: 4rem 1rem 5rem !important; }
+          /* Na mobile panel ma stałą wysokość (nie stretch od body) */
+          .sc-img-panel { min-height:unset; max-height:unset; }
+          .sc-img-panel--empty { min-height:160px; max-height:160px; }
+          .sc-img-thumbs { height:60px; }
 
-          /* Hero section */
-          .offer-hero-title { font-size: clamp(1.8rem, 8vw, 2.6rem) !important; line-height: 1.15 !important; }
-          .offer-hero-title br { display: none; }
-          .offer-hero-desc { font-size: 0.9rem !important; max-width: 100% !important; }
+          .sc-body { padding:1.6rem 1.4rem 1.5rem; }
+          .sc-meta { gap:.65rem; margin-bottom:1rem; }
+          .sc-price { padding:.45rem .85rem; }
+          .sc-price__val { font-size:1.3rem; }
+          .sc-title { font-size:clamp(1.35rem,6vw,1.75rem); margin-bottom:.7rem; }
+          .sc-desc { font-size:.88rem; margin-bottom:1.4rem; }
+          .sc-bullets { grid-template-columns:1fr; gap:.45rem; margin-bottom:1.5rem; }
+          .sc-bullet { font-size:.83rem; padding:.7rem .9rem; }
+          .sc-cta { flex-direction:column; gap:.55rem; }
+          .sc-btn { width:100%; justify-content:center; height:2.75rem; font-size:.84rem; }
 
-          /* Nawigacja - scrollowane pille */
-          .offer-nav-wrap {
-            flex-wrap: nowrap !important;
-            overflow-x: auto !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: none !important;
-            padding-bottom: 0.5rem !important;
-            gap: 0.4rem !important;
-          }
-          .offer-nav-wrap::-webkit-scrollbar { display: none; }
-          .offer-nav-pill {
-            flex-shrink: 0 !important;
-            padding: 0.5rem 1rem !important;
-            font-size: 0.8rem !important;
-          }
-
-          /* Karty ofert */
-          .offer-card { border-radius: 1.25rem !important; }
-
-          /* Header karty - układ pionowy na mobilnych */
-          .offer-card-head {
-            padding: 1.5rem 1.25rem 1.25rem !important;
-            flex-direction: column !important;
-            gap: 1rem !important;
-          }
-          .offer-card-head-inner { width: 100% !important; }
-
-          /* Ikona i badge */
-          .offer-icon-box {
-            width: 2.75rem !important;
-            height: 2.75rem !important;
-          }
-
-          /* Tytuł karty */
-          .offer-title {
-            font-size: clamp(1.25rem, 5vw, 1.6rem) !important;
-            line-height: 1.2 !important;
-            margin-bottom: 0.5rem !important;
-          }
-
-          /* Opis karty */
-          .offer-desc {
-            font-size: 0.85rem !important;
-            line-height: 1.6 !important;
-            max-width: 100% !important;
-          }
-
-          /* CENA - kluczowa poprawka */
-          .offer-price-box {
-            width: 100% !important;
-            min-width: unset !important;
-            padding: 1rem 1.25rem !important;
-            display: flex !important;
-            flex-direction: row !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            gap: 0.75rem !important;
-          }
-          .offer-price-label {
-            font-size: 0.65rem !important;
-            margin-bottom: 0 !important;
-          }
-          .offer-price-value {
-            font-size: 1.5rem !important;
-          }
-
-          /* Bullety - jedna kolumna */
-          .offer-bullets {
-            padding: 1.25rem !important;
-            grid-template-columns: 1fr !important;
-            gap: 0.5rem !important;
-          }
-          .offer-bullet {
-            padding: 0.75rem 0.9rem !important;
-          }
-          .offer-bullet-text {
-            font-size: 0.8rem !important;
-            line-height: 1.45 !important;
-          }
-
-          /* CTA przyciski - pełna szerokość */
-          .offer-cta-row {
-            padding: 1.25rem !important;
-            flex-direction: column !important;
-            gap: 0.6rem !important;
-          }
-          .offer-btn-primary,
-          .offer-btn-ghost {
-            width: 100% !important;
-            justify-content: center !important;
-            height: 2.6rem !important;
-            font-size: 0.8rem !important;
-          }
-
-          /* Bottom CTA */
-          .offer-bottom-cta {
-            padding: 2.5rem 1.5rem !important;
-            margin-top: 2.5rem !important;
-          }
-          .offer-bottom-cta-title { font-size: clamp(1.3rem, 5vw, 1.8rem) !important; }
-          .offer-bottom-cta-desc { font-size: 0.85rem !important; }
+          .op-bottom-cta { padding:3rem 1.5rem; margin-top:3.5rem; border-radius:1.5rem; }
+          .op-bottom-cta-title { font-size:clamp(1.5rem,6vw,2rem); }
+          .op-bottom-cta-desc { font-size:.9rem; }
         }
 
-        /* Bardzo małe ekrany - poniżej 380px */
-        @media (max-width: 380px) {
-          .offer-title { font-size: 1.15rem !important; }
-          .offer-price-value { font-size: 1.25rem !important; }
-          .offer-icon-box {
-            width: 2.5rem !important;
-            height: 2.5rem !important;
-          }
-          .offer-badge {
-            font-size: 0.55rem !important;
-            padding: 0.25rem 0.65rem !important;
-          }
-        }
-
-        /* Tablety - medium screens */
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .offer-card-head {
-            padding: 2rem 1.75rem 1.75rem !important;
-          }
-          .offer-bullets {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
+        @media (max-width:420px) {
+          .op-hero-title { font-size:clamp(1.9rem,10vw,2.5rem); }
+          .sc-img-panel { max-height:320px; }
         }
       `}</style>
 
       <div className="page-bg noise offerta-page">
-        <div style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 8rem" }}>
+        <div className="op-wrap">
 
-          {/* ── PAGE HERO ── */}
-          <div style={{ marginBottom:"3.5rem" }}>
-
-            <div className="fu" style={{ marginBottom:"1.25rem" }}>
-              <span className="offer-hero-badge">
-                <span style={{
-                  width:"5px", height:"5px", borderRadius:"50%",
-                  background:"var(--pink)", display:"inline-block",
-                  animation:"pulseDot 2.2s ease-in-out infinite",
-                }}/>
-                Oferta
-              </span>
+          <div className="op-hero">
+            <div className="op-live-badge">
+              <span className="op-live-dot" />
+              Oferta
             </div>
-
-            <h1 className="offer-hero-title fu d1">
-              Profesjonalna organizacja<br/>
-              <span className="offer-hero-accent">każdego wydarzenia</span>
+            <h1 className="op-hero-title">
+              Tworzymy
+              <span className="op-hero-accent">niezapomniane wydarzenia</span>
             </h1>
-
-            <p className="offer-hero-desc fu d2">
-              Specjalizujemy się w różnych typach wydarzeń - od przyjęć prywatnych
-              po eventy firmowe. Każdą usługę dopasowujemy indywidualnie.
+            <p className="op-hero-sub">
+              Specjalizujemy się w organizacji wyjątkowych imprez —
+              od kameralnych urodzin po wielkie eventy firmowe.
+              Każde wydarzenie traktujemy indywidualnie.
             </p>
-
-            {/* Nav pills */}
-            <div className="offer-nav-wrap fu d3">
+            <nav className="op-nav" aria-label="Nawigacja oferty">
               {getNavItems(sections).map((n) => (
-                <a
-                  key={n.key}
-                  href={n.href ?? `#${n.key}`}
-                  className={`offer-nav-pill${n.href ? " special" : ""}`}
-                >
-                  <span>{n.icon}</span>
+                <a key={n.key} href={n.href ?? `#${n.key}`} className={`op-nav-pill${n.href ? " op-nav-pill--special" : ""}`}>
+                  <span aria-hidden="true">{n.icon}</span>
                   {n.label}
                 </a>
               ))}
-            </div>
+            </nav>
           </div>
 
-          {/* Divider */}
-          <div className="offer-divider"/>
+          <div className="op-divider" role="separator" />
 
-          {/* ── SECTIONS HEADER ── */}
           {offerData.sections.length > 0 && (
-            <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"2rem", flexWrap:"wrap", gap:"1rem" }}>
+            <div className="op-section-head">
               <div>
-                <div className="offer-section-eyebrow">Nasze usługi</div>
-                <div style={{
-                  fontFamily:"var(--font-display)", fontSize:"1.1rem", fontWeight:600,
-                  color:"#fff",
-                }} className="sec-title-sm">
-                  Wszystko czego potrzebujesz
-                </div>
+                <div className="op-eyebrow">Nasze usługi</div>
+                <h2 className="op-section-title">Wszystko, czego potrzebujesz</h2>
               </div>
-              <span className="offer-count-badge">{offerData.sections.length} kategorii</span>
+              <span className="op-count">{offerData.sections.length} kategorii</span>
             </div>
           )}
 
-          {/* ── SECTIONS ── */}
           {offerData.sections.length > 0 ? (
-            <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
-              {offerData.sections.map((s: OfferSection) => (
-                <SectionCard key={s.key} s={s} />
+            <div className="op-cards">
+              {offerData.sections.map((s: OfferSection, i: number) => (
+                <SectionCard key={s.key} s={s} index={i} />
               ))}
             </div>
           ) : (
-            <div style={{ display:"flex", flexDirection:"column", gap:"1.5rem" }}>
-              {Object.entries(CAT_LABELS).map(([key, label]) => (
-                <article
-                  key={key} id={key}
-                  className="offer-card"
-                  style={{ scrollMarginTop:"6rem" }}
-                >
-                  <div className="offer-card-head">
-                    <div className="offer-card-head-inner">
-                      <div style={{ display:"flex", alignItems:"center", gap:"1rem", marginBottom:"1rem" }}>
-                        <div className="offer-icon-box">
-                          <span style={{ fontSize:"1.3rem" }}>{CAT_ICONS[key] ?? "✦"}</span>
-                        </div>
-                        <span className="offer-badge">{label}</span>
-                      </div>
-                      <h2 className="offer-title">{label}</h2>
-                      <p className="offer-desc">
-                        Treść tej sekcji zostanie uzupełniona - skontaktuj się, aby dowiedzieć się więcej.
-                      </p>
+            <>
+              <div className="op-section-head">
+                <div>
+                  <div className="op-eyebrow">Nasze usługi</div>
+                  <h2 className="op-section-title">Wszystko, czego potrzebujesz</h2>
+                </div>
+                <span className="op-count">{Object.keys(CAT_LABELS).length} kategorii</span>
+              </div>
+              <div className="op-empty-grid">
+                {Object.entries(CAT_LABELS).map(([key, label]) => (
+                  <article key={key} id={key} className="op-empty-card">
+                    <div style={{ display:"flex", alignItems:"center", gap:".85rem" }}>
+                      <span style={{ fontSize:"1.75rem" }}>{CAT_ICONS[key] ?? "✦"}</span>
+                      <span className="sc-badge">{label}</span>
                     </div>
-                  </div>
-                  <div className="offer-inner-divider"/>
-                  <div className="offer-cta-row">
-                    <Link href="/kontakt" className="offer-btn-primary">Zapytaj o wycenę →</Link>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    <h3 className="sc-title" style={{ fontSize:"1.3rem", margin:0 }}>{label}</h3>
+                    <p className="sc-desc" style={{ margin:0, fontSize:".88rem" }}>
+                      Skontaktuj się, aby dowiedzieć się więcej o tej kategorii.
+                    </p>
+                    <Link href="/kontakt" className="sc-btn sc-btn--primary" style={{ alignSelf:"flex-start" }}>Zapytaj →</Link>
+                  </article>
+                ))}
+              </div>
+            </>
           )}
 
-          {offerData.sections.length === 0 && (
-            <div className="offer-empty" style={{
-              padding:"4rem 2rem", textAlign:"center",
-              borderRadius:"1.5rem", border:"1px dashed rgba(240,23,122,0.2)",
-              background:"rgba(240,23,122,0.03)"
-            }}>
-              <h3 style={{ fontSize:"1.2rem", fontWeight:600, marginBottom:"0.5rem", color:"var(--pink-light)" }}>Oferta w przygotowaniu</h3>
-              <p style={{ color:"rgba(255,255,255,0.5)", lineHeight:1.6 }}>Skontaktuj się z nami, aby omówić szczegóły oferty dopasowanej do Twoich potrzeb.</p>
-              <Link href="/kontakt" className="offer-btn-primary" style={{ marginTop:"1.5rem", display:"inline-flex" }}>Skontaktuj się →</Link>
-            </div>
-          )}
-
-          {/* ── BOTTOM CTA ── */}
-          <div className="offer-bottom-cta fu d4">
-            <div style={{
-              position:"absolute", inset:0, pointerEvents:"none",
-              background:"radial-gradient(ellipse 70% 80% at 50% 110%,rgba(240,23,122,0.1) 0%,transparent 65%)",
-            }}/>
-            <h2 className="offer-bottom-cta-title">Nie widzisz tego czego szukasz?</h2>
-            <p className="offer-bottom-cta-desc">
-              Skontaktuj się z nami - organizujemy również niestandardowe wydarzenia.
+          <div className="op-bottom-cta">
+            <div className="op-bottom-cta-bg" />
+            <h2 className="op-bottom-cta-title">Nie widzisz tego, czego szukasz?</h2>
+            <p className="op-bottom-cta-desc">
+              Organizujemy również niestandardowe wydarzenia dopasowane
+              w 100% do Twoich potrzeb — napisz do nas!
             </p>
-            <Link href="/kontakt" className="offer-btn-primary" style={{
-              display:"inline-flex", alignItems:"center", gap:"0.5rem",
-              height:"3.1rem", padding:"0 2.2rem", borderRadius:"9999px",
-              fontSize:"0.9rem", fontWeight:700, textDecoration:"none",
-              position:"relative",
-            }}>
-              Napisz do nas →
+            <Link
+              href="/kontakt"
+              className="sc-btn sc-btn--primary"
+              style={{ height:"3.3rem", padding:"0 2.5rem", fontSize:".95rem", margin:"0 auto", display:"inline-flex", position:"relative" }}
+            >
+              Napisz do nas
+              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
             </Link>
           </div>
 
         </div>
       </div>
 
-      {/* Light theme inline overrides */}
-      <style>{`
-        html[data-theme="light"] .sec-title-sm { color: #0d0b10 !important; }
-        html[data-theme="light"] .offer-count-badge { background: rgba(240,23,122,0.08); }
-      `}</style>
       <SiteFooter />
     </>
   );

@@ -150,6 +150,42 @@ export default function AboutPage() {
         }
         html[data-theme="light"] .hero-desc { color:rgba(13,11,16,0.6); }
 
+        /* ── HERO IMAGE ── */
+        .hero-img-wrap {
+          position:relative;
+          border-radius:1.5rem;
+          overflow:hidden;
+          background:linear-gradient(135deg, rgba(240,23,122,0.1) 0%, rgba(20,15,30,0.8) 100%);
+          border:1px solid rgba(240,23,122,0.2);
+          box-shadow:0 20px 60px rgba(240,23,122,0.15), 0 8px 24px rgba(0,0,0,0.3);
+        }
+        html[data-theme="light"] .hero-img-wrap {
+          background:linear-gradient(135deg, rgba(240,23,122,0.08) 0%, rgba(255,255,255,0.9) 100%);
+          border:1px solid rgba(240,23,122,0.25);
+          box-shadow:0 20px 60px rgba(240,23,122,0.12), 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .hero-img {
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          object-position:center;
+          display:block;
+        }
+        .hero-img-glow {
+          position:absolute;
+          inset:0;
+          background:radial-gradient(ellipse at 50% 100%, rgba(240,23,122,0.3) 0%, transparent 70%);
+          pointer-events:none;
+          opacity:0.6;
+        }
+        .hero-img-frame {
+          position:absolute;
+          inset:0;
+          border:1px solid rgba(255,255,255,0.1);
+          border-radius:1.5rem;
+          pointer-events:none;
+        }
+
         /* ── FLOATING ORBS (decoration) ── */
         .orb {
           position:absolute; border-radius:50%;
@@ -540,35 +576,70 @@ export default function AboutPage() {
           <div className="orb orb-1" />
           <div className="orb orb-2" />
 
-          {/* Badge */}
-          <div className="fu" style={{ marginBottom:"1.5rem" }}>
-            <span className="hero-badge">
-              <span className="dot-pulse"/>
-              Poznaj nas bliżej
-            </span>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"3rem", alignItems:"center" }} className="hero-grid">
+            {/* Lewa kolumna - tekst */}
+            <div>
+              {/* Badge */}
+              <div className="fu" style={{ marginBottom:"1.5rem" }}>
+                <span className="hero-badge">
+                  <span className="dot-pulse"/>
+                  Poznaj nas bliżej
+                </span>
+              </div>
+
+              {/* Title */}
+              <h1 className="hero-title fu d1" style={{ fontSize:"clamp(2.2rem,4vw,3.5rem)" }}>
+                Tworzymy wydarzenia,<br/>
+                <span className="hero-accent">które zostają w pamięci</span>
+              </h1>
+
+              {/* Animated underline */}
+              <div className="fu d2" style={{ marginBottom:"1.5rem" }}>
+                <span className="pink-rule" style={{ width:"80px", animationDelay:"0.4s"}}/>
+              </div>
+
+              {/* Description */}
+              <p className="hero-desc fu d3">
+                Pinky Party Animacje & Eventy to firma eventowa prowadzona przez Magdę Gałkowską – animatorkę, DJ-kę, wodzirejkę oraz nauczycielkę edukacji wczesnoszkolnej. To połączenie jest kluczowe, ponieważ oznacza, że firma nie tylko organizuje wydarzenia, ale również doskonale rozumie potrzeby dzieci i młodzieży.
+              </p>
+              <p className="hero-desc fu d4" style={{ marginTop: "1rem" }}>
+                Założycielka posiada około 8 lat doświadczenia w branży eventowej, co przekłada się na profesjonalne podejście do organizacji imprez oraz umiejętność zarządzania grupą uczestników.
+              </p>
+              <p className="hero-desc fu d5" style={{ marginTop: "1rem" }}>
+                Firma współpracowała m.in. z: Aquapark Wrocław, Biedronka, Scania, różne rady osiedli, lokale eventowe i szkoły.
+              </p>
+            </div>
+
+            {/* Prawa kolumna - grafika */}
+            <div className="hero-img-wrap fr d2" style={{ height:"420px", minHeight:"420px" }}>
+              <img src="/onas.jpg" alt="Pinky Party - O nas" className="hero-img" />
+              <div className="hero-img-glow" />
+              <div className="hero-img-frame" />
+            </div>
           </div>
 
-          {/* Title */}
-          <h1 className="hero-title fu d1">
-            Tworzymy wydarzenia,<br/>
-            <span className="hero-accent">które zostają w pamięci</span>
-          </h1>
-
-          {/* Animated underline */}
-          <div className="fu d2" style={{ marginBottom:"1.5rem" }}>
-            <span className="pink-rule" style={{ width:"80px", animationDelay:"0.4s" }}/>
-          </div>
-
-          {/* Description */}
-          <p className="hero-desc fu d3">
-            Pinky Party Animacje & Eventy to firma eventowa prowadzona przez Magdę Gałkowską – animatorkę, DJ-kę, wodzirejkę oraz nauczycielkę edukacji wczesnoszkolnej. To połączenie jest kluczowe, ponieważ oznacza, że firma nie tylko organizuje wydarzenia, ale również doskonale rozumie potrzeby dzieci i młodzieży.
-          </p>
-          <p className="hero-desc fu d4" style={{ marginTop: "1rem" }}>
-            Założycielka posiada około 8 lat doświadczenia w branży eventowej, co przekłada się na profesjonalne podejście do organizacji imprez oraz umiejętność zarządzania grupą uczestników. Każde wydarzenie jest prowadzone z energią, zaangażowaniem oraz dbałością o szczegóły.
-          </p>
-          <p className="hero-desc fu d5" style={{ marginTop: "1rem" }}>
-            Firma współpracowała m.in. z: Aquapark Wrocław, Biedronka, Scania, różne rady osiedli, lokale eventowe i szkoły.
-          </p>
+          {/* Responsive styles dla hero grid */}
+          <style>{`
+            @media (max-width: 900px) {
+              .hero-grid {
+                grid-template-columns: 1fr !important;
+                gap: 2.5rem !important;
+              }
+              .hero-grid .hero-img-wrap {
+                height: 320px !important;
+                min-height: 320px !important;
+                max-width: 500px;
+                margin: 0 auto;
+                width: 100%;
+              }
+            }
+            @media (max-width: 640px) {
+              .hero-grid .hero-img-wrap {
+                height: 280px !important;
+                min-height: 280px !important;
+              }
+            }
+          `}</style>
         </section>
 
         {/* ── STATS ── */}
