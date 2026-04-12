@@ -5,12 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 
 const NAV_LINKS = [
-  { href: "/", label: "Start", icon: "⌂" },
-  { href: "/o-nas", label: "O nas", icon: "◈" },
-  { href: "/oferta", label: "Oferta", icon: "✦" },
-  { href: "/oprawa-muzyczna", label: "Oprawa muzyczna", icon: "🎵" },
-  { href: "/galeria", label: "Galeria", icon: "◻" },
-  { href: "/kontakt", label: "Kontakt", icon: "◎" },
+  { href: "/", label: "Start" },
+  { href: "/o-nas", label: "O nas" },
+  { href: "/oferta", label: "Oferta" },
+  { href: "/oprawa-muzyczna", label: "Oprawa muzyczna" },
+  { href: "/galeria", label: "Galeria" },
+  { href: "/kontakt", label: "Kontakt" },
 ] as const;
 
 function isActivePath(pathname: string, href: string) {
@@ -521,9 +521,14 @@ export default function SiteHeader() {
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 0.85rem;
           flex-shrink: 0;
           transition: all 150ms ease;
+          overflow: hidden;
+        }
+        .drawer-icon img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
         }
         .drawer-link.active .drawer-icon {
           background: rgba(240,23,122,0.2);
@@ -607,7 +612,9 @@ export default function SiteHeader() {
                 className={`drawer-link${active ? " active" : ""}`}
                 style={{ animationDelay: `${i * 50 + 60}ms` }}
               >
-                <span className="drawer-icon">{item.icon}</span>
+                <span className="drawer-icon">
+                  <img src="/Plyta_raster_lowres.png" alt="" />
+                </span>
                 <span className="drawer-link-label">{item.label}</span>
                 <span className="drawer-arrow">›</span>
               </Link>
