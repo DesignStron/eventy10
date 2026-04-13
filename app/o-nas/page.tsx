@@ -2,27 +2,34 @@ import SiteFooter from "@/components/site-footer";
 
 export const metadata = { title: "O nas" };
 
+const DiscIcon = ({ className = "" }: { className?: string }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+);
+
 const VALUES = [
   {
-    icon: "✦",
+    icon: <DiscIcon />,
     title: "Dopasowanie do grupy",
-    desc: "Każde wydarzenie projektujemy od zera - biorąc pod uwagę wiek, charakter i oczekiwania uczestników.",
+    desc: "Nie korzystamy z gotowych scenariuszy. Dopasowujemy animacje do grupy, jej energii i zaangażowania. Jesteśmy elastyczni i reagujemy na potrzeby uczestników na bieżąco.",
     gradient: "from-pink-500/20 to-rose-500/10",
   },
   {
-    icon: "◈",
+    icon: <DiscIcon />,
     title: "Dynamiczne prowadzenie",
     desc: "Energia i profesjonalizm w jednym. Dbamy o to, żeby każda minuta była angażująca.",
     gradient: "from-fuchsia-500/20 to-pink-500/10",
   },
   {
-    icon: "◉",
-    title: "Sprawna logistyka",
-    desc: "Przejmujemy pełną odpowiedzialność - od planowania po realizację. Ty tylko cieszysz się imprezą.",
+    icon: <DiscIcon />,
+    title: "Bezpieczeństwo i profesjonalizm",
+    desc: "Korzystamy wyłącznie ze sprawdzonego, certyfikowanego sprzętu: bez kompromisów i przypadkowych rozwiązań.",
     gradient: "from-rose-500/20 to-pink-400/10",
   },
   {
-    icon: "◎",
+    icon: <DiscIcon />,
     title: "Nowoczesna oprawa",
     desc: "Muzyka, światło, dekoracje i atrakcje dobierane są spójnie, tworząc jedną całość.",
     gradient: "from-pink-400/20 to-fuchsia-500/10",
@@ -31,16 +38,16 @@ const VALUES = [
 
 const STATS = [
   { num: "250+", label: "Zrealizowanych wydarzeń", icon: "🎉" },
-  { num: "8+",   label: "Lat doświadczenia",        icon: "⭐" },
+  { num: "10+",   label: "Lat doświadczenia",        icon: "⭐" },
   { num: "5★",   label: "Średnia ocen klientów",    icon: "💎" },
   { num: "24h",  label: "Czas odpowiedzi",           icon: "⚡" },
 ];
 
 const PROCESS = [
-  { n: "01", title: "Konsultacja",   desc: "Rozmawiamy o Twoich potrzebach, grupie docelowej i budżecie.", color: "#f0177a" },
-  { n: "02", title: "Koncepcja",     desc: "Przygotowujemy indywidualny scenariusz wydarzenia i wycenę.",  color: "#e0156e" },
-  { n: "03", title: "Przygotowanie", desc: "Kompletujemy atrakcje, sprzęt i koordynujemy wszystkie szczegóły.", color: "#d01462" },
-  { n: "04", title: "Realizacja",    desc: "Przyjeżdżamy i prowadzimy event - profesjonalnie i z pełną energią.", color: "#c01256" },
+  { n: "01", title: "Kontakt i ustalenie szczegółów", desc: "Ustalamy termin, miejsce, liczbę uczestników oraz rodzaj wydarzenia.", color: "#f0177a" },
+  { n: "02", title: "Dobór formy animacji", desc: "Dopasowujemy zakres animacji, warsztatów lub oprawy muzycznej do grupy i charakteru wydarzenia.", color: "#e0156e" },
+  { n: "03", title: "Rezerwacja i przygotowanie", desc: "Po akceptacji oferty rezerwujemy termin i przygotowujemy wszystkie elementy realizacji.", color: "#d01462" },
+  { n: "04", title: "Realizacja wydarzenia", desc: "Prowadzimy animacje na miejscu, dbając o atmosferę, energię i zaangażowanie uczestników.", color: "#c01256" },
 ];
 
 export default function AboutPage() {
@@ -583,30 +590,19 @@ export default function AboutPage() {
               <div className="fu" style={{ marginBottom:"1.5rem" }}>
                 <span className="hero-badge">
                   <span className="dot-pulse"/>
-                  Poznaj nas bliżej
+                  POZNAJMY SIĘ!
                 </span>
               </div>
 
-              {/* Title */}
-              <h1 className="hero-title fu d1" style={{ fontSize:"clamp(2.2rem,4vw,3.5rem)" }}>
-                Tworzymy wydarzenia,<br/>
-                <span className="hero-accent">które zostają w pamięci</span>
-              </h1>
-
-              {/* Animated underline */}
-              <div className="fu d2" style={{ marginBottom:"1.5rem" }}>
-                <span className="pink-rule" style={{ width:"80px", animationDelay:"0.4s"}}/>
-              </div>
-
-              {/* Description */}
+              {/* Short intro in hero */}
               <p className="hero-desc fu d3">
-                Pinky Party Animacje & Eventy to firma eventowa prowadzona przez Magdę Gałkowską – animatorkę, DJ-kę, wodzirejkę oraz nauczycielkę edukacji wczesnoszkolnej. To połączenie jest kluczowe, ponieważ oznacza, że firma nie tylko organizuje wydarzenia, ale również doskonale rozumie potrzeby dzieci i młodzieży.
+                Cześć! Z tej strony Magda Gałkowska - założycielka Pinky Party. Animatorka, DJ-ka, wodzirejka oraz nauczycielka edukacji wczesnoszkolnej.
               </p>
               <p className="hero-desc fu d4" style={{ marginTop: "1rem" }}>
-                Założycielka posiada około 8 lat doświadczenia w branży eventowej, co przekłada się na profesjonalne podejście do organizacji imprez oraz umiejętność zarządzania grupą uczestników.
+                Od 10 lat działam w branży eventowej i edukacyjnej. Moją misją jest tworzenie animacji na wysokim poziomie - to nie tylko zabawa, ale też emocje, relacje i doświadczenia, które budują wspomnienia.
               </p>
               <p className="hero-desc fu d5" style={{ marginTop: "1rem" }}>
-                Firma współpracowała m.in. z: Aquapark Wrocław, Biedronka, Scania, różne rady osiedli, lokale eventowe i szkoły.
+                W Pinky Party stawiam na relacje, integrację i wspólne przeżywanie emocji: zarówno wśród dzieci, jak i rodzin.
               </p>
             </div>
 
@@ -655,6 +651,56 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* ── MOJA HISTORIA ── */}
+        <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
+          <div className="fl d1" style={{ marginBottom:"2.5rem" }}>
+            <p className="sec-eyebrow">Moja historia</p>
+            <h2 className="sec-heading">Od szkoły<br/>do sceny</h2>
+          </div>
+
+          <div className="story-grid" style={{ display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"1.5rem" }}>
+            <div className="story-card fu d2" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
+              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              </div>
+              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Scena i DJ</h3>
+              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
+                Swoje doświadczenie sceniczne rozwijałam podczas licznych wydarzeń. Umiejętności DJ-skie zdobywałam w Szkole Muzyki Nowoczesnej oraz DJ Academy. Przez 3 lata występowałam w kobiecym składzie DJskim, realizując duże eventy.
+              </p>
+            </div>
+
+            <div className="story-card fu d3" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
+              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+              </div>
+              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Wokal i taniec</h3>
+              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
+                Moja praca to także doświadczenie wokalne: śpiew i emisja głosu. W ostatnich latach rozwijałam taniec nowoczesny. Wszystkie te elementy łączą się w moje unikalne podejście do prowadzenia animacji.
+              </p>
+            </div>
+
+            <div className="story-card fu d4" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
+              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              </div>
+              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Cardblocks</h3>
+              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
+                Jestem partnerem firmy Cardblocks, dla której organizuję warsztaty, szkolenia i eventy z wykorzystaniem kreatywnych, tekturowych klocków.
+              </p>
+            </div>
+
+            <div className="story-card fu d5" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
+              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Mama w pracy</h3>
+              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
+                Prywatnie mama dwójki dzieci. To pozwala mi jeszcze lepiej rozumieć, jak ważne są wartościowe, angażujące i dobrze prowadzone animacje dla dzieci.
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Divider */}
         <div className="ab-wrap" style={{ paddingBottom:"4rem" }}>
           <div className="fancy-divider"/>
@@ -663,12 +709,10 @@ export default function AboutPage() {
         {/* ── VALUES ── */}
         <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
           <div className="fl d1">
-            <p className="sec-eyebrow">Co nas wyróżnia</p>
-            <h2 className="sec-heading">Podejście, które<br/>robi różnicę</h2>
+            <p className="sec-eyebrow">Dlaczego Pinky Party?</p>
+            <h2 className="sec-heading">Tworzymy animacje<br/>nowej generacji</h2>
             <p className="sec-body">
-              Pełna personalizacja wydarzeń, doświadczeni animatorzy, połączenie animacji + DJ + warsztatów. 
-              Oferta dla dzieci, młodzieży i firm z możliwością organizacji małych i dużych eventów 
-              oraz profesjonalny sprzęt (audio + światło).
+              Bo róż to nie tylko kolor. Róż symbolizuje energię, emocje i pozytywną atmosferę, którą tworzymy na każdym wydarzeniu. Dbamy o każdy szczegół. Tworzymy animacje dopracowane w każdym detalu, pełne dobrej energii i komfortu, dzięki któremu każdy czuje się swobodnie.
             </p>
           </div>
 
@@ -731,8 +775,8 @@ export default function AboutPage() {
             </div>
 
             <div style={{ position:"relative", zIndex:1 }}>
-              <div className="cta-title">Masz pytania? Chętnie porozmawiamy.</div>
-              <div className="cta-sub">Odpiszemy w ciągu 24 godzin i przygotujemy bezpłatną wycenę.</div>
+              <div className="cta-title">Masz pytania? Napisz do nas.</div>
+              <div className="cta-sub">Chętnie odpowiemy i doradzimy w kwestii animacji, doboru atrakcji lub wspólnie ustalimy najlepszą opcję dla Twojego wydarzenia.</div>
             </div>
 
             <div style={{ display:"flex", gap:"0.875rem", flexWrap:"wrap", flexShrink:0, position:"relative", zIndex:1 }}>

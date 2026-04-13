@@ -440,10 +440,19 @@ export default async function OfferPage() {
         @media (max-width:768px) {
           .op-wrap { padding:5rem 1.1rem 7rem; }
           .op-hero-title { font-size:clamp(2.2rem,9vw,3rem); letter-spacing:-.03em; }
-          .op-hero-sub { font-size:.95rem; max-width:100%; }
-          .op-nav { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; padding-bottom:.5rem; }
-          .op-nav::-webkit-scrollbar { display:none; }
-          .op-nav-pill { flex-shrink:0; }
+          .op-hero-sub { font-size:.95rem; max-width:100%; line-height:1.7; }
+          .op-nav { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 0.5rem;
+            overflow-x: visible;
+          }
+          .op-nav-pill { 
+            flex-shrink: 0; 
+            justify-content: center;
+            font-size: 0.8rem;
+            padding: 0.6rem 0.8rem;
+          }
           .op-divider { margin:2.5rem 0 3rem; }
           .op-section-head { margin-bottom:2rem; }
           .op-section-title { font-size:1.25rem; }
@@ -473,6 +482,10 @@ export default async function OfferPage() {
           .op-bottom-cta-desc { font-size:.9rem; }
         }
 
+        @media (max-width:380px) {
+          .op-nav { grid-template-columns: 1fr; }
+        }
+
         @media (max-width:420px) {
           .op-hero-title { font-size:clamp(1.9rem,10vw,2.5rem); }
           .sc-img-panel { max-height:320px; }
@@ -488,13 +501,24 @@ export default async function OfferPage() {
               Oferta
             </div>
             <h1 className="op-hero-title">
-              Tworzymy
-              <span className="op-hero-accent">niezapomniane wydarzenia</span>
+              Sprawdź
+              <span className="op-hero-accent">naszą ofertę</span>
             </h1>
             <p className="op-hero-sub">
-              Specjalizujemy się w organizacji wyjątkowych imprez —
-              od kameralnych urodzin po wielkie eventy firmowe.
-              Każde wydarzenie traktujemy indywidualnie.
+              Zajmujemy się animacjami dla dzieci i młodzieży oraz organizacją
+              wydarzeń dla klientów prywatnych, szkół i firm we Wrocławiu i
+              okolicach.
+            </p>
+            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
+              Prowadzimy animacje, warsztaty oraz oprawę muzyczną wydarzeń.
+              Realizujemy imprezy takie jak urodziny, Mikołajki, bale karnawałowe,
+              festyny i pikniki, a także wydarzenia szkolne i młodzieżowe:
+              studniówki, bale 8-klasistów oraz dyskoteki szkolne.
+            </p>
+            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
+              Jeśli nie widzisz w ofercie dokładnie tego, czego potrzebujesz lub
+              masz niestandardowe potrzeby: napisz do nas! Ustalimy najlepsze
+              rozwiązanie dopasowane do Twojego wydarzenia.
             </p>
             <nav className="op-nav" aria-label="Nawigacja oferty">
               {getNavItems(sections).map((n) => (
@@ -525,7 +549,7 @@ export default async function OfferPage() {
               ))}
             </div>
           ) : (
-            <>
+            <div>
               <div className="op-section-head">
                 <div>
                   <div className="op-eyebrow">Nasze usługi</div>
@@ -548,15 +572,168 @@ export default async function OfferPage() {
                   </article>
                 ))}
               </div>
-            </>
+            </div>
           )}
+
+          <section className="op-process" style={{ marginTop: "5rem", marginBottom: "5rem" }}>
+            <div className="op-section-head" style={{ marginBottom: "2.5rem" }}>
+              <div>
+                <div className="op-eyebrow">Jak pracujemy?</div>
+                <h2 className="op-section-title">Od pomysłu<br/>do realizacji</h2>
+              </div>
+            </div>
+            <p className="op-hero-sub" style={{ marginBottom: "2rem" }}>
+              Współpraca z nami przebiega w kilku prostych krokach:
+            </p>
+            <div className="process-grid" style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+              gap: "1.5rem"
+            }}>
+              <div className="process-card" style={{ 
+                padding: "2rem", 
+                borderRadius: "1.5rem", 
+                background: "rgba(255,255,255,0.03)", 
+                border: "1px solid rgba(255,255,255,0.08)" 
+              }}>
+                <div style={{ 
+                  fontSize: "2.5rem", 
+                  fontWeight: 700, 
+                  color: "rgba(240,23,122,0.3)", 
+                  marginBottom: "1rem",
+                  fontFamily: "var(--font-display)"
+                }}>01</div>
+                <div style={{ 
+                  width: "2rem", 
+                  height: "3px", 
+                  borderRadius: "2px", 
+                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
+                  marginBottom: "1rem" 
+                }} />
+                <h3 style={{ 
+                  fontSize: "1.1rem", 
+                  fontWeight: 700, 
+                  color: "#fff", 
+                  marginBottom: "0.75rem",
+                  fontFamily: "var(--font-display)"
+                }}>Kontakt i ustalenie szczegółów</h3>
+                <p style={{ 
+                  fontSize: "0.9rem", 
+                  color: "rgba(255,255,255,0.5)", 
+                  lineHeight: 1.7 
+                }}>Ustalamy termin, miejsce, liczbę uczestników oraz rodzaj wydarzenia.</p>
+              </div>
+
+              <div className="process-card" style={{ 
+                padding: "2rem", 
+                borderRadius: "1.5rem", 
+                background: "rgba(255,255,255,0.03)", 
+                border: "1px solid rgba(255,255,255,0.08)" 
+              }}>
+                <div style={{ 
+                  fontSize: "2.5rem", 
+                  fontWeight: 700, 
+                  color: "rgba(240,23,122,0.3)", 
+                  marginBottom: "1rem",
+                  fontFamily: "var(--font-display)"
+                }}>02</div>
+                <div style={{ 
+                  width: "2rem", 
+                  height: "3px", 
+                  borderRadius: "2px", 
+                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
+                  marginBottom: "1rem" 
+                }} />
+                <h3 style={{ 
+                  fontSize: "1.1rem", 
+                  fontWeight: 700, 
+                  color: "#fff", 
+                  marginBottom: "0.75rem",
+                  fontFamily: "var(--font-display)"
+                }}>Dobór formy animacji</h3>
+                <p style={{ 
+                  fontSize: "0.9rem", 
+                  color: "rgba(255,255,255,0.5)", 
+                  lineHeight: 1.7 
+                }}>Dopasowujemy zakres animacji, warsztatów lub oprawy muzycznej do grupy i charakteru wydarzenia.</p>
+              </div>
+
+              <div className="process-card" style={{ 
+                padding: "2rem", 
+                borderRadius: "1.5rem", 
+                background: "rgba(255,255,255,0.03)", 
+                border: "1px solid rgba(255,255,255,0.08)" 
+              }}>
+                <div style={{ 
+                  fontSize: "2.5rem", 
+                  fontWeight: 700, 
+                  color: "rgba(240,23,122,0.3)", 
+                  marginBottom: "1rem",
+                  fontFamily: "var(--font-display)"
+                }}>03</div>
+                <div style={{ 
+                  width: "2rem", 
+                  height: "3px", 
+                  borderRadius: "2px", 
+                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
+                  marginBottom: "1rem" 
+                }} />
+                <h3 style={{ 
+                  fontSize: "1.1rem", 
+                  fontWeight: 700, 
+                  color: "#fff", 
+                  marginBottom: "0.75rem",
+                  fontFamily: "var(--font-display)"
+                }}>Rezerwacja terminu i przygotowanie</h3>
+                <p style={{ 
+                  fontSize: "0.9rem", 
+                  color: "rgba(255,255,255,0.5)", 
+                  lineHeight: 1.7 
+                }}>Po akceptacji oferty rezerwujemy termin i przygotowujemy wszystkie elementy realizacji.</p>
+              </div>
+
+              <div className="process-card" style={{ 
+                padding: "2rem", 
+                borderRadius: "1.5rem", 
+                background: "rgba(255,255,255,0.03)", 
+                border: "1px solid rgba(255,255,255,0.08)" 
+              }}>
+                <div style={{ 
+                  fontSize: "2.5rem", 
+                  fontWeight: 700, 
+                  color: "rgba(240,23,122,0.3)", 
+                  marginBottom: "1rem",
+                  fontFamily: "var(--font-display)"
+                }}>04</div>
+                <div style={{ 
+                  width: "2rem", 
+                  height: "3px", 
+                  borderRadius: "2px", 
+                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
+                  marginBottom: "1rem" 
+                }} />
+                <h3 style={{ 
+                  fontSize: "1.1rem", 
+                  fontWeight: 700, 
+                  color: "#fff", 
+                  marginBottom: "0.75rem",
+                  fontFamily: "var(--font-display)"
+                }}>Realizacja wydarzenia</h3>
+                <p style={{ 
+                  fontSize: "0.9rem", 
+                  color: "rgba(255,255,255,0.5)", 
+                  lineHeight: 1.7 
+                }}>Prowadzimy animacje na miejscu, dbając o atmosferę, energię i zaangażowanie uczestników.</p>
+              </div>
+            </div>
+          </section>
 
           <div className="op-bottom-cta">
             <div className="op-bottom-cta-bg" />
-            <h2 className="op-bottom-cta-title">Nie widzisz tego, czego szukasz?</h2>
+            <h2 className="op-bottom-cta-title">Masz pytania? Napisz do nas.</h2>
             <p className="op-bottom-cta-desc">
-              Organizujemy również niestandardowe wydarzenia dopasowane
-              w 100% do Twoich potrzeb — napisz do nas!
+              Chętnie odpowiemy i doradzimy w kwestii animacji, doboru atrakcji lub
+              wspólnie ustalimy najlepszą opcję dla Twojego wydarzenia.
             </p>
             <Link
               href="/kontakt"

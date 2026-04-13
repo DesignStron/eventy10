@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const NAV = [
-  { href: "/",                label: "Start" },
+  { href: "/",                label: "Home" },
   { href: "/o-nas",           label: "O nas" },
   { href: "/oferta",          label: "Oferta" },
   { href: "/oprawa-muzyczna", label: "Oprawa muzyczna" },
@@ -53,14 +53,14 @@ export default function SiteFooter() {
         /* ── INNER WRAPPER ── */
         .ft-inner {
           max-width:76rem; margin:0 auto;
-          padding:2.5rem 1.25rem 0;
+          padding:1.5rem 1.25rem 0;
           position:relative; z-index:1;
         }
 
         /* ── TOP: brand strip ── */
         .ft-brand {
-          margin-bottom:1.75rem;
-          padding-bottom:1.5rem;
+          margin-bottom:1rem;
+          padding-bottom:1rem;
           border-bottom:1px solid rgba(240,23,122,0.08);
           /* mobile: center everything */
           display:flex; flex-direction:column; align-items:center; text-align:center;
@@ -73,21 +73,21 @@ export default function SiteFooter() {
           display:flex; align-items:center; gap:0.5rem; text-decoration:none; flex-shrink:0;
         }
         .ft-logo-img {
-          width:auto; height:3rem; object-fit:contain; display:block;
+          width:auto; height:2rem; object-fit:contain; display:block;
         }
         .ft-tagline {
-          font-size:0.8rem; color:var(--text-secondary); line-height:1.65;
-          margin:0 0 0.75rem; max-width:22rem;
+          font-size:0.75rem; color:var(--text-secondary); line-height:1.5;
+          margin:0 0 0.5rem; max-width:20rem;
         }
         .ft-brand-actions {
           display:flex; align-items:center; justify-content:center; gap:0.75rem; flex-wrap:wrap;
         }
         .ft-cta {
-          display:inline-flex; align-items:center; gap:0.4rem;
-          padding:0.6rem 1.25rem; border-radius:9999px;
+          display:inline-flex; align-items:center; gap:0.35rem;
+          padding:0.5rem 1rem; border-radius:9999px;
           background:linear-gradient(135deg,#f0177a,#ff4fa3); color:#fff;
-          font-size:0.8rem; font-weight:700; text-decoration:none;
-          box-shadow:0 3px 14px rgba(240,23,122,0.35);
+          font-size:0.75rem; font-weight:700; text-decoration:none;
+          box-shadow:0 3px 12px rgba(240,23,122,0.35);
           transition:all 180ms ease; white-space:nowrap; flex-shrink:0;
         }
         .ft-cta:hover { box-shadow:0 5px 22px rgba(240,23,122,0.55); transform:translateY(-1px); }
@@ -103,8 +103,8 @@ export default function SiteFooter() {
         .ft-grid {
           display:grid;
           grid-template-columns:1fr 1fr;
-          gap:1.5rem 1rem;
-          margin-bottom:2rem;
+          gap:1rem 0.75rem;
+          margin-bottom:1.25rem;
           justify-items:center;
         }
         .ft-grid > div { width:100%; }
@@ -113,23 +113,23 @@ export default function SiteFooter() {
         }
 
         .ft-col-title {
-          font-size:0.58rem; font-weight:700; letter-spacing:0.13em;
-          text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;
+          font-size:0.55rem; font-weight:700; letter-spacing:0.12em;
+          text-transform:uppercase; color:var(--text-muted); margin-bottom:0.5rem;
         }
         .ft-link {
           display:block; color:var(--text-secondary); text-decoration:none;
-          font-size:0.82rem; font-weight:500; padding:0.22rem 0;
-          transition:color 150ms ease; line-height:1.5;
+          font-size:0.78rem; font-weight:500; padding:0.18rem 0;
+          transition:color 150ms ease; line-height:1.4;
         }
         .ft-link:hover { color:var(--pink); }
 
         .ft-contact-lbl {
-          font-size:0.56rem; font-weight:700; letter-spacing:0.1em;
-          text-transform:uppercase; color:var(--text-muted); margin-bottom:0.1rem;
+          font-size:0.54rem; font-weight:700; letter-spacing:0.1em;
+          text-transform:uppercase; color:var(--text-muted); margin-bottom:0.08rem;
         }
         .ft-contact-val {
-          font-size:0.8rem; color:var(--text-secondary); font-weight:500;
-          text-decoration:none; display:block; transition:color 150ms; margin-bottom:0.7rem;
+          font-size:0.75rem; color:var(--text-secondary); font-weight:500;
+          text-decoration:none; display:block; transition:color 150ms; margin-bottom:0.5rem;
           word-break:break-all;
         }
         a.ft-contact-val:hover { color:var(--pink); }
@@ -161,13 +161,13 @@ export default function SiteFooter() {
         .ft-divider { border:none; border-top:1px solid var(--border); margin:0; }
         .ft-bottom {
           max-width:76rem; margin:0 auto;
-          padding:1rem 1.25rem 1.5rem;
+          padding:0.75rem 1.25rem 1rem;
           display:flex; align-items:center; justify-content:space-between;
-          gap:0.75rem; flex-wrap:wrap;
+          gap:0.5rem; flex-wrap:wrap;
           position:relative; z-index:1;
         }
-        .ft-copy { font-size:0.7rem; color:var(--text-muted); }
-        .ft-credit { font-size:0.65rem; color:var(--text-muted); font-family:var(--font-mono); }
+        .ft-copy { font-size:0.65rem; color:var(--text-muted); }
+        .ft-credit { font-size:0.6rem; color:var(--text-muted); font-family:var(--font-mono); }
       `}</style>
 
       <div className="ft-glow" />
@@ -181,12 +181,6 @@ export default function SiteFooter() {
               <Link href="/" className="ft-logo-wrap">
                 <img src="/Logo_1_raster_lowres.png" alt="Pinky Party Logo" className="ft-logo-img" />
               </Link>
-              <div className="ft-badge">
-                <span className="pdot" />
-                <span style={{ fontSize:"0.58rem", fontWeight:700, color:"#ff4fa3", letterSpacing:"0.06em", textTransform:"uppercase" }}>
-                  Przyjmujemy rezerwacje
-                </span>
-              </div>
             </div>
 
             <p className="ft-tagline">

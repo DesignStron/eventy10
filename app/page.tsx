@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
 
 function useCounter(target: number, duration = 1800) {
@@ -31,26 +30,178 @@ function useCounter(target: number, duration = 1800) {
   return { val, ref };
 }
 
-export default function Home() {
-  const [heroImage, setHeroImage] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+// Karuzela zdjęć - automatyczna zmiana co 4 sekundy
+// Pobiera max 3 zdjęcia z każdej kategorii, wyświetla na zmianę (interleave)
+// Pomija kategorię: INNE
+function ImageCarousel() {
+  const [images, setImages] = useState<string[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
 
   useEffect(() => {
-    fetchHeroImage();
+    const fetchImages = async () => {
+      try {
+        const res = await fetch("/api/galeria");
+        const data = await res.json();
+        if (data.images && data.images.length > 0) {
+          const byCategory: Record<string, any[]> = {};
+          data.images.forEach((img: any) => {
+            const cat = (img.category || "").toString().trim();
+            if (!cat) return;
+            if (cat.toLowerCase() === "inne") return;
+            if (!byCategory[cat]) byCategory[cat] = [];
+            byCategory[cat].push(img);
+          });
+
+          const categories = Object.keys(byCategory);
+          const maxPerCategory = 3;
+          const categoryImages: any[][] = categories.map((cat) =>
+            byCategory[cat].slice(0, maxPerCategory)
+          );
+
+          const interleaved: string[] = [];
+          let index = 0;
+          let hasMore = true;
+
+          while (hasMore) {
+            hasMore = false;
+            for (let i = 0; i < categoryImages.length; i++) {
+              if (index < categoryImages[i].length) {
+                interleaved.push(categoryImages[i][index].url);
+                hasMore = true;
+              }
+            }
+            index++;
+          }
+
+          setImages(interleaved);
+        }
+      } catch (e) {
+        console.error("Failed to fetch gallery images:", e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchImages();
   }, []);
 
-  const fetchHeroImage = async () => {
-    try {
-      const res = await fetch("/api/site-settings");
-      const json = await res.json();
-      setHeroImage(json.settings?.hero_image || "");
-    } catch (e) {
-      console.error("Failed to fetch hero image:", e);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (images.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && images.length > 0) {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }
+    if (isRightSwipe && images.length > 0) {
+      setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div style={{
+        width:"100%",height:"100%",
+        background:"linear-gradient(135deg,rgba(240,23,122,.08) 0%,rgba(240,23,122,.02) 100%)",
+        display:"flex",alignItems:"center",justifyContent:"center",
+      }}>
+        <span style={{fontSize:"4rem",animation:"dot 1.5s ease-in-out infinite"}}>✦</span>
+      </div>
+    );
+  }
+
+  if (images.length === 0) {
+    return (
+      <div style={{
+        width:"100%",height:"100%",
+        background:"linear-gradient(135deg,rgba(240,23,122,.08) 0%,rgba(240,23,122,.02) 100%)",
+        display:"flex",alignItems:"center",justifyContent:"center",
+      }}>
+        <span style={{fontSize:"4rem",color:"rgba(240,23,122,.3)"}}>✦</span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{ position: "relative", width: "100%", height: "100%" }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+    >
+      {images.map((img, index) => (
+        <div
+          key={index}
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: index === currentIndex ? 1 : 0,
+            transition: "opacity 800ms ease-in-out",
+            zIndex: index === currentIndex ? 1 : 0,
+          }}
+        >
+          <img
+            src={img}
+            alt={`Realizacja ${index + 1}`}
+            style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
+          />
+        </div>
+      ))}
+      <div style={{
+        position:"absolute",inset:0,
+        background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
+        zIndex: 2,
+      }}/>
+      <div style={{
+        position:"absolute",bottom:"1rem",left:"50%",transform:"translateX(-50%)",
+        display:"flex",gap:"0.5rem",zIndex:10,padding:"0.5rem",
+      }}>
+        {images.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            style={{
+              width: index === currentIndex ? "1.5rem" : "0.5rem",
+              height: "0.5rem",
+              borderRadius: "9999px",
+              border: "none",
+              background: index === currentIndex ? "var(--pink)" : "rgba(255,255,255,.4)",
+              cursor: "pointer",
+              transition: "all 300ms ease",
+              pointerEvents: "auto",
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function Home() {
   return (
     <>
       <style>{`
@@ -131,7 +282,6 @@ export default function Home() {
         .btn-hero::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.16) 0%,transparent 55%);pointer-events:none}
         .btn-hero:hover{transform:translateY(-3px);box-shadow:0 14px 48px rgba(240,23,122,.62);background:var(--pink-light)}
         .btn-hero:hover .ar{transform:translateX(5px)}
-        .ar{display:inline-block;transition:transform 240ms ease}
 
         .btn-img-w{
           display:inline-flex;align-items:center;gap:.45rem;
@@ -269,17 +419,65 @@ export default function Home() {
               </div>
 
               <h1 className="h1 fu d1">
-                Imprezy,{" "}
-                <em>które zostają<br/>w&nbsp;pamięci</em>
+                Tworzymy wspomnienia<br/>
+                <em>od najmłodszych lat</em>
               </h1>
 
               <p className="fu d2" style={{
                 color:"rgba(255,255,255,.54)",
                 fontSize:"clamp(1rem,1.8vw,1.12rem)",
-                lineHeight:1.85,maxWidth:"46ch",marginBottom:"2.5rem",
+                lineHeight:1.85,maxWidth:"50ch",marginBottom:"1.5rem",
+                fontWeight: 500,
               }}>
-                Ponad 8 lat doświadczenia w tworzeniu wyjątkowych wydarzeń -
-                od animacji dla dzieci po imprezy firmowe i eventy szkolne.
+                Animacje, warsztaty i oprawa muzyczna wydarzeń - Wrocław
+              </p>
+
+              <p className="fu d2" style={{
+                color:"rgba(255,255,255,.54)",
+                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
+                lineHeight:1.8,maxWidth:"52ch",marginBottom:"1.2rem",
+              }}>
+                Pinky Party Animacje & Eventy organizuje animacje i imprezy dla dzieci
+                oraz młodzieży.
+              </p>
+
+              <p className="fu d2" style={{
+                color:"rgba(255,255,255,.54)",
+                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
+                lineHeight:1.8,maxWidth:"52ch",marginBottom:"1.2rem",
+              }}>
+                Tworzymy wydarzenia na każdą okazję: od urodzin i wesel, przez
+                festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
+              </p>
+
+              <p className="fu d2" style={{
+                color:"rgba(255,255,255,.54)",
+                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
+                lineHeight:1.8,maxWidth:"52ch",marginBottom:"1.2rem",
+              }}>
+                Prowadzimy animacje dla dzieci, warsztaty oraz zapewniamy oprawę
+                muzyczną dla młodzieży jako DJ i wodzirejka podczas studniówek, bali
+                8-klasistów i dyskotek szkolnych.
+              </p>
+
+              <p className="fu d2" style={{
+                color:"rgba(255,255,255,.54)",
+                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
+                lineHeight:1.8,maxWidth:"52ch",marginBottom:"2rem",
+              }}>
+                Działamy w szkołach, przedszkolach, domach kultury, lokalach oraz
+                prywatnych przestrzeniach.
+              </p>
+
+              <p className="fu d3" style={{
+                color:"var(--pink-light)",
+                fontSize:"clamp(0.9rem,1.4vw,1rem)",
+                fontWeight: 600,
+                letterSpacing: "0.05em",
+                marginBottom:"2.5rem",
+              }}>
+                Animacje • Imprezy • DJ • Warsztaty<br/>
+                Wrocław i okolice
               </p>
 
               <div className="fu d3" style={{marginBottom:"3rem"}}>
@@ -303,50 +501,30 @@ export default function Home() {
             <div className="hg-img fu d5" style={{position:"relative"}}>
               <div className="img-glow"/>
               <div className="img-card" style={{position:"relative",zIndex:1}}>
-                {heroImage ? (
-                  <>
-                    <img
-                      src={heroImage}
-                      alt="Realizacja wydarzenia"
-                      style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
-                    />
-                    <div style={{
-                      position:"absolute",inset:0,
-                      background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
-                    }}/>
-                    <div style={{
-                      position:"absolute",left:"1.4rem",right:"1.4rem",bottom:"1.6rem",
-                      display:"flex",flexDirection:"column",gap:".75rem",
-                    }}>
-                      <span style={{
-                        display:"inline-flex",alignItems:"center",gap:".4rem",
-                        padding:".28rem .8rem",borderRadius:"9999px",
-                        background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.32)",
-                        backdropFilter:"blur(10px)",
-                        fontSize:".62rem",fontWeight:700,letterSpacing:".09em",
-                        textTransform:"uppercase",color:"#fff",width:"fit-content",
-                      }}>
-                        ✦ Nasze realizacje
-                      </span>
-                      <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
-                        <Link href="/galeria" className="btn-img-w">
-                          Zobacz galerię <span className="ar">→</span>
-                        </Link>
-                        <Link href="/oferta" className="btn-img-g">
-                          Oferta <span className="ar">→</span>
-                        </Link>
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <div style={{
-                    width:"100%",height:"100%",
-                    background:"linear-gradient(135deg,rgba(240,23,122,.08) 0%,rgba(240,23,122,.02) 100%)",
-                    display:"flex",alignItems:"center",justifyContent:"center",
+                <ImageCarousel />
+                <div style={{
+                  position:"absolute",left:"1.4rem",right:"1.4rem",bottom:"4.5rem",
+                  display:"flex",flexDirection:"column",gap:".75rem",zIndex:5,
+                }}>
+                  <span style={{
+                    display:"inline-flex",alignItems:"center",gap:".4rem",
+                    padding:".28rem .8rem",borderRadius:"9999px",
+                    background:"rgba(255,255,255,.15)",border:"1px solid rgba(255,255,255,.32)",
+                    backdropFilter:"blur(10px)",
+                    fontSize:".62rem",fontWeight:700,letterSpacing:".09em",
+                    textTransform:"uppercase",color:"#fff",width:"fit-content",
                   }}>
-                    <span style={{fontSize:"4rem",animation:"dot 1.5s ease-in-out infinite"}}>✦</span>
+                    ✦ Nasze realizacje
+                  </span>
+                  <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
+                    <Link href="/galeria" className="btn-img-w">
+                      Zobacz galerię <span className="ar">→</span>
+                    </Link>
+                    <Link href="/oferta" className="btn-img-g">
+                      Oferta <span className="ar">→</span>
+                    </Link>
                   </div>
-                )}
+                </div>
               </div>
             </div>
 
@@ -363,7 +541,7 @@ export default function Home() {
                 textTransform:"uppercase",color:"var(--pink-light)",marginBottom:"1.4rem",
               }}>
                 <span style={{width:"6px",height:"6px",borderRadius:"50%",background:"var(--pink)",display:"inline-block",animation:"dot 2s ease-in-out infinite"}}/>
-                Wycena w 24 godziny
+                Napisz do nas
               </span>
 
               <h2 style={{
@@ -377,15 +555,17 @@ export default function Home() {
 
               <p style={{
                 color:"rgba(255,255,255,.5)",fontSize:"1.02rem",lineHeight:1.78,
-                maxWidth:"38ch",marginBottom:"2.5rem",
+                maxWidth:"45ch",marginBottom:"2.5rem",
               }}>
-                Napisz do nas - przygotujemy indywidualny scenariusz
-                i&nbsp;wycenę dopasowaną do Twoich potrzeb.
+                W wiadomości podaj: termin, liczbę dzieci, rodzaj uroczystości oraz
+                miejsce wydarzenia  to pomoże nam szybko potwierdzić dostępność i
+                sprawnie wrócić z odpowiedzią
               </p>
 
               <Link href="/kontakt" className="bnr-btn">
-                Wyślij zapytanie <span className="ar">→</span>
+                Skontaktuj się <span className="ar">→</span>
               </Link>
+
             </div>
           </div>
 

@@ -3,11 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
+import { supabase } from "@/lib/supabase";
 
-const NAV_LINKS = [
-  { href: "/", label: "Start" },
+interface OfferSection {
+  key: string;
+  category: string;
+  categoryLabel?: string;
+  title?: string;
+  order_index?: number;
+}
+
+const STATIC_LINKS = [
+  { href: "/", label: "Home" },
   { href: "/o-nas", label: "O nas" },
-  { href: "/oferta", label: "Oferta" },
+  { href: "/oferta", label: "Oferta", hasDropdown: true },
   { href: "/oprawa-muzyczna", label: "Oprawa muzyczna" },
   { href: "/galeria", label: "Galeria" },
   { href: "/kontakt", label: "Kontakt" },
@@ -24,7 +33,37 @@ export default function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [offerSections, setOfferSections] = useState<OfferSection[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Pobierz oferty z Supabase - tabela "offer" jak w page.tsx
+  useEffect(() => {
+    async function fetchOffers() {
+      const { data, error } = await supabase
+        .from("offer")
+        .select("key, category, title, category_label")
+        .order("created_at", { ascending: true });
+
+      if (data) {
+        // Mapuj dane tak jak w oferta/page.tsx
+        const mapped = data.map((item: any) => ({
+          key: item.key,
+          category: item.category || item.key,
+          title: item.title,
+          categoryLabel: item.category_label,
+        }));
+        setOfferSections(mapped);
+        console.log("Pobrano oferty:", mapped);
+      }
+      if (error) {
+        console.error("Błąd pobierania ofert:", error);
+      }
+    }
+    fetchOffers();
+  }, []);
 
   const applyTheme = (next: "dark" | "light") => {
     const root = document.documentElement;
@@ -82,6 +121,18 @@ export default function SiteHeader() {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, [mobileOpen]);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [dropdownOpen]);
 
   return (
     <>
@@ -587,6 +638,160 @@ export default function SiteHeader() {
         }
         .drawer-admin:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
         .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
+
+        /* ── DROPDOWN ── */
+        .nav-item-dropdown {
+          position: relative;
+        }
+        .dropdown-menu {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          margin-top: 0.5rem;
+          min-width: 220px;
+          background: rgba(6,5,8,0.95);
+          border: 1px solid rgba(240,23,122,0.2);
+          border-radius: 1rem;
+          padding: 0.5rem;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+          backdrop-filter: blur(20px);
+          opacity: 0;
+          visibility: hidden;
+          transform: translateY(-10px);
+          transition: all 200ms cubic-bezier(0.16,1,0.3,1);
+          z-index: 200;
+        }
+        .dropdown-menu.open {
+          opacity: 1;
+          visibility: visible;
+          transform: translateY(0);
+        }
+        html[data-theme="light"] .dropdown-menu {
+          background: rgba(255,255,255,0.98);
+          border-color: rgba(240,23,122,0.15);
+          box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        .dropdown-link {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.75rem 1rem;
+          border-radius: 0.75rem;
+          text-decoration: none;
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: rgba(255,255,255,0.8);
+          transition: all 150ms ease;
+          white-space: nowrap;
+        }
+        .dropdown-link:hover {
+          background: rgba(240,23,122,0.1);
+          color: #ff4fa3;
+        }
+        html[data-theme="light"] .dropdown-link {
+          color: rgba(0,0,0,0.75);
+        }
+        html[data-theme="light"] .dropdown-link:hover {
+          color: var(--pink);
+        }
+        .dropdown-icon {
+          width: 1.5rem;
+          height: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        /* ── MOBILE DROPDOWN ── */
+        .mobile-dropdown-toggle {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          padding: 0.875rem 1rem;
+          border-radius: 0.75rem;
+          text-decoration: none;
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: rgba(255,255,255,0.75);
+          border: 1px solid transparent;
+          transition: all 150ms ease;
+          background: transparent;
+          cursor: pointer;
+        }
+        .mobile-dropdown-toggle:hover {
+          background: rgba(255,255,255,0.07);
+          color: #fff;
+          border-color: rgba(255,255,255,0.08);
+        }
+        .mobile-dropdown-toggle.active {
+          background: rgba(240,23,122,0.12);
+          color: #ff4fa3;
+          border-color: rgba(240,23,122,0.25);
+          font-weight: 600;
+        }
+        html[data-theme="light"] .mobile-dropdown-toggle {
+          color: rgba(0,0,0,0.75);
+        }
+        html[data-theme="light"] .mobile-dropdown-toggle:hover {
+          color: var(--pink);
+          background: rgba(240,23,122,0.06);
+        }
+        html[data-theme="light"] .mobile-dropdown-toggle.active {
+          color: var(--pink);
+          background: rgba(240,23,122,0.1);
+        }
+        .mobile-dropdown-icon {
+          width: 2rem;
+          height: 2rem;
+          border-radius: 0.5rem;
+          background: rgba(255,255,255,0.06);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+        .mobile-dropdown-toggle.active .mobile-dropdown-icon {
+          background: rgba(240,23,122,0.2);
+        }
+        .mobile-dropdown-chevron {
+          transition: transform 200ms ease;
+        }
+        .mobile-dropdown-chevron.open {
+          transform: rotate(180deg);
+        }
+        .mobile-dropdown-menu {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 300ms cubic-bezier(0.16,1,0.3,1);
+          margin-left: 2.5rem;
+        }
+        .mobile-dropdown-menu.open {
+          max-height: 500px;
+        }
+        .mobile-dropdown-link {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.6rem 1rem;
+          border-radius: 0.5rem;
+          text-decoration: none;
+          font-size: 0.85rem;
+          font-weight: 500;
+          color: rgba(255,255,255,0.6);
+          transition: all 150ms ease;
+        }
+        .mobile-dropdown-link:hover {
+          color: #ff4fa3;
+          background: rgba(240,23,122,0.08);
+        }
+        html[data-theme="light"] .mobile-dropdown-link {
+          color: rgba(0,0,0,0.6);
+        }
+        html[data-theme="light"] .mobile-dropdown-link:hover {
+          color: var(--pink);
+        }
       `}</style>
 
       {/* Backdrop */}
@@ -603,14 +808,59 @@ export default function SiteHeader() {
         </div>
 
         <nav className="drawer-nav">
-          {NAV_LINKS.map((item, i) => {
+          {STATIC_LINKS.map((item, i) => {
             const active = isActivePath(pathname, item.href);
+            
+            // Dropdown dla Oferta w mobile
+            if ('hasDropdown' in item && item.hasDropdown) {
+              return (
+                <div key={item.href} style={{ animationDelay: `${i * 50 + 60}ms` }}>
+                  <button
+                    onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+                    className={`mobile-dropdown-toggle${active ? " active" : ""}`}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
+                      <span className="mobile-dropdown-icon">
+                        <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      </span>
+                      <span>{item.label}</span>
+                    </div>
+                    <svg 
+                      width="12" 
+                      height="12" 
+                      viewBox="0 0 12 12" 
+                      fill="none" 
+                      className={`mobile-dropdown-chevron${mobileDropdownOpen ? " open" : ""}`}
+                    >
+                      <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  <div className={`mobile-dropdown-menu${mobileDropdownOpen ? " open" : ""}`}>
+                    {offerSections.map((section) => (
+                      <Link
+                        key={section.key}
+                        href={`/oferta#${section.key}`}
+                        className="mobile-dropdown-link"
+                        onClick={() => {
+                          setMobileDropdownOpen(false);
+                          setMobileOpen(false);
+                        }}
+                      >
+                        {section.title || section.categoryLabel || section.category}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              );
+            }
+            
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`drawer-link${active ? " active" : ""}`}
                 style={{ animationDelay: `${i * 50 + 60}ms` }}
+                onClick={() => setMobileOpen(false)}
               >
                 <span className="drawer-icon">
                   <img src="/Plyta_raster_lowres.png" alt="" />
@@ -651,8 +901,42 @@ export default function SiteHeader() {
 
           {/* Desktop Nav */}
           <nav className="desktop-nav">
-            {NAV_LINKS.map((item) => {
+            {STATIC_LINKS.map((item) => {
               const active = isActivePath(pathname, item.href);
+              
+              // Dropdown dla Oferta
+              if ('hasDropdown' in item && item.hasDropdown) {
+                return (
+                  <div key={item.href} className="nav-item-dropdown" ref={dropdownRef}>
+                    <button
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                      className={`nav-link${active ? " active" : ""}`}
+                      style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "transparent", cursor: "pointer" }}
+                    >
+                      {item.label}
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: dropdownOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 200ms" }}>
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                    <div className={`dropdown-menu${dropdownOpen ? " open" : ""}`}>
+                      {offerSections.map((section) => (
+                        <Link
+                          key={section.key}
+                          href={`/oferta#${section.key}`}
+                          className="dropdown-link"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          <span className="dropdown-icon">
+                            <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                          </span>
+                          {section.title || section.categoryLabel || section.category}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+              
               return (
                 <Link
                   key={item.href}
