@@ -39,7 +39,7 @@ export default function SiteHeader() {
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Pobierz oferty z Supabase - tabela "offer" jak w page.tsx
+  // Pobierz oferty z Supabase - tabela "offer" - sortowanie po created_at
   useEffect(() => {
     async function fetchOffers() {
       const { data, error } = await supabase

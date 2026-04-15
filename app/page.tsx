@@ -30,9 +30,6 @@ function useCounter(target: number, duration = 1800) {
   return { val, ref };
 }
 
-// Karuzela zdjęć - automatyczna zmiana co 4 sekundy
-// Pobiera max 3 zdjęcia z każdej kategorii, wyświetla na zmianę (interleave)
-// Pomija kategorię: INNE
 function ImageCarousel() {
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -91,11 +88,9 @@ function ImageCarousel() {
 
   useEffect(() => {
     if (images.length <= 1) return;
-
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 4000);
-
     return () => clearInterval(interval);
   }, [images.length]);
 
@@ -113,7 +108,6 @@ function ImageCarousel() {
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
-
     if (isLeftSwipe && images.length > 0) {
       setCurrentIndex((prev) => (prev + 1) % images.length);
     }
@@ -239,7 +233,7 @@ export default function Home() {
         /* ── HEADLINE ── */
         .h1 {
           font-family: var(--font-display);
-          font-size: clamp(3.4rem, 6vw, 5.8rem);
+          font-size: clamp(2.4rem, 4vw, 4.4rem);
           font-weight: 700;
           line-height: 1.06;
           letter-spacing: -0.03em;
@@ -247,6 +241,9 @@ export default function Home() {
           margin: 0 0 1.75rem;
           overflow: visible;
           padding-bottom:.06em;
+        }
+        @media(max-width:900px){
+          .h1 { font-size: clamp(2.2rem, 8vw, 3rem); }
         }
         .h1 em {
           font-style: normal;

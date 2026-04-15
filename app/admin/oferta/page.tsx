@@ -2,6 +2,23 @@
 
 import { useEffect, useMemo, useState } from "react";
 import AdminShell from "@/components/admin/admin-shell";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type SaveState =
   | { state: "idle" }
@@ -18,6 +35,8 @@ type OfferSection = {
   price: string;
   bullets: string[];
   images: string[];
+  order_index?: number;
+  menu_order?: number;
 };
 
 type OfferData = {
@@ -55,8 +74,8 @@ export default function AdminOfferPage() {
   }, []);
 
   const canSave = useMemo(() => {
-    if (!data) return false;
-    return data.sections.every((s) => s.title.trim() && s.description.trim());
+    if (!data || !data.sections || !Array.isArray(data.sections)) return false;
+    return data.sections.every((s) => s.title?.trim() && s.description?.trim());
   }, [data]);
 
   function updateSection(key: string, patch: Partial<OfferSection>) {
@@ -85,7 +104,9 @@ export default function AdminOfferPage() {
       description: "Opis nowej oferty...",
       price: "0 PLN",
       bullets: ["Usługa 1"],
-      images: []
+      images: [],
+      order_index: 0,
+      menu_order: 0,
     };
     
     setData((prev) => {
@@ -228,6 +249,31 @@ export default function AdminOfferPage() {
       setTimeout(() => setSave({ state: "idle" }), 2000);
     } catch {
       setSave({ state: "error", message: "Błąd połączenia." });
+    }
+  }
+
+  // Sensors for drag & drop
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // Handle drag end - reorder sections
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setData((prev) => {
+        if (!prev) return prev;
+        const oldIndex = prev.sections.findIndex((s) => s.key === active.id);
+        const newIndex = prev.sections.findIndex((s) => s.key === over.id);
+        return {
+          ...prev,
+          sections: arrayMove(prev.sections, oldIndex, newIndex),
+        };
+      });
     }
   }
 
@@ -582,6 +628,48 @@ export default function AdminOfferPage() {
           gap: 0.75rem;
           justify-content: center;
         }
+        /* Drag & Drop styles */
+        .ao-sortable-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.75rem;
+          touch-action: none;
+        }
+        .ao-grip {
+          display: grid;
+          grid-template-columns: repeat(2, 4px);
+          grid-template-rows: repeat(3, 4px);
+          gap: 2px;
+          padding: 0.5rem;
+          margin: -0.5rem 0 0 -0.5rem;
+          cursor: grab;
+          flex-shrink: 0;
+          align-self: center;
+          opacity: 0.5;
+          transition: opacity 200ms ease;
+        }
+        .ao-grip:hover {
+          opacity: 1;
+        }
+        .ao-grip:active {
+          cursor: grabbing;
+        }
+        .ao-grip-dot {
+          width: 4px;
+          height: 4px;
+          border-radius: 50%;
+          background: var(--text-muted);
+        }
+        .ao-dragging {
+          opacity: 0.5;
+          transform: scale(1.02);
+          box-shadow: 0 8px 32px rgba(240,23,122,0.2);
+          z-index: 100;
+        }
+        .ao-section-content {
+          flex: 1;
+          min-width: 0;
+        }
       `}</style>
 
       <div className="ao-card">
@@ -608,191 +696,39 @@ export default function AdminOfferPage() {
         {save.state === "error" && <div className="ao-msg-error">{save.message}</div>}
         {save.state === "saved" && <div className="ao-msg-saved">✓ Zapisano ({save.at})</div>}
 
-        <div style={{ display: "grid", gap: "1rem", marginTop: "0.5rem" }}>
-          {data?.sections.map((s) => {
-            const isEditing = editingKey === s.key;
-            const isLocked = editingKey !== null && editingKey !== s.key;
-            return (
-              <div key={s.key} className={`ao-section ${isEditing ? "editing" : ""} ${isLocked ? "readonly" : ""}`}>
-                <div className="ao-section-header">
-                  <span className="ao-section-title">{s.categoryLabel || s.title}</span>
-                  <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                    <span className="ao-key-pill">{s.key}</span>
-                    <button 
-                      onClick={() => setEditingKey(isEditing ? null : s.key)} 
-                      disabled={save.state === "saving" || isLocked} 
-                      className={`ao-btn-edit ${isEditing ? "active" : ""}`}
-                    >
-                      {isEditing ? "Zakończ edycję" : "Edytuj"}
-                    </button>
-                    <button 
-                      onClick={() => askRemoveSection(s.key, s.categoryLabel || s.title)} 
-                      disabled={save.state === "saving"} 
-                      className="ao-btn-delete"
-                    >
-                      Usuń
-                    </button>
-                  </div>
-                </div>
-
-                {isEditing && (
-                  <div className="ao-grid">
-                    <label className="ao-label">
-                      Nazwa kategorii (widoczna w menu)
-                      <input
-                        value={s.categoryLabel}
-                        onChange={(e) => updateSection(s.key, { categoryLabel: e.target.value })}
-                        className="ao-input"
-                        placeholder="Np. Urodziny, Wesela..."
-                      />
-                    </label>
-
-                    <label className="ao-label">
-                      Tytuł oferty
-                      <input
-                        value={s.title}
-                        onChange={(e) => updateSection(s.key, { title: e.target.value })}
-                        className="ao-input"
-                      />
-                    </label>
-
-                    <label className="ao-label">
-                      Cena od (zł)
-                      <input
-                        value={s.price}
-                        onChange={(e) => updateSection(s.key, { price: e.target.value })}
-                        inputMode="numeric"
-                        className="ao-input"
-                      />
-                    </label>
-
-                    <div className="ao-label span-2">
-                      <span>Zdjęcia</span>
-                      <div className="ao-images-grid">
-                        {(s.images || []).map((img, idx) => (
-                          <div key={idx} className="ao-image-item">
-                            <img src={img} alt={`Zdjęcie ${idx + 1}`} />
-                            <button 
-                              className="ao-image-remove" 
-                              onClick={() => removeImage(s.key, idx)}
-                              title="Usuń zdjęcie"
-                            >
-                              ×
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="ao-upload-options" style={{ marginTop: "0.5rem" }}>
-                        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                          <button 
-                            className={`ao-upload-type-btn ${!showUrlInput[s.key] ? 'active' : ''}`}
-                            onClick={() => setShowUrlInput(prev => ({ ...prev, [s.key]: false }))}
-                            style={{ flex: 1 }}
-                          >
-                            📁 Z komputera
-                          </button>
-                          <button 
-                            className={`ao-upload-type-btn ${showUrlInput[s.key] ? 'active' : ''}`}
-                            onClick={() => setShowUrlInput(prev => ({ ...prev, [s.key]: true }))}
-                            style={{ flex: 1 }}
-                          >
-                            🔗 Z linku
-                          </button>
-                        </div>
-                        
-                        {!showUrlInput[s.key] ? (
-                          <label className="ao-upload-btn">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              style={{ display: "none" }}
-                              onChange={(e) => e.target.files?.[0] && handleFileUpload(s.key, e.target.files[0])}
-                            />
-                            {uploading === s.key ? "Przesyłanie..." : "Wybierz plik"}
-                          </label>
-                        ) : (
-                          <div style={{ display: "flex", gap: "0.5rem" }}>
-                            <input
-                              type="text"
-                              placeholder="Wklej link do zdjęcia..."
-                              className="ao-input"
-                              style={{ flex: 1 }}
-                              onKeyPress={(e) => {
-                                if (e.key === 'Enter') {
-                                  e.currentTarget.blur();
-                                  handleImageUrl(s.key, e.currentTarget.value);
-                                  e.currentTarget.value = '';
-                                }
-                              }}
-                            />
-                            <button
-                              className="ao-btn-add"
-                              onClick={(e) => {
-                                const input = e.currentTarget.parentElement?.querySelector('input');
-                                if (input?.value.trim()) {
-                                  handleImageUrl(s.key, input.value);
-                                  input.value = '';
-                                }
-                              }}
-                              disabled={uploading === s.key}
-                            >
-                              Dodaj
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <label className="ao-label span-2">
-                      Opis
-                      <textarea
-                        value={s.description}
-                        onChange={(e) => updateSection(s.key, { description: e.target.value })}
-                        className="ao-textarea"
-                      />
-                    </label>
-
-                    <div className="span-2">
-                      <div className="ao-bullets-label">Punkty pakietu</div>
-                      {s.bullets.map((b, idx) => (
-                        <div key={`${s.key}_${idx}`} className="ao-bullet-row">
-                          <input
-                            value={b}
-                            onChange={(e) => {
-                              const next = s.bullets.slice();
-                              next[idx] = e.target.value;
-                              updateSection(s.key, { bullets: next });
-                            }}
-                            className="ao-input"
-                            placeholder={`Punkt ${idx + 1}`}
-                          />
-                          <button 
-                            className="ao-btn-remove-bullet" 
-                            onClick={() => removeBullet(s.key, idx)}
-                            disabled={s.bullets.length <= 1}
-                          >
-                            Usuń
-                          </button>
-                        </div>
-                      ))}
-                      <button className="ao-btn-add" onClick={() => addBullet(s.key)}>
-                        + Dodaj punkt
-                      </button>
-                    </div>
-                  </div>
-                )}
-
-                {!isEditing && (
-                  <div style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: "1.4" }}>
-                    <div>Cena: {s.price}</div>
-                    <div>Punkty pakietu: {s.bullets.length}</div>
-                    <div>Zdjęcia: {(s.images || []).length}</div>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {/* Drag & Drop List */}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={data?.sections.map((s) => s.key) || []}
+            strategy={verticalListSortingStrategy}
+          >
+            <div style={{ display: "grid", gap: "1rem", marginTop: "0.5rem" }}>
+              {data?.sections.map((s) => (
+                <SortableItem
+                  key={s.key}
+                  section={s}
+                  editingKey={editingKey}
+                  setEditingKey={setEditingKey}
+                  save={save}
+                  askRemoveSection={askRemoveSection}
+                  updateSection={updateSection}
+                  removeImage={removeImage}
+                  handleFileUpload={handleFileUpload}
+                  handleImageUrl={handleImageUrl}
+                  uploading={uploading}
+                  showUrlInput={showUrlInput}
+                  setShowUrlInput={setShowUrlInput}
+                  addBullet={addBullet}
+                  removeBullet={removeBullet}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
 
         {!canSave && data && (
           <div className="ao-hint">Uzupełnij tytuł i opis w każdej sekcji, aby móc zapisać.</div>
@@ -820,5 +756,252 @@ export default function AdminOfferPage() {
         )}
       </div>
     </AdminShell>
+  );
+}
+
+// Sortable Item Component with Grip Handle (6 dots)
+function SortableItem({
+  section,
+  editingKey,
+  setEditingKey,
+  save,
+  askRemoveSection,
+  updateSection,
+  removeImage,
+  handleFileUpload,
+  handleImageUrl,
+  uploading,
+  showUrlInput,
+  setShowUrlInput,
+  addBullet,
+  removeBullet,
+}: {
+  section: OfferSection;
+  editingKey: string | null;
+  setEditingKey: (key: string | null) => void;
+  save: { state: string };
+  askRemoveSection: (key: string, title: string) => void;
+  updateSection: (key: string, patch: Partial<OfferSection>) => void;
+  removeImage: (key: string, idx: number) => void;
+  handleFileUpload: (key: string, file: File) => void;
+  handleImageUrl: (key: string, url: string) => void;
+  uploading: string | null;
+  showUrlInput: Record<string, boolean>;
+  setShowUrlInput: React.Dispatch<React.SetStateAction<Record<string, boolean>>>;
+  addBullet: (key: string) => void;
+  removeBullet: (key: string, idx: number) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: section.key });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const isEditing = editingKey === section.key;
+  const isLocked = editingKey !== null && editingKey !== section.key;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`ao-sortable-item ${isDragging ? "ao-dragging" : ""}`}
+    >
+      {/* Grip Handle - 6 dots */}
+      <div className="ao-grip" {...attributes} {...listeners}>
+        <span className="ao-grip-dot" />
+        <span className="ao-grip-dot" />
+        <span className="ao-grip-dot" />
+        <span className="ao-grip-dot" />
+        <span className="ao-grip-dot" />
+        <span className="ao-grip-dot" />
+      </div>
+
+      {/* Section Content */}
+      <div className={`ao-section-content ao-section ${isEditing ? "editing" : ""} ${isLocked ? "readonly" : ""}`}>
+        <div className="ao-section-header">
+          <span className="ao-section-title">{section.categoryLabel || section.title}</span>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <span className="ao-key-pill">{section.key}</span>
+            <button
+              onClick={() => setEditingKey(isEditing ? null : section.key)}
+              disabled={save.state === "saving" || isLocked}
+              className={`ao-btn-edit ${isEditing ? "active" : ""}`}
+            >
+              {isEditing ? "Zakończ edycję" : "Edytuj"}
+            </button>
+            <button
+              onClick={() => askRemoveSection(section.key, section.categoryLabel || section.title)}
+              disabled={save.state === "saving"}
+              className="ao-btn-delete"
+            >
+              Usuń
+            </button>
+          </div>
+        </div>
+
+        {isEditing && (
+          <div className="ao-grid">
+            <label className="ao-label">
+              Nazwa kategorii (widoczna w menu)
+              <input
+                value={section.categoryLabel}
+                onChange={(e) => updateSection(section.key, { categoryLabel: e.target.value })}
+                className="ao-input"
+                placeholder="Np. Urodziny, Wesela..."
+              />
+            </label>
+
+            <label className="ao-label">
+              Tytuł oferty
+              <input
+                value={section.title}
+                onChange={(e) => updateSection(section.key, { title: e.target.value })}
+                className="ao-input"
+              />
+            </label>
+
+            <label className="ao-label">
+              Cena od (zł)
+              <input
+                value={section.price}
+                onChange={(e) => updateSection(section.key, { price: e.target.value })}
+                inputMode="numeric"
+                className="ao-input"
+              />
+            </label>
+
+            <div className="ao-label span-2">
+              <span>Zdjęcia</span>
+              <div className="ao-images-grid">
+                {(section.images || []).map((img, idx) => (
+                  <div key={idx} className="ao-image-item">
+                    <img src={img} alt={`Zdjęcie ${idx + 1}`} />
+                    <button
+                      className="ao-image-remove"
+                      onClick={() => removeImage(section.key, idx)}
+                      title="Usuń zdjęcie"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div className="ao-upload-options" style={{ marginTop: "0.5rem" }}>
+                <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
+                  <button
+                    className={`ao-upload-type-btn ${!showUrlInput[section.key] ? 'active' : ''}`}
+                    onClick={() => setShowUrlInput(prev => ({ ...prev, [section.key]: false }))}
+                    style={{ flex: 1 }}
+                  >
+                    📁 Z komputera
+                  </button>
+                  <button
+                    className={`ao-upload-type-btn ${showUrlInput[section.key] ? 'active' : ''}`}
+                    onClick={() => setShowUrlInput(prev => ({ ...prev, [section.key]: true }))}
+                    style={{ flex: 1 }}
+                  >
+                    🔗 Z linku
+                  </button>
+                </div>
+
+                {!showUrlInput[section.key] ? (
+                  <label className="ao-upload-btn">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={(e) => e.target.files?.[0] && handleFileUpload(section.key, e.target.files[0])}
+                    />
+                    {uploading === section.key ? "Przesyłanie..." : "Wybierz plik"}
+                  </label>
+                ) : (
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <input
+                      type="text"
+                      placeholder="Wklej link do zdjęcia..."
+                      className="ao-input"
+                      style={{ flex: 1 }}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          e.currentTarget.blur();
+                          handleImageUrl(section.key, e.currentTarget.value);
+                          e.currentTarget.value = '';
+                        }
+                      }}
+                    />
+                    <button
+                      className="ao-btn-add"
+                      onClick={(e) => {
+                        const input = e.currentTarget.parentElement?.querySelector('input');
+                        if (input?.value.trim()) {
+                          handleImageUrl(section.key, input.value);
+                          input.value = '';
+                        }
+                      }}
+                      disabled={uploading === section.key}
+                    >
+                      Dodaj
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <label className="ao-label span-2">
+              Opis
+              <textarea
+                value={section.description}
+                onChange={(e) => updateSection(section.key, { description: e.target.value })}
+                className="ao-textarea"
+              />
+            </label>
+
+            <div className="span-2">
+              <div className="ao-bullets-label">Punkty pakietu</div>
+              {section.bullets.map((b, idx) => (
+                <div key={`${section.key}_${idx}`} className="ao-bullet-row">
+                  <input
+                    value={b}
+                    onChange={(e) => {
+                      const next = section.bullets.slice();
+                      next[idx] = e.target.value;
+                      updateSection(section.key, { bullets: next });
+                    }}
+                    className="ao-input"
+                    placeholder={`Punkt ${idx + 1}`}
+                  />
+                  <button
+                    className="ao-btn-remove-bullet"
+                    onClick={() => removeBullet(section.key, idx)}
+                    disabled={section.bullets.length <= 1}
+                  >
+                    Usuń
+                  </button>
+                </div>
+              ))}
+              <button className="ao-btn-add" onClick={() => addBullet(section.key)}>
+                + Dodaj punkt
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!isEditing && (
+          <div style={{ color: "var(--text-secondary)", fontSize: "0.8rem", lineHeight: "1.4" }}>
+            <div>Cena: {section.price}</div>
+            <div>Punkty pakietu: {section.bullets.length}</div>
+            <div>Zdjęcia: {(section.images || []).length}</div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

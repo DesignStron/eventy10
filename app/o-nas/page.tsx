@@ -599,10 +599,13 @@ export default function AboutPage() {
                 Cześć! Z tej strony Magda Gałkowska - założycielka Pinky Party. Animatorka, DJ-ka, wodzirejka oraz nauczycielka edukacji wczesnoszkolnej.
               </p>
               <p className="hero-desc fu d4" style={{ marginTop: "1rem" }}>
-                Od 10 lat działam w branży eventowej i edukacyjnej. Moją misją jest tworzenie animacji na wysokim poziomie - to nie tylko zabawa, ale też emocje, relacje i doświadczenia, które budują wspomnienia.
+                Od 10 lat działam w branży eventowej i edukacyjnej. To połączenie doświadczenia pedagogicznego i scenicznego jest kluczowe, bo pozwala tworzyć wydarzenia, które są nie tylko atrakcyjne, ale też świadomie dopasowane do wieku, potrzeb i emocji uczestników.
               </p>
               <p className="hero-desc fu d5" style={{ marginTop: "1rem" }}>
-                W Pinky Party stawiam na relacje, integrację i wspólne przeżywanie emocji: zarówno wśród dzieci, jak i rodzin.
+                Łączę wiedzę o rozwoju dzieci z praktyką prowadzenia wydarzeń, dzięki czemu animacje mają nie tylko bawić, ale też budować relacje, angażować i zostawiać wartościowe doświadczenia.
+              </p>
+              <p className="hero-desc fu d6" style={{ marginTop: "1rem" }}>
+                Prywatnie jestem mamą dwójki dzieci, co jeszcze bardziej wzmacnia moje podejście do tworzenia jakościowych i dobrze przemyślanych animacji.
               </p>
             </div>
 
@@ -650,61 +653,6 @@ export default function AboutPage() {
             ))}
           </div>
         </section>
-
-        {/* ── MOJA HISTORIA ── */}
-        <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
-          <div className="fl d1" style={{ marginBottom:"2.5rem" }}>
-            <p className="sec-eyebrow">Moja historia</p>
-            <h2 className="sec-heading">Od szkoły<br/>do sceny</h2>
-          </div>
-
-          <div className="story-grid" style={{ display:"grid", gridTemplateColumns:"repeat(2, 1fr)", gap:"1.5rem" }}>
-            <div className="story-card fu d2" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
-              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
-              </div>
-              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Scena i DJ</h3>
-              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
-                Swoje doświadczenie sceniczne rozwijałam podczas licznych wydarzeń. Umiejętności DJ-skie zdobywałam w Szkole Muzyki Nowoczesnej oraz DJ Academy. Przez 3 lata występowałam w kobiecym składzie DJskim, realizując duże eventy.
-              </p>
-            </div>
-
-            <div className="story-card fu d3" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
-              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
-              </div>
-              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Wokal i taniec</h3>
-              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
-                Moja praca to także doświadczenie wokalne: śpiew i emisja głosu. W ostatnich latach rozwijałam taniec nowoczesny. Wszystkie te elementy łączą się w moje unikalne podejście do prowadzenia animacji.
-              </p>
-            </div>
-
-            <div className="story-card fu d4" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
-              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-              </div>
-              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Cardblocks</h3>
-              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
-                Jestem partnerem firmy Cardblocks, dla której organizuję warsztaty, szkolenia i eventy z wykorzystaniem kreatywnych, tekturowych klocków.
-              </p>
-            </div>
-
-            <div className="story-card fu d5" style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.025)", border:"1px solid rgba(255,255,255,0.07)" }}>
-              <div style={{ width:"3rem", height:"3rem", borderRadius:"1rem", background:"rgba(240,23,122,0.1)", border:"1px solid rgba(240,23,122,0.2)", display:"flex", alignItems:"center", justifyContent:"center", marginBottom:"1.25rem", color:"var(--pink-light)" }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              </div>
-              <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>Mama w pracy</h3>
-              <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>
-                Prywatnie mama dwójki dzieci. To pozwala mi jeszcze lepiej rozumieć, jak ważne są wartościowe, angażujące i dobrze prowadzone animacje dla dzieci.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Divider */}
-        <div className="ab-wrap" style={{ paddingBottom:"4rem" }}>
-          <div className="fancy-divider"/>
-        </div>
 
         {/* ── VALUES ── */}
         <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>

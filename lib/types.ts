@@ -9,6 +9,8 @@ export type OfferSection = {
   price: string;
   bullets: string[];
   images: string[];
+  order_index?: number; // Kolejność wyświetlania (dropdown i podstrona)
+  menu_order?: number; // Opcjonalna osobna kolejność dla menu
 };
 
 export type OfferData = {
