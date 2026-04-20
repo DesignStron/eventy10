@@ -505,19 +505,27 @@ export default async function OfferPage() {
               <span className="op-hero-accent">naszą ofertę</span>
             </h1>
             <p className="op-hero-sub">
-              Zajmujemy się animacjami dla dzieci i młodzieży oraz organizacją
-              wydarzeń dla klientów prywatnych, szkół i firm we Wrocławiu i
-              okolicach.
+              Poniżej znajdziesz standardową ofertę naszych usług. 
+              Realizujemy animacje, warsztaty oraz oprawę muzyczną 
+              dla dzieci i młodzieży, organizując wydarzenia 
+              dla klientów prywatnych, szkół i firm.
             </p>
             <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              Prowadzimy animacje, warsztaty oraz oprawę muzyczną wydarzeń.
-              Realizujemy imprezy takie jak urodziny, Mikołajki, bale karnawałowe,
-              festyny i pikniki, a także wydarzenia szkolne i młodzieżowe:
-              studniówki, bale 8-klasistów oraz dyskoteki szkolne.
+              W ofercie znajdują się m.in. urodziny, animacje weselne, 
+              komunijne, Mikołajki, bale karnawałowe, festyny i pikniki, 
+              a także wydarzenia szkolne i młodzieżowe, takie jak 
+              studniówki, bale 8-klasistów oraz dyskoteki.
             </p>
             <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              Jeśli nie widzisz w ofercie dokładnie tego, czego potrzebujesz lub
-              masz niestandardowe potrzeby: napisz do nas! Ustalimy najlepsze
+              Ceny mogą się różnić w zależności od czasu trwania, 
+              lokalizacji oraz zakresu wydarzenia. Działamy 
+              na terenie Wrocławia i okolic. Dojazd do 20 km 
+              wliczony jest w cenę.
+            </p>
+            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
+              Jeśli nie widzisz w ofercie dokładnie tego, 
+              czego potrzebujesz lub masz niestandardowe potrzeby 
+              lub pomysły — napisz do nas. Ustalimy najlepsze 
               rozwiązanie dopasowane do Twojego wydarzenia.
             </p>
             <nav className="op-nav" aria-label="Nawigacja oferty">
