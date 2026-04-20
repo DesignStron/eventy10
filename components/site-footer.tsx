@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CookieSettingsLink from "@/components/cookie-settings-link";
 
 const NAV = [
   { href: "/",                label: "Home" },
@@ -248,7 +249,25 @@ export default function SiteFooter() {
 
       <div className="ft-bottom">
         <span className="ft-copy">
-          © {new Date().getFullYear()} Pinky Party Animacje & Eventy. Wszelkie prawa zastrzeżone.
+          &copy; {new Date().getFullYear()} Pinky Party Animacje & Eventy. Wszelkie prawa zastrzeżone.
+          {' '}| Strona wykonana przez{' '}
+          <a
+            href="https://designstron.pl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ft-link"
+            style={{ display: "inline", padding: 0, fontSize: "0.65rem" }}
+          >
+            DesignStron
+          </a>
+        </span>
+        <span style={{ display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+          <Link href="/polityka-prywatnosci" className="ft-link" style={{ padding: 0, fontSize: "0.65rem" }}>
+            Polityka prywatności i cookies
+          </Link>
+          <CookieSettingsLink className="ft-link" style={{ padding: 0, fontSize: "0.65rem", background: "transparent", border: "none", textAlign: "left" } as React.CSSProperties}>
+            Ustawienia cookies
+          </CookieSettingsLink>
         </span>
         <span className="ft-credit">Projekt i realizacja — z pasją</span>
       </div>

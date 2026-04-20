@@ -204,6 +204,7 @@ export default function Home() {
         @keyframes dot      { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.75)} }
         @keyframes lineGrow { from{transform:scaleX(0);opacity:0} to{transform:scaleX(1);opacity:1} }
         @keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+        @keyframes shimBar  { 0%{background-position:-200% center} 100%{background-position:200% center} }
         @keyframes shine    { 0%{background-position:200% center} 100%{background-position:-200% center} }
         @keyframes borderGlow {
           0%,100% { box-shadow: 0 0 0 1px rgba(240,23,122,0.15), 0 32px 80px rgba(0,0,0,0.5); }
@@ -233,12 +234,12 @@ export default function Home() {
         /* ── HEADLINE ── */
         .h1 {
           font-family: var(--font-display);
-          font-size: clamp(2.4rem, 4vw, 4.4rem);
+          font-size: clamp(2.6rem, 5.5vw, 4.5rem);
           font-weight: 700;
-          line-height: 1.06;
-          letter-spacing: -0.03em;
+          line-height: 1.25;
+          letter-spacing: -0.028em;
           color: #fff;
-          margin: 0 0 1.75rem;
+          margin: 0 0 1.35rem;
           overflow: visible;
           padding-bottom:.06em;
         }
@@ -247,12 +248,12 @@ export default function Home() {
         }
         .h1 em {
           font-style: normal;
-          background: linear-gradient(105deg,#fff 0%,#fff 18%,var(--pink-light) 38%,#ffb3d4 55%,var(--pink-light) 72%,#fff 88%,#fff 100%);
-          background-size: 220% auto;
+          background:linear-gradient(105deg,#f0177a 0%,#ff6bb5 50%,#f0177a 80%);
+          background-size:200% auto;
           -webkit-background-clip: text;
           background-clip: text;
           -webkit-text-fill-color: transparent;
-          animation: shine 5s linear infinite;
+          animation: shimBar 3.5s linear infinite;
         }
 
         /* ── BADGE ── */

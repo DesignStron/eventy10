@@ -184,12 +184,15 @@ export default async function OfferPage() {
         }
         .op-hero-title {
           font-family:var(--font-display); font-size:clamp(3rem,6vw,5.5rem);
-          font-weight:800; line-height:1.05; letter-spacing:-.04em; color:#fff;
-          margin:0 0 1.75rem; animation:fadeUp .7s .08s cubic-bezier(.16,1,.3,1) both;
+          font-weight:800; line-height:1.18; letter-spacing:-.04em; color:#fff;
+          margin:0 0 1.75rem; overflow:visible; padding-bottom:.12em;
+          animation:fadeUp .7s .08s cubic-bezier(.16,1,.3,1) both;
         }
         html[data-theme="light"] .op-hero-title { color:#0d0b10; }
         .op-hero-accent {
           display:block;
+          overflow:visible;
+          padding-bottom:.08em;
           background:linear-gradient(110deg,#f0177a 0%,#ff8cc8 42%,#f0177a 82%);
           background-size:220% auto; -webkit-background-clip:text; background-clip:text;
           -webkit-text-fill-color:transparent; animation:shimmer 4s linear infinite;
@@ -443,15 +446,19 @@ export default async function OfferPage() {
           .op-hero-sub { font-size:.95rem; max-width:100%; line-height:1.7; }
           .op-nav { 
             display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
             gap: 0.5rem;
             overflow-x: visible;
           }
           .op-nav-pill { 
-            flex-shrink: 0; 
+            width: 100%;
+            min-width: 0;
+            flex-shrink: 1; 
             justify-content: center;
             font-size: 0.8rem;
             padding: 0.6rem 0.8rem;
+            white-space: normal;
+            text-align: center;
           }
           .op-divider { margin:2.5rem 0 3rem; }
           .op-section-head { margin-bottom:2rem; }
@@ -505,19 +512,27 @@ export default async function OfferPage() {
               <span className="op-hero-accent">naszą ofertę</span>
             </h1>
             <p className="op-hero-sub">
-              Zajmujemy się animacjami dla dzieci i młodzieży oraz organizacją
-              wydarzeń dla klientów prywatnych, szkół i firm we Wrocławiu i
-              okolicach.
+              Poniżej znajdziesz standardową ofertę naszych usług. 
+              Realizujemy animacje, warsztaty oraz oprawę muzyczną 
+              dla dzieci i młodzieży, organizując wydarzenia 
+              dla klientów prywatnych, szkół i firm.
             </p>
             <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              Prowadzimy animacje, warsztaty oraz oprawę muzyczną wydarzeń.
-              Realizujemy imprezy takie jak urodziny, Mikołajki, bale karnawałowe,
-              festyny i pikniki, a także wydarzenia szkolne i młodzieżowe:
-              studniówki, bale 8-klasistów oraz dyskoteki szkolne.
+              W ofercie znajdują się m.in. urodziny, animacje weselne, 
+              komunijne, Mikołajki, bale karnawałowe, festyny i pikniki, 
+              a także wydarzenia szkolne i młodzieżowe, takie jak 
+              studniówki, bale 8-klasistów oraz dyskoteki.
             </p>
             <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              Jeśli nie widzisz w ofercie dokładnie tego, czego potrzebujesz lub
-              masz niestandardowe potrzeby: napisz do nas! Ustalimy najlepsze
+              Ceny mogą się różnić w zależności od czasu trwania, 
+              lokalizacji oraz zakresu wydarzenia. Działamy 
+              na terenie Wrocławia i okolic. Dojazd do 20 km 
+              wliczony jest w cenę.
+            </p>
+            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
+              Jeśli nie widzisz w ofercie dokładnie tego, 
+              czego potrzebujesz lub masz niestandardowe potrzeby 
+              lub pomysły — napisz do nas. Ustalimy najlepsze 
               rozwiązanie dopasowane do Twojego wydarzenia.
             </p>
             <nav className="op-nav" aria-label="Nawigacja oferty">

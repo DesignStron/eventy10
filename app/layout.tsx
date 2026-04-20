@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans, DM_Mono } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/site-header";
+import CookieConsent from "@/components/cookie-consent";
 
 const playfair = Playfair_Display({
   variable: "--font-display",
@@ -62,6 +63,7 @@ export default function RootLayout({
       <body style={{ minHeight: "100vh", display: "flex", flexDirection: "column", margin: 0, overflowX: "hidden" }}>
         <SiteHeader />
         <main style={{ flex: 1 }}>{children}</main>
+        <CookieConsent />
       </body>
     </html>
   );
