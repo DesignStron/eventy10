@@ -152,8 +152,14 @@ export default function AboutPage() {
 
         /* ── HERO DESCRIPTION ── */
         .hero-desc {
-          color:rgba(255,255,255,0.55); font-size:clamp(1rem,1.8vw,1.15rem);
-          line-height:1.85; max-width:560px;
+          color:rgba(255,255,255,0.55); font-size:clamp(0.95rem,1.35vw,1.05rem);
+          line-height:1.85; width: 100%; max-width: 1200px;
+          text-align: center; margin: 0 auto 1rem; padding: 0 2rem;
+        }
+        @media(max-width:768px){
+          .hero-desc {
+            font-size: clamp(0.9rem,1.2vw,1rem); line-height: 1.75; padding: 0 1rem;
+          }
         }
         html[data-theme="light"] .hero-desc { color:rgba(13,11,16,0.6); }
 
@@ -174,7 +180,7 @@ export default function AboutPage() {
         .hero-img {
           width:100%;
           height:100%;
-          object-fit:cover;
+          object-fit:contain;
           object-position:center;
           display:block;
         }
@@ -288,6 +294,10 @@ export default function AboutPage() {
           letter-spacing:-0.02em; margin-bottom:1rem;
         }
         html[data-theme="light"] .sec-heading { color:#0d0b10; }
+
+        @media(min-width:901px){
+          .sec-heading--nowrap{ white-space:nowrap; }
+        }
 
         .sec-body {
           font-size:0.95rem; color:rgba(255,255,255,0.5);
@@ -586,16 +596,10 @@ export default function AboutPage() {
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:"3rem", alignItems:"center" }} className="hero-grid">
             {/* Lewa kolumna - tekst */}
             <div>
-              {/* Badge */}
-              <div className="fu" style={{ marginBottom:"1.5rem" }}>
-                <span className="hero-badge">
-                  <span className="dot-pulse"/>
-                  POZNAJMY SIĘ!
-                </span>
-              </div>
+              <h1 className="hero-title fu d2">Poznajmy się</h1>
 
               {/* Short intro in hero */}
-              <p className="hero-desc fu d3">
+              <p className="hero-desc fu d3" style={{ marginTop: "-0.5rem" }}>
                 Cześć! Z tej strony Magda Gałkowska - założycielka Pinky Party. Animatorka, DJ-ka, wodzirejka oraz nauczycielka edukacji wczesnoszkolnej.
               </p>
               <p className="hero-desc fu d4" style={{ marginTop: "1rem" }}>
@@ -610,7 +614,7 @@ export default function AboutPage() {
             </div>
 
             {/* Prawa kolumna - grafika */}
-            <div className="hero-img-wrap fr d2" style={{ height:"420px", minHeight:"420px" }}>
+            <div className="hero-img-wrap fr d2" style={{ aspectRatio:"2 / 3", maxWidth:"400px", justifySelf:"end" }}>
               <img src="/onas.jpg" alt="Pinky Party - O nas" className="hero-img" />
               <div className="hero-img-glow" />
               <div className="hero-img-frame" />
@@ -658,7 +662,7 @@ export default function AboutPage() {
         <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
           <div className="fl d1">
             <p className="sec-eyebrow">Dlaczego Pinky Party?</p>
-            <h2 className="sec-heading">Tworzymy animacje<br/>nowej generacji</h2>
+            <h2 className="sec-heading sec-heading--nowrap">Tworzymy animacje nowej generacji</h2>
             <p className="sec-body">
               Bo róż to nie tylko kolor. Róż symbolizuje energię, emocje i pozytywną atmosferę, którą tworzymy na każdym wydarzeniu. Dbamy o każdy szczegół. Tworzymy animacje dopracowane w każdym detalu, pełne dobrej energii i komfortu, dzięki któremu każdy czuje się swobodnie.
             </p>
@@ -689,7 +693,7 @@ export default function AboutPage() {
         <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
           <div className="fr d1">
             <p className="sec-eyebrow">Jak pracujemy</p>
-            <h2 className="sec-heading">Od pomysłu<br/>do realizacji</h2>
+            <h2 className="sec-heading sec-heading--nowrap">Od pomysłu do realizacji</h2>
             <p className="sec-body">
               Nasz proces jest prosty i przejrzysty - żebyś wiedział/a dokładnie,
               czego się spodziewać na każdym etapie.

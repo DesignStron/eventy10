@@ -1,0 +1,159 @@
+﻿[
+    {
+        "key":  "urodziny",
+        "category":  "urodziny",
+        "categoryLabel":  "Animacje urodzinowe",
+        "title":  "Animacje urodzinowe",
+        "description":  "Animacje urodzinowe to 2 godziny zabawy z animatorem, dopasowane do wieku, energii i liczby uczestnikÃ³w. Reagujemy na grupÄ i dostosowujemy przebieg animacji na bieÅ¼Ä\u0085co. \nDojeÅ¼dÅ¼amy na terenie WrocÅawia i okolic (do 20 km w cenie). \nW programie znajdujÄ\u0085 siÄ rÃ³Å¼norodne aktywnoÅci ruchowe i integracyjne oraz gry i zabawy z animacyjnymi gadÅ¼etami dopasowane do przestrzeni oraz charakteru wydarzenia. \nPrzy wiÄkszej liczbie uczestnikÃ³w dobierany jest dodatkowy animator (wycena indywidualna).",
+        "price":  "750 zÅ",
+        "bullets":  [
+                        "1 animator do 12 dzieci",
+                        "Zabawy ruchowe i integracyjne",
+                        "Mini disco i taÅce",
+                        "Chusta animacyjna (Klanza)",
+                        "Balonowe zoo",
+                        "Gry zespoÅowe i konkursy",
+                        "Dyplom dla kaÅ¼dego uczestnika"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914692823-0hv2b67d8zkg.jpg"
+                   ]
+    },
+    {
+        "key":  "komunie",
+        "category":  "komunie",
+        "categoryLabel":  "Animacje komunijne/weselne",
+        "title":  "Animacje komunijne/weselne",
+        "description":  "Podczas wesel i przyjÄÄ komunijnych zapewniamy profesjonalne animacje\ndla dzieci, dziÄki ktÃ³rym najmÅodsi goÅcie sÄ\u0085 zaopiekowani i aktywnie\nspÄdzajÄ\u0085 czas, a doroÅli mogÄ\u0085 w peÅni uczestniczyÄ w uroczystoÅci.\nOferujemy 3 godziny animacji dopasowanych do wieku dzieci, liczby\nuczestnikÃ³w oraz przestrzeni. Standardowo 1 animator prowadzi animacje\ndla grupy do 12 dzieci. Przy wiÄkszej liczbie uczestnikÃ³w dobierany\njest dodatkowy animator - wycena ustalana indywidualnie.\n",
+        "price":  "950 zÅ",
+        "bullets":  [
+                        "Gry i zabawy integracyjne i ruchowe",
+                        "Animacje taneczne",
+                        "Balonowe zoo",
+                        "TatuaÅ¼e brokatowe",
+                        "Warsztat kreatywny",
+                        "Klocki Cardblocks",
+                        "3 godziny animacji (1 animator do 12 dzieci)"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1776699853949-rg09o2n75q.jpg"
+                   ]
+    },
+    {
+        "key":  "bale",
+        "category":  "bale",
+        "categoryLabel":  "Bale karnawaÅowe",
+        "title":  "Bale karnawaÅowe",
+        "description":  "Bale karnawaÅowe to profesjonalnie prowadzone wydarzenia dla dzieci i\nmÅodzieÅ¼y, ÅÄ\u0085czÄ\u0085ce animacje, muzykÄ oraz swobodnÄ\u0085 zabawÄ tanecznÄ\u0085.\nDbamy o wysokiej jakoÅci nagÅoÅnienie, estetyczne stanowisko DJ oraz\npÅynny przebieg caÅego wydarzenia. Podczas balu zapewniamy zarÃ³wno\nprowadzone animacje, jak i przestrzeÅ na swobodny taniec, gry i zabawy\nintegracyjne. Nasze wydarzenia angaÅ¼ujÄ\u0085 caÅe grupy i integrujÄ\u0085 klasy,\ntworzÄ\u0085c atmosferÄ radoÅci, energii i wspÃ³lnej zabawy, czÄsto rÃ³wnieÅ¼ z\naktywnym udziaÅem nauczycieli.\n\nBale prowadzone sÄ\u0085 przez doÅwiadczony duet DJ + prowadzÄ\u0085cy,\nspecjalizujÄ\u0085cy siÄ w pracy z duÅ¼ymi grupami dzieci i mÅodzieÅ¼y. DziÄki\ntemu muzyka, prowadzenie i animacje tworzÄ\u0085 spÃ³jnÄ\u0085 caÅoÅÄ, a wydarzenie\nma dynamiczny i profesjonalny przebieg. Dobieramy muzykÄ do wieku\nuczestnikÃ³w oraz aktualnych trendÃ³w, dziÄki czemu bal jest atrakcyjny\ni angaÅ¼ujÄ\u0085cy dla wszystkich. Standardowy bal karnawaÅowy trwa 2\ngodziny. W przypadku wiÄkszych grup, kilku klas lub niestandardowej\norganizacji wydarzenia przygotowujemy indywidualnÄ\u0085 ofertÄ oraz wycenÄ\ndopasowanÄ\u0085 do potrzeb szkÃ³Å lub instytucji.",
+        "price":  "2500 zÅ",
+        "bullets":  [
+                        "TaÅce i zabawy muzyczne",
+                        "Quizy i konkursy",
+                        "Animacje i gry integracyjne",
+                        "Swobodny taniec przy muzyce",
+                        "Muzyka dopasowana do trendÃ³w mÅodzieÅ¼owych",
+                        "Prowadzenie wydarzenia + oprawa muzyczna (DJ + prowadzÄ\u0085cy)",
+                        "2 godziny balu karnawaÅowego (DJ + prowadzÄ\u0085cy)"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914544972-ji9g0xbj19a.jpg"
+                   ]
+    },
+    {
+        "key":  "pikniki",
+        "category":  "pikniki",
+        "categoryLabel":  "Festyny i pikniki / DzieÅ Dziecka",
+        "title":  "Festyny i pikniki / DzieÅ Dziecka",
+        "description":  "Od kameralnych piknikÃ³w po duÅ¼e wydarzenia plenerowe. Tworzymy animacje dopasowane do skali, przestrzeni i charakteru eventu. Zapewniamy kompleksowÄ\u0085 obsÅugÄ, angaÅ¼ujÄ\u0085ce strefy oraz atrakcje dla dzieci w rÃ³Å¼nym wieku. W zaleÅ¼noÅci od wydarzenia pracujemy w zespole jednego lub kilku animatorÃ³w. KaÅ¼dy festyn wyceniamy indywidualnie - w zaleÅ¼noÅci od liczby uczestnikÃ³w, czasu trwania oraz zakresu atrakcji.\n\nOpisz nam swÃ³j pomysÅ, a my przygotujemy ofertÄ dopasowanÄ\u0085 do Twoich potrzeb. ",
+        "price":  "1800 zÅ",
+        "bullets":  [
+                        "Gry i zabawy ruchowe i integracyjne",
+                        "Animacje plenerowe i prowadzenie sceniczne",
+                        "Konkursy i aktywnoÅci zespoÅowe",
+                        "Modelowanie balonÃ³w",
+                        "TatuaÅ¼e brokatowe",
+                        "Zaplatanie warkoczykÃ³w",
+                        "Strefy kreatywne i plastyczne",
+                        "Strefa klockÃ³w kartonowych Cardblocks",
+                        "Oprawa muzyczna wydarzenia"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914811494-84j64oogon6.jpg"
+                   ]
+    },
+    {
+        "key":  "mikolajki",
+        "category":  "mikolajki",
+        "categoryLabel":  "Wizyta Åw. MikoÅaja",
+        "title":  "Wizyta Åw. MikoÅaja",
+        "description":  "Nasze animacje ÅwiÄ\u0085teczne to kompleksowe wydarzenia dla szkÃ³Å,\nprzedszkoli i instytucji ÅÄ\u0085czÄ\u0085ce animacje ÅnieÅ¼ynek z wyjÄ\u0085tkowÄ\u0085 wizytÄ\u0085\nÅwiÄtego MikoÅaja. To nie tylko wrÄczenie prezentÃ³w, ale peÅne\nÅwiÄ\u0085teczne doÅwiadczenie budujÄ\u0085ce atmosferÄ radoÅci i magii.\n\nW zaleÅ¼noÅci od organizacji placÃ³wki przygotowujemy rÃ³Å¼ne warianty\nwydarzenia: od krÃ³tszych spotkaÅ dla jednej grupy, po wiÄksze\nrealizacje dla caÅych szkÃ³Å, przedszkoli, hoteli czy firm. Animacje\nprowadzone przez ÅnieÅ¼ynki wprowadzajÄ\u0085 dzieci w ÅwiÄ\u0085teczny klimat, a\nnastÄpnie ÅwiÄty MikoÅaj wrÄcza prezenty przygotowane przezm\norgganizatorÃ³w, rozmawia z dzieÄmi oraz wykonuje pamiÄ\u0085tkowe zdjÄcia.\n\nKaÅ¼de wydarzenie dostosowujemy indywidualnie do liczby grup, wieku\ndzieci oraz moÅ¼liwoÅci organizacyjnych instytucji. W przypadku\nwiÄkszych wydarzeÅ czas realizacji jest odpowiednio wydÅuÅ¼any lub\ndzielony na bloki, aby kaÅ¼de dziecko mogÅo w peÅni uczestniczyÄ w\nspotkaniu.\n\nNapisz do nas i podaj liczbÄ dzieci, grup oraz wiek uczestnikÃ³w. Z\nprzyjemnoÅciÄ\u0085 przygotujemy szczegÃ³ÅowÄ\u0085 ofertÄ oraz dopasujemy przebieg\nwydarzenia do potrzeb Twojego wydarzenia.",
+        "price":  "Ustalana indywidualnie",
+        "bullets":  [
+                        "Profesjonalny strÃ³j Åw. MikoÅaja",
+                        "ÅwiÄ\u0085teczny klimat",
+                        "DbaÅoÅÄ o detale",
+                        "Prezenty dostarczane przez organizatora",
+                        "Dojazd na terenie WrocÅawia i okolic w cenie"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914630952-gp2zv5uknxv.jpg"
+                   ]
+    },
+    {
+        "key":  "animacje",
+        "category":  "animacje",
+        "categoryLabel":  "Halloween / Andrzejki / Animacje tematyczne",
+        "title":  "Halloween / Andrzejki / Animacje tematyczne",
+        "description":  "KaÅ¼da okazja jest dobra do ÅwiÄtowania: Halloween, Andrzejki, Animacje\nwielkanocne to tylko czÄÅÄ naszych realizacji. Organizujemy wydarzenia\ntematyczne dopasowane do charakteru placÃ³wki i uczestnikÃ³w.\n\nTworzymy animacje dla przedszkoli, szkÃ³Å, firm oraz gminnych oÅrodkÃ³w\nkultury, ÅÄ\u0085czÄ\u0085c zabawÄ, tematykÄ, muzykÄ i integracjÄ w spÃ³jnÄ\u0085\nangaÅ¼ujÄ\u0085cÄ\u0085 caÅoÅÄ. Naszym celem jest wysoka jakoÅÄ wydarzeÅ oraz\ntworzenie atmosfery, ktÃ³ra integruje dzieci, mÅodzieÅ¼ i caÅe rodziny.\n\nW przypadku klas 4â8 realizujemy rÃ³wnieÅ¼ tematyczne dyskoteki szkolne\nz elementami animacji i prowadzenia scenicznego.",
+        "price":  "1800 zÅ",
+        "bullets":  [
+                        "Animacje tematyczne dopasowane do okazji",
+                        "Oprawa muzyczna i prowadzenie wydarzenia",
+                        "Gry i zabawy integracyjne",
+                        "Konkursy i aktywnoÅci grupowe",
+                        "Integracja rodzin",
+                        "Niesamowite przebrania animatorÃ³w",
+                        "Dla szkÃ³Å, przedszkoli, firm i instytucji"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1776699879932-a2rob6ef09l.jpg"
+                   ]
+    },
+    {
+        "key":  "szkolne",
+        "category":  "szkolne",
+        "categoryLabel":  "Warsztaty CardBlocks",
+        "title":  "Warsztaty CardBlocks",
+        "description":  "Warsztaty z ekologicznymi klockami CardBlocks to kreatywna atrakcja\nidealna dla szkÃ³Å, przedszkoli, festynÃ³w oraz wydarzeÅ rodzinnych i\nhotelowych. ZajÄcia rozwijajÄ\u0085 wyobraÅºniÄ, wspÃ³ÅpracÄ oraz logiczne\nmyÅlenie, wpisujÄ\u0085c siÄ w zaÅoÅ¼enia edukacji STEAM. Podczas warsztatÃ³w\nkaÅ¼dy uczestnik otrzymuje wÅasny zestaw klockÃ³w do samodzielnego\nzÅoÅ¼enia z ktÃ³rego nastÄpnie buduje konstrukcje wedÅug podanej\ninstrukcji, bÄ\u0085dÅº wedÅug wÅasnego pomysÅu. ZajÄcia uczÄ\u0085 kreatywnoÅci,\norientacji przestrzennej i logicznego myÅlenia. Warsztaty cieszÄ\u0085 siÄ\nduÅ¼ym zainteresowaniem zarÃ³wno wÅrÃ³d dzieci, jak i dorosÅych, tworzÄ\u0085c\nangaÅ¼ujÄ\u0085cÄ\u0085 i nowoczesnÄ\u0085 formÄ zabawy edukacyjnej.\nNa zakoÅczenie kaÅ¼dy uczestnik zabiera swÃ³j zestaw klockÃ³w, dyplom\noraz torbÄ, dziÄki czemu doÅwiadczenie pozostaje z nimi na dÅugo po\nwydarzeniu.  Minimalna grupa uczestnikÃ³w: 15 osÃ³b.",
+        "price":  "40 zÅ/osoba",
+        "bullets":  [
+                        "Czas trwania: 1 godzina (przedszkola i szkoÅy)",
+                        "Wiek uczestnikÃ³w: od 5 lat",
+                        "Dojazd na terenie WrocÅawia i okolic w cenie",
+                        "Edukacja poprzez zabawÄ (STEAM)",
+                        "Rozwijanie kreatywnoÅci i orientacji przestrzennej",
+                        "Zabawa angaÅ¼ujÄ\u0085ca dzieci i dorosÅych"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914761632-li1sfpezxd.jpg"
+                   ]
+    },
+    {
+        "key":  "firmowe",
+        "category":  "firmowe",
+        "categoryLabel":  "Oprawa muzyczna i prowadzenie wydarzeÅ",
+        "title":  "Oprawa muzyczna i prowadzenie wydarzeÅ",
+        "description":  "Szukasz DJ-a, ktÃ³ry poprowadzi bal Ã³smoklasisty, studniÃ³wkÄ lub innÄ\u0085 imprezÄ dla mÅodzieÅ¼y i naprawdÄ zna ich klimat? TrafiÅeÅ idealnie.\n\nSpecjalizujemy siÄ w wydarzeniach dla mÅodzieÅ¼y. Wiemy, co dziaÅa, Åledzimy trendy muzyczne i potrafimy utrzymaÄ energiÄ na parkiecie od poczÄ\u0085tku do koÅca.\n\nZapewniamy kompleksowÄ\u0085 oprawÄ muzycznÄ\u0085, tworzymy i prowadzimy wydarzenie w sposÃ³b naturalny i angaÅ¼ujÄ\u0085cy.\n\nDziaÅamy na terenie WrocÅawia i okolic.",
+        "price":  "2500 zÅ",
+        "bullets":  [
+                        "NagÅoÅnienie",
+                        "OÅwietlenie",
+                        "DJ \u0026 prowadzenie",
+                        "Muzyka dla mÅodzieÅ¼y",
+                        "Animacje taneczne"
+                    ],
+        "images":  [
+                       "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914507515-rtkkbwpwq3b.jpg"
+                   ]
+    }
+]

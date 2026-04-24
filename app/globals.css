@@ -998,3 +998,32 @@ html[data-theme="light"] .fancy-divider {
   border-color: rgba(240,23,122,0.4);
   color: var(--pink);
 }
+.op-hero-text {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+}
+.op-hero-sub {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 1rem;
+  line-height: 1.85;
+  color: rgba(255,255,255,.55);
+  padding: 0 2rem;
+}
+@media(max-width:768px){
+  .op-hero-text {
+    width: 100%;
+    padding: 0 1rem;
+  }
+  .op-hero-sub {
+    font-size: 0.95rem;
+    line-height: 1.75;
+    padding: 0 1rem;
+  }
+}

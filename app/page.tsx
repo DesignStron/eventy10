@@ -210,6 +210,10 @@ export default function Home() {
           0%,100% { box-shadow: 0 0 0 1px rgba(240,23,122,0.15), 0 32px 80px rgba(0,0,0,0.5); }
           50%     { box-shadow: 0 0 0 1px rgba(240,23,122,0.4),  0 32px 80px rgba(0,0,0,0.5), 0 0 40px rgba(240,23,122,0.08); }
         }
+        @keyframes tagPulse {
+          0%,100% { border-color: rgba(240,23,122,0.3); }
+          50%     { border-color: rgba(240,23,122,0.7); }
+        }
 
         .fu{animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both}
         .fi{animation:fadeIn .7s ease both}
@@ -220,10 +224,10 @@ export default function Home() {
         .hg {
           display:grid;
           grid-template-columns: 1fr 1fr;
-          gap: 4rem;
+          gap: 2rem;
           align-items: center;
-          min-height: 88vh;
-          padding: 6rem 0 3rem;
+          min-height: 55vh;
+          padding: 4rem 0 2.5rem;
         }
         @media(max-width:900px){
           .hg { grid-template-columns:1fr; min-height:auto; padding:4rem 0 2rem; gap:2.5rem; }
@@ -234,7 +238,7 @@ export default function Home() {
         /* ── HEADLINE ── */
         .h1 {
           font-family: var(--font-display);
-          font-size: clamp(2.6rem, 5.5vw, 4.5rem);
+          font-size: clamp(2rem, 4vw, 3.2rem);
           font-weight: 700;
           line-height: 1.25;
           letter-spacing: -0.028em;
@@ -248,12 +252,7 @@ export default function Home() {
         }
         .h1 em {
           font-style: normal;
-          background:linear-gradient(105deg,#f0177a 0%,#ff6bb5 50%,#f0177a 80%);
-          background-size:200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: shimBar 3.5s linear infinite;
+          color: #fff;
         }
 
         /* ── BADGE ── */
@@ -313,6 +312,9 @@ export default function Home() {
         @media(max-width:900px){
           .img-card{aspect-ratio:16/9;animation:none;}
         }
+        @media(max-width:600px){
+          .img-card{aspect-ratio:4/5;}
+        }
         .img-glow{
           position:absolute;
           width:130%;height:130%;top:-15%;left:-15%;
@@ -328,6 +330,62 @@ export default function Home() {
           animation:lineGrow 1.1s cubic-bezier(.16,1,.3,1) .6s both;
         }
 
+        /* ── SERVICE TAGS ── */
+        .service-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: .6rem;
+          margin-bottom: 2.5rem;
+        }
+        .service-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: .35rem;
+          padding: .45rem 1rem;
+          border-radius: 9999px;
+          border: 1px solid rgba(240,23,122,.3);
+          background: rgba(240,23,122,.07);
+          color: var(--pink-light);
+          font-size: .78rem;
+          font-weight: 600;
+          letter-spacing: .04em;
+          animation: tagPulse 3s ease-in-out infinite;
+          transition: background 200ms, transform 200ms;
+        }
+        .service-tag:nth-child(2) { animation-delay: .4s; }
+        .service-tag:nth-child(3) { animation-delay: .8s; }
+        .service-tag:nth-child(4) { animation-delay: 1.2s; }
+        .service-tag:hover {
+          background: rgba(240,23,122,.15);
+          transform: translateY(-2px);
+        }
+        .service-tag-dot {
+          width: 5px; height: 5px;
+          border-radius: 50%;
+          background: var(--pink);
+          display: inline-block;
+        }
+
+        /* ── LOCATION CHIP ── */
+        .location-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: .5rem;
+          padding: .45rem 1.1rem;
+          border-radius: 9999px;
+          background: rgba(255,255,255,.05);
+          border: 1px solid rgba(255,255,255,.1);
+          color: rgba(255,255,255,.5);
+          font-size: .78rem;
+          font-weight: 500;
+          letter-spacing: .03em;
+          margin-bottom: 2.5rem;
+        }
+        .location-chip-icon {
+          font-size: .9rem;
+          opacity: .7;
+        }
+
         /* ── STATS ── */
         .stats-wrap{
           display:flex;flex-wrap:wrap;
@@ -335,7 +393,8 @@ export default function Home() {
           border:1px solid rgba(255,255,255,.07);
           border-radius:1rem;
           overflow:hidden;
-          margin-top:2.5rem;
+          margin:2.25rem auto 0;
+          max-width:34rem;
         }
         .stat-cell{
           flex:1;min-width:100px;
@@ -401,6 +460,9 @@ export default function Home() {
           text-transform:uppercase;color:rgba(255,255,255,.22);
           margin-bottom:.6rem;display:block;
         }
+
+        /* arrow transition */
+        .ar { display:inline-block; transition:transform 200ms ease; }
       `}</style>
 
       <div className="page-bg noise">
@@ -417,82 +479,48 @@ export default function Home() {
               </div>
 
               <h1 className="h1 fu d1">
-                Tworzymy wspomnienia<br/>
-                <em>od najmłodszych lat</em>
+                Tworzymy wydarzenia <em>od najmłodszych lat</em>
               </h1>
 
               <p className="fu d2" style={{
                 color:"rgba(255,255,255,.54)",
-                fontSize:"clamp(1rem,1.8vw,1.12rem)",
-                lineHeight:1.85,maxWidth:"50ch",marginBottom:"1.5rem",
+                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
+                lineHeight:1.8,maxWidth:"55ch",marginBottom:"2rem",
                 fontWeight: 500,
               }}>
-                Animacje, warsztaty i oprawa muzyczna wydarzeń - Wrocław
+                Pinky Party Animacje & Eventy organizuje animacje, warsztaty i oprawę muzyczną wydarzeń we Wrocławiu. Tworzymy wydarzenia na każdą okazję: od urodzin i wesel, przez festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
               </p>
 
-              <p className="fu d2" style={{
-                color:"rgba(255,255,255,.54)",
-                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
-                lineHeight:1.8,maxWidth:"52ch",marginBottom:"1.2rem",
-              }}>
-                Pinky Party Animacje & Eventy organizuje animacje i imprezy dla dzieci
-                oraz młodzieży.
-              </p>
+              {/* ── SERVICE TAGS (zastąpienie dwóch osobnych <p>) ── */}
+              <div className="service-tags fu d3">
+                <span className="service-tag">
+                  <span className="service-tag-dot"/>Animacje
+                </span>
+                <span className="service-tag">
+                  <span className="service-tag-dot"/>Imprezy
+                </span>
+                <span className="service-tag">
+                  <span className="service-tag-dot"/>DJ
+                </span>
+                <span className="service-tag">
+                  <span className="service-tag-dot"/>Warsztaty
+                </span>
+              </div>
 
-              <p className="fu d2" style={{
-                color:"rgba(255,255,255,.54)",
-                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
-                lineHeight:1.8,maxWidth:"52ch",marginBottom:"1.2rem",
-              }}>
-                Tworzymy wydarzenia na każdą okazję: od urodzin i wesel, przez
-                festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
-              </p>
+              {/* ── LOCATION CHIP ── */}
+              <div className="fu d4" style={{marginBottom:"2.5rem"}}>
+                <span className="location-chip">
+                  <span className="location-chip-icon">📍</span>
+                  Wrocław i okolice
+                </span>
+              </div>
 
-              <p className="fu d2" style={{
-                color:"rgba(255,255,255,.54)",
-                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
-                lineHeight:1.8,maxWidth:"52ch",marginBottom:"1.2rem",
-              }}>
-                Prowadzimy animacje dla dzieci, warsztaty oraz zapewniamy oprawę
-                muzyczną dla młodzieży jako DJ i wodzirejka podczas studniówek, bali
-                8-klasistów i dyskotek szkolnych.
-              </p>
-
-              <p className="fu d2" style={{
-                color:"rgba(255,255,255,.54)",
-                fontSize:"clamp(0.95rem,1.6vw,1.05rem)",
-                lineHeight:1.8,maxWidth:"52ch",marginBottom:"2rem",
-              }}>
-                Działamy w szkołach, przedszkolach, domach kultury, lokalach oraz
-                prywatnych przestrzeniach.
-              </p>
-
-              <p className="fu d3" style={{
-                color:"var(--pink-light)",
-                fontSize:"clamp(0.9rem,1.4vw,1rem)",
-                fontWeight: 600,
-                letterSpacing: "0.05em",
-                marginBottom:"2.5rem",
-              }}>
-                Animacje • Imprezy • DJ • Warsztaty<br/>
-                Wrocław i okolice
-              </p>
-
-              <div className="fu d3" style={{marginBottom:"3rem"}}>
+              <div className="fu d4">
                 <Link href="/oferta" className="btn-hero">
                   Zobacz ofertę <span className="ar">→</span>
                 </Link>
               </div>
 
-              {/* STATS in a bordered box */}
-              <div className="fu d4">
-                <div className="div-pink" style={{marginBottom:"0"}}/>
-                <div className="stats-wrap">
-                  <StatCell num={250} suffix="+" label="zrealizowanych wydarzeń" delay="0s"/>
-                  <StatCell num={10}  suffix="+" label="lat doświadczenia"        delay=".15s"/>
-                  <StatCell num={5}   suffix="★" label="średnia ocen"             delay=".3s"/>
-                </div>
-              </div>
             </div>
 
             {/* IMAGE */}
@@ -556,8 +584,8 @@ export default function Home() {
                 maxWidth:"45ch",marginBottom:"2.5rem",
               }}>
                 W wiadomości podaj: termin, liczbę dzieci, rodzaj uroczystości oraz
-                miejsce wydarzenia  to pomoże nam szybko potwierdzić dostępność i
-                sprawnie wrócić z odpowiedzią
+                miejsce wydarzenia — to pomoże nam szybko potwierdzić dostępność i
+                sprawnie wrócić z odpowiedzią.
               </p>
 
               <Link href="/kontakt" className="bnr-btn">

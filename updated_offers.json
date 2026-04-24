@@ -1,0 +1,182 @@
+[
+    {
+        "key": "urodziny",
+        "category": "urodziny",
+        "categoryLabel": "Animacje urodzinowe",
+        "title": "Animacje urodzinowe",
+        "description": "Animacje urodzinowe to 2 godziny zabawy z animatorem, dopasowane do wieku, energii i liczby uczestników. Reagujemy na grupę i dostosowujemy przebieg animacji na bieżąco. \nDojeżdżamy na terenie Wrocławia i okolic (do 20 km w cenie). \nW programie znajdują się różnorodne aktywności ruchowe i integracyjne oraz gry i zabawy z animacyjnymi gadżetami dopasowane do przestrzeni oraz charakteru wydarzenia. \nPrzy większej liczbie uczestników dobierany jest dodatkowy animator (wycena indywidualna).",
+        "price": "750 zł",
+        "bullets": [
+            "1 animator do 12 dzieci",
+            "Zabawy ruchowe i integracyjne",
+            "Mini disco i tańce",
+            "Chusta animacyjna (Klanza)",
+            "Balonowe zoo",
+            "Gry zespołowe i konkursy",
+            "Dyplom dla każdego uczestnika"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914692823-0hv2b67d8zkg.jpg"
+        ]
+    },
+    {
+        "key": "komunie",
+        "category": "komunie",
+        "categoryLabel": "Animacje komunijne/weselne",
+        "title": "Animacje komunijne/weselne",
+        "description": "Podczas wesel i przyjęć komunijnych zapewniamy profesjonalne animacje\ndla dzieci, dzięki którym najmłodsi goście są zaopiekowani i aktywnie\nspędzają czas, a dorośli mogą w pełni uczestniczyć w uroczystości.\nOferujemy 3 godziny animacji dopasowanych do wieku dzieci, liczby\nuczestników oraz przestrzeni. Standardowo 1 animator prowadzi animacje\ndla grupy do 12 dzieci. Przy większej liczbie uczestników dobierany\njest dodatkowy animator - wycena ustalana indywidualnie.\n",
+        "price": "950 zł",
+        "bullets": [
+            "Gry i zabawy integracyjne i ruchowe",
+            "Animacje taneczne",
+            "Balonowe zoo",
+            "Tatuaże brokatowe",
+            "Warsztat kreatywny",
+            "Klocki Cardblocks",
+            "3 godziny animacji (1 animator do 12 dzieci)"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1776699853949-rg09o2n75q.jpg"
+        ]
+    },
+    {
+        "key": "bale",
+        "category": "bale",
+        "categoryLabel": "Bale karnawałowe",
+        "title": "Bale karnawałowe",
+        "description": "Bale karnawałowe to profesjonalnie prowadzone wydarzenia dla dzieci i\nmłodzieży, łączące animacje, muzykę oraz swobodną zabawę taneczną.\nDbamy o wysokiej jakości nagłośnienie, estetyczne stanowisko DJ oraz\npłynny przebieg całego wydarzenia. Podczas balu zapewniamy zarówno\nprowadzone animacje, jak i przestrzeń na swobodny taniec, gry i zabawy\nintegracyjne. Nasze wydarzenia angażują całe grupy i integrują klasy,\ntworząc atmosferę radości, energii i wspólnej zabawy, często również z\naktywnym udziałem nauczycieli.\n\nBale prowadzone są przez doświadczony duet DJ + prowadzący,\nspecjalizujący się w pracy z dużymi grupami dzieci i młodzieży. Dzięki\ntemu muzyka, prowadzenie i animacje tworzą spójną całość, a wydarzenie\nma dynamiczny i profesjonalny przebieg. Dobieramy muzykę do wieku\nuczestników oraz aktualnych trendów, dzięki czemu bal jest atrakcyjny\ni angażujący dla wszystkich. Standardowy bal karnawałowy trwa 2\ngodziny. W przypadku większych grup, kilku klas lub niestandardowej\norganizacji wydarzenia przygotowujemy indywidualną ofertę oraz wycenę\ndopasowaną do potrzeb szkół lub instytucji.",
+        "price": "2500 zł",
+        "bullets": [
+            "Tańce i zabawy muzyczne",
+            "Quizy i konkursy",
+            "Animacje i gry integracyjne",
+            "Swobodny taniec przy muzyce",
+            "Muzyka dopasowana do trendów młodzieżowych",
+            "Prowadzenie wydarzenia + oprawa muzyczna (DJ + prowadzący)",
+            "2 godziny balu karnawałowego (DJ + prowadzący)"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914544972-ji9g0xbj19a.jpg"
+        ]
+    },
+    {
+        "key": "pikniki",
+        "category": "pikniki",
+        "categoryLabel": "Festyny i pikniki / Dzień Dziecka",
+        "title": "Festyny i pikniki / Dzień Dziecka",
+        "description": "Organizujemy festyny i pikniki dopasowane do skali wydarzenia. Zapewniamy kompleksową obsługę, angażujące strefy oraz atrakcje dla dzieci w różnym wieku. Każdy festyn wyceniamy indywidualnie - w zależności od liczby uczestników, czasu trwania oraz zakresu atrakcji.\n\nOpisz nam swój pomysł, a my przygotujemy ofertę dopasowaną do Twoich potrzeb.",
+        "price": "1800 zł",
+        "bullets": [
+            "Gry i zabawy ruchowe i integracyjne",
+            "Animacje plenerowe i prowadzenie sceniczne",
+            "Konkursy i aktywności zespołowe",
+            "Modelowanie balonów",
+            "Tatuaże brokatowe",
+            "Zaplatanie warkoczyków",
+            "Strefy kreatywne i plastyczne",
+            "Strefa klocków kartonowych Cardblocks",
+            "Oprawa muzyczna wydarzenia"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914811494-84j64oogon6.jpg"
+        ]
+    },
+    {
+        "key": "mikolajki",
+        "category": "mikolajki",
+        "categoryLabel": "Wizyta świętego Mikołaja",
+        "title": "Wizyta świętego Mikołaja",
+        "description": "Nasze animacje świąteczne to kompleksowe wydarzenia dla szkół,\nprzedszkoli i instytucji łączące animacje śnieżynek z wyjątkową wizytą\nświętego Mikołaja. To nie tylko wręczenie prezentów, ale pełne\nświąteczne doświadczenie budujące atmosferę radości i magii.\n\nW zależności od organizacji placówki przygotowujemy różne warianty\nwydarzenia: od krótszych spotkań dla jednej grupy, po większe\nrealizacje dla całych szkół, przedszkoli, hoteli czy firm. Animacje\nprowadzone przez śnieżynki wprowadzają dzieci w świąteczny klimat, a\nnastępnie święty Mikołaj wręcza prezenty przygotowane przezm\norgganizatorów, rozmawia z dziećmi oraz wykonuje pamiątkowe zdjęcia.\n\nKażde wydarzenie dostosowujemy indywidualnie do liczby grup, wieku\ndzieci oraz możliwości organizacyjnych instytucji. W przypadku\nwiększych wydarzeń czas realizacji jest odpowiednio wydłużany lub\ndzielony na bloki, aby każde dziecko mogło w pełni uczestniczyć w\nspotkaniu.\n\nNapisz do nas i podaj liczbę dzieci, grup oraz wiek uczestników. Z\nprzyjemnością przygotujemy szczegółową ofertę oraz dopasujemy przebieg\nwydarzenia do potrzeb Twojego wydarzenia.",
+        "price": "Ustalana indywidualnie",
+        "bullets": [
+            "Profesjonalny strój świętego Mikołaja",
+            "Świąteczny klimat",
+            "Dbałość o detale",
+            "Prezenty dostarczane przez organizatora",
+            "Dojazd na terenie Wrocławia i okolic w cenie"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914630952-gp2zv5uknxv.jpg"
+        ]
+    },
+    {
+        "key": "animacje",
+        "category": "animacje",
+        "categoryLabel": "Halloween / Andrzejki / Animacje tematyczne",
+        "title": "Halloween / Andrzejki / Animacje tematyczne",
+        "description": "Każda okazja jest dobra do świętowania: Halloween, Andrzejki, Animacje\nwielkanocne to tylko część naszych realizacji. Organizujemy wydarzenia\ntematyczne dopasowane do charakteru placówki i uczestników.\n\nTworzymy animacje dla przedszkoli, szkół, firm oraz gminnych ośrodków\nkultury, łącząc zabawę, tematykę, muzykę i integrację w spójną\nangażującą całość. Naszym celem jest wysoka jakość wydarzeń oraz\ntworzenie atmosfery, która integruje dzieci, młodzież i całe rodziny.\n\nW przypadku klas 4–8 realizujemy również tematyczne dyskoteki szkolne\nz elementami animacji i prowadzenia scenicznego.",
+        "price": "1800 zł",
+        "bullets": [
+            "Animacje tematyczne dopasowane do okazji",
+            "Oprawa muzyczna i prowadzenie wydarzenia",
+            "Gry i zabawy integracyjne",
+            "Konkursy i aktywności grupowe",
+            "Integracja rodzin",
+            "Niesamowite przebrania animatorów",
+            "Dla szkół, przedszkoli, firm i instytucji"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1776699879932-a2rob6ef09l.jpg"
+        ]
+    },
+    {
+        "key": "szkolne",
+        "category": "szkolne",
+        "categoryLabel": "Warsztaty CardBlocks",
+        "title": "Warsztaty CardBlocks",
+        "description": "Warsztaty z ekologicznymi klockami CardBlocks to kreatywna atrakcja\nidealna dla szkół, przedszkoli, festynów oraz wydarzeń rodzinnych i\nhotelowych. Zajęcia rozwijają wyobraźnię, współpracę oraz logiczne\nmyślenie, wpisując się w założenia edukacji STEAM. Podczas warsztatów\nkażdy uczestnik otrzymuje własny zestaw klocków do samodzielnego\nzłożenia z którego następnie buduje konstrukcje według podanej\ninstrukcji, bądź według własnego pomysłu. Zajęcia uczą kreatywności,\norientacji przestrzennej i logicznego myślenia. Warsztaty cieszą się\ndużym zainteresowaniem zarówno wśród dzieci, jak i dorosłych, tworząc\nangażującą i nowoczesną formę zabawy edukacyjnej.\nNa zakończenie każdy uczestnik zabiera swój zestaw klocków, dyplom\noraz torbę, dzięki czemu doświadczenie pozostaje z nimi na długo po\nwydarzeniu.  Minimalna grupa uczestników: 15 osób.",
+        "price": "40 zł/osoba",
+        "bullets": [
+            "Czas trwania: 1 godzina (przedszkola i szkoły)",
+            "Wiek uczestników: od 5 lat",
+            "Dojazd na terenie Wrocławia i okolic w cenie",
+            "Edukacja poprzez zabawę (STEAM)",
+            "Rozwijanie kreatywności i orientacji przestrzennej",
+            "Zabawa angażująca dzieci i dorosłych"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914761632-li1sfpezxd.jpg"
+        ]
+    },
+    {
+        "key": "team-building",
+        "category": "team",
+        "categoryLabel": "TEAM BUILDING & Integracje",
+        "title": "TEAM BUILDING & Integracje",
+        "description": "Integracja to dziś jeden z kluczowych elementów pracy z młodzieżą. W świecie, w którym naturalne budowanie relacji jest coraz trudniejsze, dobrze zaplanowany team building pomaga stworzyć zgraną, bezpieczną i współpracującą grupę, zarówno w szkole, jak i podczas wyjazdów.\n\nDopasowujemy formę i narzędzia do grupy docelowej, aby osiągnąć najlepsze efekty. Prowadzimy działania integracyjne dla szkół, klas i grup młodzieżowych, zarówno w szkołach, jak i podczas wyjazdów. Tworzymy przestrzeń do poznania się poprzez współpracę i zabawę. Budujemy relację w naturalny sposób bez sztuczności, za to z realnym efektem dla grupy.\n\nOferujemy również szkolenia dla nauczycieli, wychowawców, animatorów i osób pracujących z grupami. Możesz zamówić szkolenie np. podczas rady pedagogicznej lub spotkania szkoleniowego.\n\nDziałamy tam, gdzie jesteśmy najbardziej potrzebni - na miejscu i na wyjazdach. Realizujemy działania w szkołach, na integracji na początku roku szkolnego, podczas wyjazdów szkolnych i zielonych szkół, na koloniach i półkoloniach oraz podczas rad pedagogicznych i spotkań zespołów.\n\nŁączymy doświadczenie pracy z młodzieżą z rozumieniem procesów grupowych i realiów szkolnych. Dzięki temu integracja nie jest jednorazowym wydarzeniem, ale realnym wsparciem w budowaniu relacji, współpracy i dobrej atmosfery w grupie.",
+        "price": "Ustalana indywidualnie",
+        "bullets": [
+            "Praca z młodzieżą w szkołach i podczas wyjazdów",
+            "Tworzenie bezpiecznej przestrzeni do poznania się",
+            "Budowanie relacji poprzez współpracę i zabawę",
+            "Szkolenia dla kadry pedagogicznej",
+            "Jak wspierać proces integracji",
+            "Jak budować relacje w grupie",
+            "Jakie aktywności sprawdzają się w różnych sytuacjach",
+            "Jak dobierać działania do wieku i dynamiki zespołu",
+            "Realizacja w szkołach, na wyjazdach, koloniach",
+            "Rady pedagogiczne i spotkania zespołów"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914507515-rtkkbwpwq3b.jpg"
+        ]
+    },
+    {
+        "key": "oprawa-muzyczna",
+        "category": "music",
+        "categoryLabel": "OPRAWA MUZYCZNA WYDARZEŃ",
+        "title": "OPRAWA MUZYCZNA WYDARZEŃ",
+        "description": "Szukasz DJ-a, który poprowadzi bal ósmoklasisty, studniówkę lub inną imprezę dla młodzieży i naprawdę zna ich klimat? Trafiłeś idealnie.\n\nSpecjalizujemy się w wydarzeniach dla młodzieży. Wiemy, co działa, śledzimy trendy muzyczne i potrafimy utrzymać energię na parkiecie od początku do końca.\n\nZapewniamy kompleksową oprawę muzyczną, tworzymy i prowadzimy wydarzenie w sposób naturalny i angażujący.\n\nDziałamy na terenie Wrocławia i okolic.",
+        "price": "2500 zł",
+        "bullets": [
+            "Nagłośnienie",
+            "Oświetlenie",
+            "DJ & prowadzenie",
+            "Muzyka dla młodzieży",
+            "Animacje taneczne"
+        ],
+        "images": [
+            "https://qbcjyecssttdmvmtswcy.supabase.co/storage/v1/object/public/offer-images/offer-images/1775914507515-rtkkbwpwq3b.jpg"
+        ]
+    }
+]

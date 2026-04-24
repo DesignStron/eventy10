@@ -38,7 +38,6 @@ function SectionCard({ s, index }: { s: OfferSection; index: number }) {
       {/* ── IMAGE PANEL ── */}
       {hasImages ? (
         <div className="sc-img-panel">
-          {/* Wrapper wypełnia panel poza miniaturami; zdjęcie absolute wewnątrz */}
           <div className="sc-img-main-wrap">
             <img src={s.images[0]} alt={s.title} className="sc-img-main" />
           </div>
@@ -120,10 +119,15 @@ const getNavItems = (sections: OfferSection[]): NavItem[] => {
   sections.forEach(s => {
     if (!seen.has(s.category)) {
       seen.add(s.category);
-      items.push({ key: s.key, label: s.categoryLabel || s.title, icon: icons[s.category] || "✦" });
+      // Używamy s.category jako key (nie s.key) — zapobiega duplikatom
+      items.push({ key: s.category, label: s.categoryLabel || s.title, icon: icons[s.category] || "✦" });
     }
   });
-  return [...items, { key: "team-building", label: "TEAM BUILDING", icon: "🤝", href: "/team-building" }];
+  // Dodajemy team-building tylko jeśli nie ma go już w sekcjach
+  if (!seen.has("team-building")) {
+    items.push({ key: "team-building", label: "TEAM BUILDING", icon: "🤝", href: "/team-building" });
+  }
+  return items;
 };
 
 export default async function OfferPage() {
@@ -165,7 +169,10 @@ export default async function OfferPage() {
           50%      { transform:translateY(-8px) rotate(-4deg); }
         }
 
-        .op-wrap { max-width:78rem; margin:0 auto; padding:7rem 2rem 10rem; }
+        .op-wrap { max-width:78rem; margin:0 auto; padding:4rem 2rem 10rem; }
+        @media(max-width:768px){
+          .op-wrap { padding:3rem 1rem 8rem; }
+        }
 
         /* ── HERO ── */
         .op-hero { margin-bottom:5rem; }
@@ -185,22 +192,26 @@ export default async function OfferPage() {
         .op-hero-title {
           font-family:var(--font-display); font-size:clamp(3rem,6vw,5.5rem);
           font-weight:800; line-height:1.18; letter-spacing:-.04em; color:#fff;
-          margin:0 0 1.75rem; overflow:visible; padding-bottom:.12em;
+          margin:0 0 1rem; overflow:visible; padding-bottom:.12em;
           animation:fadeUp .7s .08s cubic-bezier(.16,1,.3,1) both;
+          white-space: nowrap;
+          text-align: left;
         }
         html[data-theme="light"] .op-hero-title { color:#0d0b10; }
         .op-hero-accent {
-          display:block;
-          overflow:visible;
-          padding-bottom:.08em;
-          background:linear-gradient(110deg,#f0177a 0%,#ff8cc8 42%,#f0177a 82%);
-          background-size:220% auto; -webkit-background-clip:text; background-clip:text;
-          -webkit-text-fill-color:transparent; animation:shimmer 4s linear infinite;
+          color: #fff;
+          display: inline;
         }
         .op-hero-sub {
           font-size:1.1rem; line-height:1.9; color:rgba(255,255,255,.55);
-          max-width:540px; margin:0 0 3rem;
+          width: 100%; max-width: 1200px; margin:0 auto 2rem;
+          text-align: left; padding: 0 2rem;
           animation:fadeUp .7s .16s cubic-bezier(.16,1,.3,1) both;
+        }
+        @media(max-width:768px){
+          .op-hero-sub {
+            font-size: 1rem; line-height: 1.75; padding: 0 1rem;
+          }
         }
         html[data-theme="light"] .op-hero-sub { color:rgba(13,11,16,.55); }
 
@@ -248,17 +259,9 @@ export default async function OfferPage() {
         /* ── CARDS ── */
         .op-cards { display:flex; flex-direction:column; gap:2rem; }
 
-        /* ══════════════════════════════════════
-           SECTION CARD
-           Panel ze zdjęciem rozciąga się na
-           pełną wysokość karty (align-items:stretch
-           domyślne w grid). Zdjęcie wypełnia panel
-           z object-fit:contain — zero przycinania.
-        ══════════════════════════════════════ */
         .sc {
           display:grid;
           grid-template-columns:360px 1fr;
-          /* align-items: stretch (domyślne) */
           border-radius:1.75rem;
           border:1px solid rgba(255,255,255,.08);
           background:rgba(255,255,255,.03);
@@ -273,31 +276,26 @@ export default async function OfferPage() {
         .sc--rev .sc-img-panel { order:2; }
         .sc--rev .sc-body      { order:1; }
 
-        /* ── IMAGE PANEL ──
-           Panel rozciąga się na pełną wysokość karty.
-           Wewnątrz: wrapper flex:1 + zdjęcie absolute/contain.
-        ── */
         .sc-img-panel {
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
-}
-.sc-img-main-wrap {
-  flex:1;
-  overflow:hidden;
-}
-
-.sc-img-main {
-  display:block;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-  transition:transform 600ms cubic-bezier(.16,1,.3,1);
-}
+          display:flex;
+          flex-direction:column;
+          overflow:hidden;
+        }
+        .sc-img-main-wrap {
+          flex:1;
+          overflow:hidden;
+        }
+        .sc-img-main {
+          display:block;
+          width:100%;
+          height:100%;
+          object-fit:cover;
+          object-position:center top;
+          transition:transform 600ms cubic-bezier(.16,1,.3,1);
+        }
+  
         .sc:hover .sc-img-main { transform:scale(1.03); }
 
-        /* Pasek miniatur */
         .sc-img-thumbs { display:flex; gap:2px; flex-shrink:0; height:72px; }
         .sc-img-thumb {
           flex:1; overflow:hidden; position:relative;
@@ -305,11 +303,11 @@ export default async function OfferPage() {
           display:flex; align-items:center; justify-content:center;
         }
         .sc-img-thumb img {
-  width:100%; height:100%;
-  object-fit:cover;
-  display:block;
-  transition:transform 400ms ease;
-}
+          width:100%; height:100%;
+          object-fit:cover;
+          display:block;
+          transition:transform 400ms ease;
+        }
         .sc-img-thumb:hover img { transform:scale(1.06); }
         .sc-img-thumb--more {
           display:flex; align-items:center; justify-content:center;
@@ -317,7 +315,6 @@ export default async function OfferPage() {
           color:rgba(255,255,255,.8); font-family:var(--font-display);
         }
 
-        /* Panel bez zdjęcia */
         .sc-img-panel--empty {
           align-items:center; justify-content:center;
           background:rgba(240,23,122,.05); border-right:1px solid rgba(240,23,122,.1);
@@ -326,7 +323,6 @@ export default async function OfferPage() {
         .sc--rev .sc-img-panel--empty { border-right:none; border-left:1px solid rgba(240,23,122,.1); }
         .sc-no-img-icon { font-size:4rem; animation:floatIcon 7s ease-in-out infinite; filter:drop-shadow(0 8px 24px rgba(240,23,122,.3)); }
 
-        /* ── BODY ── */
         .sc-body {
           padding:2.5rem 2.75rem; display:flex; flex-direction:column;
           justify-content:center; position:relative; min-width:0;
@@ -468,7 +464,6 @@ export default async function OfferPage() {
           .sc--rev .sc-img-panel { order:0; }
           .sc--rev .sc-body      { order:1; }
 
-          /* Na mobile panel ma stałą wysokość (nie stretch od body) */
           .sc-img-panel { min-height:unset; max-height:unset; }
           .sc-img-panel--empty { min-height:160px; max-height:160px; }
           .sc-img-thumbs { height:60px; }
@@ -497,44 +492,37 @@ export default async function OfferPage() {
           .op-hero-title { font-size:clamp(1.9rem,10vw,2.5rem); }
           .sc-img-panel { max-height:320px; }
         }
+
+        @media(min-width:901px){
+          .op-section-title--nowrap{ white-space:nowrap; }
+        }
       `}</style>
 
       <div className="page-bg noise offerta-page">
         <div className="op-wrap">
 
           <div className="op-hero">
-            <div className="op-live-badge">
-              <span className="op-live-dot" />
-              Oferta
-            </div>
             <h1 className="op-hero-title">
-              Sprawdź
-              <span className="op-hero-accent">naszą ofertę</span>
-            </h1>
-            <p className="op-hero-sub">
-              Poniżej znajdziesz standardową ofertę naszych usług. 
-              Realizujemy animacje, warsztaty oraz oprawę muzyczną 
-              dla dzieci i młodzieży, organizując wydarzenia 
-              dla klientów prywatnych, szkół i firm.
-            </p>
-            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              W ofercie znajdują się m.in. urodziny, animacje weselne, 
-              komunijne, Mikołajki, bale karnawałowe, festyny i pikniki, 
-              a także wydarzenia szkolne i młodzieżowe, takie jak 
-              studniówki, bale 8-klasistów oraz dyskoteki.
-            </p>
-            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              Ceny mogą się różnić w zależności od czasu trwania, 
-              lokalizacji oraz zakresu wydarzenia. Działamy 
-              na terenie Wrocławia i okolic. Dojazd do 20 km 
-              wliczony jest w cenę.
-            </p>
-            <p className="op-hero-sub" style={{ marginTop: "1rem" }}>
-              Jeśli nie widzisz w ofercie dokładnie tego, 
-              czego potrzebujesz lub masz niestandardowe potrzeby 
-              lub pomysły — napisz do nas. Ustalimy najlepsze 
-              rozwiązanie dopasowane do Twojego wydarzenia.
-            </p>
+Sprawdź naszą ofertę
+</h1>
+
+<div className="op-hero-text">
+  <p className="op-hero-sub op-hero-sub--lead">
+    Poniżej znajdziesz standardową ofertę naszych usług. Realizujemy animacje, warsztaty oraz oprawę muzyczną dla dzieci i młodzieży, organizując wydarzenia dla klientów prywatnych, szkół i firm.
+  </p>
+
+  <p className="op-hero-sub">
+    W ofercie znajdują się m.in. urodziny, animacje weselne, komunijne, Mikołajki, bale karnawałowe, festyny i pikniki, a także wydarzenia szkolne i młodzieżowe, takie jak studniówki, bale 8-klasistów oraz dyskoteki.
+  </p>
+
+  <p className="op-hero-sub">
+    Ceny mogą się różnić w zależności od czasu trwania, lokalizacji oraz zakresu wydarzenia. Działamy na terenie Wrocławia i okolic. Dojazd do 20 km wliczony jest w cenę.
+  </p>
+
+  <p className="op-hero-sub">
+    Jeśli nie widzisz w ofercie dokładnie tego, czego potrzebujesz lub masz niestandardowe potrzeby lub pomysły — napisz do nas. Ustalimy najlepsze rozwiązanie dopasowane do Twojego wydarzenia.
+  </p>
+</div>
             <nav className="op-nav" aria-label="Nawigacja oferty">
               {getNavItems(sections).map((n) => (
                 <a key={n.key} href={n.href ?? `#${n.key}`} className={`op-nav-pill${n.href ? " op-nav-pill--special" : ""}`}>
@@ -594,7 +582,7 @@ export default async function OfferPage() {
             <div className="op-section-head" style={{ marginBottom: "2.5rem" }}>
               <div>
                 <div className="op-eyebrow">Jak pracujemy?</div>
-                <h2 className="op-section-title">Od pomysłu<br/>do realizacji</h2>
+                <h2 className="op-section-title op-section-title--nowrap">Od pomysłu do realizacji</h2>
               </div>
             </div>
             <p className="op-hero-sub" style={{ marginBottom: "2rem" }}>
@@ -605,141 +593,19 @@ export default async function OfferPage() {
               gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
               gap: "1.5rem"
             }}>
-              <div className="process-card" style={{ 
-                padding: "2rem", 
-                borderRadius: "1.5rem", 
-                background: "rgba(255,255,255,0.03)", 
-                border: "1px solid rgba(255,255,255,0.08)" 
-              }}>
-                <div style={{ 
-                  fontSize: "2.5rem", 
-                  fontWeight: 700, 
-                  color: "rgba(240,23,122,0.3)", 
-                  marginBottom: "1rem",
-                  fontFamily: "var(--font-display)"
-                }}>01</div>
-                <div style={{ 
-                  width: "2rem", 
-                  height: "3px", 
-                  borderRadius: "2px", 
-                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
-                  marginBottom: "1rem" 
-                }} />
-                <h3 style={{ 
-                  fontSize: "1.1rem", 
-                  fontWeight: 700, 
-                  color: "#fff", 
-                  marginBottom: "0.75rem",
-                  fontFamily: "var(--font-display)"
-                }}>Kontakt i ustalenie szczegółów</h3>
-                <p style={{ 
-                  fontSize: "0.9rem", 
-                  color: "rgba(255,255,255,0.5)", 
-                  lineHeight: 1.7 
-                }}>Ustalamy termin, miejsce, liczbę uczestników oraz rodzaj wydarzenia.</p>
-              </div>
-
-              <div className="process-card" style={{ 
-                padding: "2rem", 
-                borderRadius: "1.5rem", 
-                background: "rgba(255,255,255,0.03)", 
-                border: "1px solid rgba(255,255,255,0.08)" 
-              }}>
-                <div style={{ 
-                  fontSize: "2.5rem", 
-                  fontWeight: 700, 
-                  color: "rgba(240,23,122,0.3)", 
-                  marginBottom: "1rem",
-                  fontFamily: "var(--font-display)"
-                }}>02</div>
-                <div style={{ 
-                  width: "2rem", 
-                  height: "3px", 
-                  borderRadius: "2px", 
-                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
-                  marginBottom: "1rem" 
-                }} />
-                <h3 style={{ 
-                  fontSize: "1.1rem", 
-                  fontWeight: 700, 
-                  color: "#fff", 
-                  marginBottom: "0.75rem",
-                  fontFamily: "var(--font-display)"
-                }}>Dobór formy animacji</h3>
-                <p style={{ 
-                  fontSize: "0.9rem", 
-                  color: "rgba(255,255,255,0.5)", 
-                  lineHeight: 1.7 
-                }}>Dopasowujemy zakres animacji, warsztatów lub oprawy muzycznej do grupy i charakteru wydarzenia.</p>
-              </div>
-
-              <div className="process-card" style={{ 
-                padding: "2rem", 
-                borderRadius: "1.5rem", 
-                background: "rgba(255,255,255,0.03)", 
-                border: "1px solid rgba(255,255,255,0.08)" 
-              }}>
-                <div style={{ 
-                  fontSize: "2.5rem", 
-                  fontWeight: 700, 
-                  color: "rgba(240,23,122,0.3)", 
-                  marginBottom: "1rem",
-                  fontFamily: "var(--font-display)"
-                }}>03</div>
-                <div style={{ 
-                  width: "2rem", 
-                  height: "3px", 
-                  borderRadius: "2px", 
-                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
-                  marginBottom: "1rem" 
-                }} />
-                <h3 style={{ 
-                  fontSize: "1.1rem", 
-                  fontWeight: 700, 
-                  color: "#fff", 
-                  marginBottom: "0.75rem",
-                  fontFamily: "var(--font-display)"
-                }}>Rezerwacja terminu i przygotowanie</h3>
-                <p style={{ 
-                  fontSize: "0.9rem", 
-                  color: "rgba(255,255,255,0.5)", 
-                  lineHeight: 1.7 
-                }}>Po akceptacji oferty rezerwujemy termin i przygotowujemy wszystkie elementy realizacji.</p>
-              </div>
-
-              <div className="process-card" style={{ 
-                padding: "2rem", 
-                borderRadius: "1.5rem", 
-                background: "rgba(255,255,255,0.03)", 
-                border: "1px solid rgba(255,255,255,0.08)" 
-              }}>
-                <div style={{ 
-                  fontSize: "2.5rem", 
-                  fontWeight: 700, 
-                  color: "rgba(240,23,122,0.3)", 
-                  marginBottom: "1rem",
-                  fontFamily: "var(--font-display)"
-                }}>04</div>
-                <div style={{ 
-                  width: "2rem", 
-                  height: "3px", 
-                  borderRadius: "2px", 
-                  background: "linear-gradient(90deg,#f0177a,#ff6bb5)", 
-                  marginBottom: "1rem" 
-                }} />
-                <h3 style={{ 
-                  fontSize: "1.1rem", 
-                  fontWeight: 700, 
-                  color: "#fff", 
-                  marginBottom: "0.75rem",
-                  fontFamily: "var(--font-display)"
-                }}>Realizacja wydarzenia</h3>
-                <p style={{ 
-                  fontSize: "0.9rem", 
-                  color: "rgba(255,255,255,0.5)", 
-                  lineHeight: 1.7 
-                }}>Prowadzimy animacje na miejscu, dbając o atmosferę, energię i zaangażowanie uczestników.</p>
-              </div>
+              {[
+                { n: "01", title: "Kontakt i ustalenie szczegółów", desc: "Ustalamy termin, miejsce, liczbę uczestników oraz rodzaj wydarzenia." },
+                { n: "02", title: "Dobór formy animacji", desc: "Dopasowujemy zakres animacji, warsztatów lub oprawy muzycznej do grupy i charakteru wydarzenia." },
+                { n: "03", title: "Rezerwacja terminu i przygotowanie", desc: "Po akceptacji oferty rezerwujemy termin i przygotowujemy wszystkie elementy realizacji." },
+                { n: "04", title: "Realizacja wydarzenia", desc: "Prowadzimy animacje na miejscu, dbając o atmosferę, energię i zaangażowanie uczestników." },
+              ].map(({ n, title, desc }) => (
+                <div key={n} style={{ padding:"2rem", borderRadius:"1.5rem", background:"rgba(255,255,255,0.03)", border:"1px solid rgba(255,255,255,0.08)" }}>
+                  <div style={{ fontSize:"2.5rem", fontWeight:700, color:"rgba(240,23,122,0.3)", marginBottom:"1rem", fontFamily:"var(--font-display)" }}>{n}</div>
+                  <div style={{ width:"2rem", height:"3px", borderRadius:"2px", background:"linear-gradient(90deg,#f0177a,#ff6bb5)", marginBottom:"1rem" }} />
+                  <h3 style={{ fontSize:"1.1rem", fontWeight:700, color:"#fff", marginBottom:"0.75rem", fontFamily:"var(--font-display)" }}>{title}</h3>
+                  <p style={{ fontSize:"0.9rem", color:"rgba(255,255,255,0.5)", lineHeight:1.7 }}>{desc}</p>
+                </div>
+              ))}
             </div>
           </section>
 
