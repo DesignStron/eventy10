@@ -129,6 +129,16 @@ export default function TeamBuildingPage() {
           font-size:1.5rem; margin-bottom:1.5rem;
           transition:transform 300ms ease, box-shadow 300ms ease, background 300ms ease;
           animation:floatY 6s ease-in-out infinite;
+          position: relative;
+        }
+        .tb-card-icon::before {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 1rem;
+          background: url('/Plyta_raster_lowres.png') center/cover;
+          opacity: 0.7;
         }
         .tb-card:nth-child(2) .tb-card-icon { animation-delay:1s; }
         .tb-card:hover .tb-card-icon {
@@ -182,12 +192,31 @@ export default function TeamBuildingPage() {
         .tb-loc-grid {
           display:flex; flex-wrap:wrap; gap:0.8rem;
         }
+        @media(min-width:769px) {
+          .tb-loc-grid {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 0.6rem;
+          }
+        }
         .tb-loc-item {
           display:inline-flex; align-items:center; gap:0.5rem;
           padding:0.6rem 1.2rem; border-radius:9999px;
           background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.1);
           color:rgba(255,255,255,0.8); font-size:0.9rem; font-weight:500;
           transition:all 200ms ease;
+          position: relative;
+          padding-left: 2rem;
+        }
+        .tb-loc-item::before {
+          content: '';
+          position: absolute;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: var(--pink);
+          box-shadow: 0 0 12px rgba(240,23,122,0.6);
+          left: 0.8rem;
         }
         .tb-loc-item:hover {
           background:rgba(240,23,122,0.1); border-color:rgba(240,23,122,0.3);
@@ -261,13 +290,29 @@ export default function TeamBuildingPage() {
       <div className="page-bg noise">
 
         {/* ── HERO ── */}
-        <section style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 5rem", position:"relative" }}>
+<section style={{ maxWidth:"72rem", margin:"0 auto", padding:"6rem 1.5rem 5rem", position:"relative" }}>
           <div style={{
             position:"absolute", top:"-60px", right:"-60px",
             width:"380px", height:"380px", borderRadius:"50%", pointerEvents:"none",
             background:"radial-gradient(circle,rgba(240,23,122,0.14) 0%,transparent 70%)",
             filter:"blur(40px)", animation:"floatY 9s ease-in-out infinite",
           }}/>
+
+          <div className="fu" style={{ display:"block", marginBottom: "1rem" }}>
+            <Link href="/oferta" style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              color: "rgba(255,255,255,0.6)",
+              textDecoration: "none",
+              fontSize: "0.9rem",
+              fontWeight: "500",
+              transition: "color 200ms ease"
+            }}>
+              <span style={{ transform: "rotate(180deg)", display: "inline-block" }}>→</span>
+              Wróć do oferty
+            </Link>
+          </div>
 
           <div className="fu" style={{ display:"block" }}>
             <span className="tb-hero-badge">
@@ -303,7 +348,7 @@ export default function TeamBuildingPage() {
           <div className="tb-grid">
             {/* Pracujemy z młodzieżą */}
             <div className="tb-card fu d1">
-              <div className="tb-card-icon">🤝</div>
+              <div className="tb-card-icon"></div>
               <div className="tb-card-title">Pracujemy z młodzieżą</div>
               <div className="tb-card-desc">
                 Prowadzimy działania integracyjne dla szkół, klas i grup młodzieżowych, zarówno w szkołach, jak i podczas wyjazdów. Tworzymy przestrzeń do poznania się poprzez współpracę i zabawę. Budujemy relację w naturalny sposób bez sztuczności, za to z realnym efektem dla grupy.
@@ -312,7 +357,7 @@ export default function TeamBuildingPage() {
 
             {/* Pracujemy również z kadrą */}
             <div className="tb-card fu d2">
-              <div className="tb-card-icon">🎓</div>
+              <div className="tb-card-icon"></div>
               <div className="tb-card-title">Pracujemy również z kadrą</div>
               <div className="tb-card-desc">
                 Oferujemy szkolenia dla nauczycieli, wychowawców, animatorów i osób pracujących z grupami. Możesz zamówić szkolenie np. podczas rady pedagogicznej lub spotkania szkoleniowego.
@@ -355,12 +400,108 @@ export default function TeamBuildingPage() {
           </div>
 
           <div className="tb-loc-grid fu d2">
-            <div className="tb-loc-item">🏫 Szkoły</div>
-            <div className="tb-loc-item">👋 Integracja na początku roku szkolnego</div>
-            <div className="tb-loc-item">🚌 Wyjazdy szkolne i zielone szkoły</div>
-            <div className="tb-loc-item">🏕️ Kolonie i półkolonie</div>
-            <div className="tb-loc-item">💼 Rady pedagogiczne i spotkania zespołów</div>
-          </div>
+
+  <div className="tb-loc-item">
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "18px",
+      height: "18px",
+      borderRadius: "50%",
+      background: "rgba(240,23,122,0.12)",
+      border: "1px solid rgba(240,23,122,0.28)",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    }}>
+      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+        <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+    Szkoły
+  </div>
+
+  <div className="tb-loc-item">
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "18px",
+      height: "18px",
+      borderRadius: "50%",
+      background: "rgba(240,23,122,0.12)",
+      border: "1px solid rgba(240,23,122,0.28)",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    }}>
+      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+        <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+    Integracja na początku roku szkolnego
+  </div>
+
+  <div className="tb-loc-item">
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "18px",
+      height: "18px",
+      borderRadius: "50%",
+      background: "rgba(240,23,122,0.12)",
+      border: "1px solid rgba(240,23,122,0.28)",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    }}>
+      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+        <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+    Wyjazdy szkolne i zielone szkoły
+  </div>
+
+  <div className="tb-loc-item">
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "18px",
+      height: "18px",
+      borderRadius: "50%",
+      background: "rgba(240,23,122,0.12)",
+      border: "1px solid rgba(240,23,122,0.28)",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    }}>
+      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+        <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+    Kolonie i półkolonie
+  </div>
+
+  <div className="tb-loc-item">
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: "18px",
+      height: "18px",
+      borderRadius: "50%",
+      background: "rgba(240,23,122,0.12)",
+      border: "1px solid rgba(240,23,122,0.28)",
+      marginRight: "0.5rem",
+      flexShrink: 0
+    }}>
+      <svg width="8" height="8" viewBox="0 0 10 10" fill="none">
+        <path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </span>
+    Rady pedagogiczne i spotkania zespołów
+  </div>
+
+</div>
         </section>
 
         {/* Divider */}
@@ -371,7 +512,7 @@ export default function TeamBuildingPage() {
         {/* ── DLACZEGO TO DZIAŁA ── */}
         <section className="tb-wrap" style={{ paddingBottom:"5rem" }}>
           <div className="tb-card fu d1" style={{ padding: "3rem", alignItems: "center", textAlign: "center" }}>
-            <div className="tb-card-icon" style={{ width: "4rem", height: "4rem", fontSize: "2rem" }}>💡</div>
+            <div className="tb-card-icon"></div>
             <h2 className="tb-sec-title" style={{ marginBottom: "1.5rem" }}>Dlaczego to działa?</h2>
             <p className="tb-card-desc" style={{ maxWidth: "800px", margin: "0 auto", fontSize: "1.1rem", lineHeight: "1.9" }}>
               Łączymy doświadczenie pracy z młodzieżą z rozumieniem procesów grupowych i realiów szkolnych. Dzięki temu integracja nie jest jednorazowym wydarzeniem, ale realnym wsparciem w budowaniu relacji, współpracy i dobrej atmosfery w grupie.

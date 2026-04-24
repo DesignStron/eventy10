@@ -836,6 +836,16 @@ export default function SiteHeader() {
                     </svg>
                   </button>
                   <div className={`mobile-dropdown-menu${mobileDropdownOpen ? " open" : ""}`}>
+                    <Link
+                      href="/oferta"
+                      className="mobile-dropdown-link"
+                      onClick={() => {
+                        setMobileDropdownOpen(false);
+                        setMobileOpen(false);
+                      }}
+                    >
+                      Oferta
+                    </Link>
                     {offerSections.map((section) => (
                       <Link
                         key={section.key}
@@ -919,6 +929,16 @@ export default function SiteHeader() {
                       </svg>
                     </button>
                     <div className={`dropdown-menu${dropdownOpen ? " open" : ""}`}>
+                      <Link
+                        href="/oferta"
+                        className="dropdown-link"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        <span className="dropdown-icon">
+                          <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        </span>
+                        Oferta
+                      </Link>
                       {offerSections.map((section) => (
                         <Link
                           key={section.key}
