@@ -17,7 +17,7 @@ const STATIC_LINKS = [
   { href: "/", label: "Home" },
   { href: "/o-nas", label: "O nas" },
   { href: "/oferta", label: "Oferta", hasDropdown: true },
-  { href: "/oprawa-muzyczna", label: "Oprawa muzyczna" },
+  { href: "/team-building", label: "TEAM BUILDING" },
   { href: "/galeria", label: "Galeria" },
   { href: "/kontakt", label: "Kontakt" },
 ] as const;

@@ -123,7 +123,7 @@ const getNavItems = (sections: OfferSection[]): NavItem[] => {
       items.push({ key: s.key, label: s.categoryLabel || s.title, icon: icons[s.category] || "✦" });
     }
   });
-  return [...items, { key: "oprawa-muzyczna", label: "Oprawa muzyczna", icon: "🎵", href: "/oprawa-muzyczna" }];
+  return [...items, { key: "team-building", label: "TEAM BUILDING", icon: "🤝", href: "/team-building" }];
 };
 
 export default async function OfferPage() {

@@ -15,16 +15,14 @@ export default function AdminHomePage() {
   useEffect(() => {
     void (async () => {
       try {
-        const [o, g, c, m] = await Promise.all([
+        const [o, g, c] = await Promise.all([
           fetch("/api/oferta").then((r) => r.ok ? r.json() : null).catch(() => null),
           fetch("/api/galeria").then((r) => r.ok ? r.json() : null).catch(() => null),
           fetch("/api/kontakt").then((r) => r.ok ? r.json() : null).catch(() => null),
-          fetch("/api/oprawa-muzyczna").then((r) => r.ok ? r.json() : null).catch(() => null),
         ]);
         setOffer(o);
         setGallery(g);
         setContact(c);
-        setMusic(m);
       } finally {
         setLoading(false);
       }
@@ -33,7 +31,6 @@ export default function AdminHomePage() {
 
   const stats = [
     { label: "Oferta", value: offer?.sections?.length ?? null, sub: "sekcje do edycji", href: "/admin/oferta", icon: "✦" },
-    { label: "Oprawa muzyczna", value: music?.services?.length ?? null, sub: "usługi do edycji", href: "/admin/oprawa-muzyczna", icon: "" },
     { label: "Galeria", value: gallery?.images?.length ?? null, sub: "zdjęcia", href: "/admin/galeria", icon: "◻" },
     { label: "Formularze", value: contact?.messages?.length ?? null, sub: "zgłoszenia", href: "/admin/kontakt", icon: "◎" },
   ];
