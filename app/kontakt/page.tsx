@@ -262,13 +262,12 @@ export default function ContactPage() {
           </div>
 
           <h1 className="kt-hero-title fu d1">
-            Napisz do nas -<br/>
-            <span className="kt-hero-accent">wrócimy z wyceną</span>
+            Zarezerwuj termin:<br/>
+            <span className="kt-hero-accent">napisz do nas</span>
           </h1>
 
           <p className="kt-hero-desc fu d2">
-            Opisz krótko typ wydarzenia, termin i liczbę uczestników.
-            Odpiszemy w ciągu 24 godzin z konkretną propozycją.
+            Podaj rodzaj wydarzenia, datę, miejsce i liczbę uczestników. Sprawdzimy dostępność i skontaktujemy się z Tobą.
           </p>
         </section>
 
@@ -317,6 +316,16 @@ export default function ContactPage() {
             <a href="tel:+48000000000" className="kt-call-btn">
               Zadzwoń teraz →
             </a>
+          </div>
+
+          <div className="kt-promise fu d4" style={{ marginTop: "1.25rem" }}>
+            <div className="kt-promise-icon">💡</div>
+            <div style={{ flex:1, position:"relative" }}>
+              <div className="kt-promise-title">Masz własny pomysł?</div>
+              <div className="kt-promise-desc">
+                Opisz, czego potrzebujesz. Wspólnie możemy stworzyć wyjątkowe wydarzenie.
+              </div>
+            </div>
           </div>
         </section>
 

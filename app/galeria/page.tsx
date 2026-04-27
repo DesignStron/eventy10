@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { GalleryData, GalleryImage } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
@@ -27,7 +26,9 @@ function ImageCard({ img, index }: { img: GalleryImage; index: number }) {
           src={img.url}
           alt={img.title}
           className="gal-img"
-          loading="lazy"
+          loading={index < 6 ? "eager" : "lazy"}
+          fetchPriority={index < 2 ? "high" : "auto"}
+          decoding="async"
         />
 
         {/* Overlay */}
@@ -202,6 +203,8 @@ export default async function GalleryPage() {
           margin-bottom:1rem;
           animation:fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
           display:block; /* ważne dla column layout */
+          content-visibility:auto;
+          contain-intrinsic-size: 320px 240px;
         }
 
         /* ── IMAGE WRAPPER ── */
@@ -378,8 +381,7 @@ export default async function GalleryPage() {
             </h1>
 
             <p className="gal-hero-desc fu d2">
-              Każde zdjęcie to kawałek historii - imprez, uśmiechów
-              i&nbsp;momentów, które zostały w&nbsp;pamięci.
+              Każde zdjęcie to fragment historii pełnej emocji, uśmiechów i wyjątkowych momentów, które zostają w pamięci. Jesteśmy otwarci na różne wydarzenia i wyzwania. Poniżej znajdziesz wybrane realizacje z naszych eventów.
             </p>
 
             {/* Stats pills */}
