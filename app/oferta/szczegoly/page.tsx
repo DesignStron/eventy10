@@ -518,7 +518,11 @@ export default function OfferDetailsPage() {
                           <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </div>
-                      <span className="od-bullet-text">{b}</span>
+                      <span className="od-bullet-text">
+                        {offer.category === "bale" && b === "2 godziny balu karnawałowego (DJ + prowadzenie)"
+                          ? "Możliwość dopasowania balu do potrzeb placówki"
+                          : b}
+                      </span>
                     </div>
                   ))}
                 </div>

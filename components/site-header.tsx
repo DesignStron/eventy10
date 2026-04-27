@@ -39,7 +39,6 @@ export default function SiteHeader() {
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Pobierz oferty z Supabase - tabela "offer" - sortowanie po created_at
   useEffect(() => {
     async function fetchOffers() {
       const { data, error } = await supabase
@@ -48,7 +47,6 @@ export default function SiteHeader() {
         .order("created_at", { ascending: true });
 
       if (data) {
-        // Mapuj dane tak jak w oferta/page.tsx
         const mapped = data.map((item: any) => ({
           key: item.key,
           category: item.category || item.key,
@@ -56,7 +54,6 @@ export default function SiteHeader() {
           categoryLabel: item.category_label,
         }));
         setOfferSections(mapped);
-        console.log("Pobrano oferty:", mapped);
       }
       if (error) {
         console.error("Błąd pobierania ofert:", error);
@@ -70,7 +67,6 @@ export default function SiteHeader() {
     root.setAttribute("data-theme", next);
     root.classList.toggle("theme-light", next === "light");
     root.classList.toggle("theme-dark", next === "dark");
-
     document.body.setAttribute("data-theme", next);
     document.body.classList.toggle("theme-light", next === "light");
     document.body.classList.toggle("theme-dark", next === "dark");
@@ -81,7 +77,6 @@ export default function SiteHeader() {
     const saved = window.localStorage.getItem("theme");
     const next = saved === "light" ? "light" : "dark";
     setTheme(next);
-    // Don't apply theme here - it's already applied by the script in layout.tsx
   }, []);
 
   useEffect(() => {
@@ -99,18 +94,15 @@ export default function SiteHeader() {
     });
   };
 
-  // Close on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  // Lock body scroll when menu open
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
-  // Close on outside click
   useEffect(() => {
     if (!mobileOpen) return;
     const handler = (e: MouseEvent) => {
@@ -122,7 +114,6 @@ export default function SiteHeader() {
     return () => document.removeEventListener("mousedown", handler);
   }, [mobileOpen]);
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!dropdownOpen) return;
     const handler = (e: MouseEvent) => {
@@ -150,6 +141,7 @@ export default function SiteHeader() {
         .header-root {
           position: sticky;
           top: 0;
+          /* FIX: z-index musi być NIŻSZY niż drawer (105), aby drawer był nad headerem */
           z-index: 100;
           transition: background 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
         }
@@ -253,12 +245,8 @@ export default function SiteHeader() {
           background: rgba(255,255,255,0.85);
           border-bottom: 1px solid rgba(240,23,122,0.08);
         }
-        html[data-theme="light"] .logo-text-name {
-          color: var(--black);
-        }
-        html[data-theme="light"] .logo-text-sub {
-          color: rgba(0,0,0,0.45);
-        }
+        html[data-theme="light"] .logo-text-name { color: var(--black); }
+        html[data-theme="light"] .logo-text-sub { color: rgba(0,0,0,0.45); }
         html[data-theme="light"] .nav-link {
           color: rgba(0,0,0,0.7);
           border: 1px solid transparent;
@@ -294,20 +282,14 @@ export default function SiteHeader() {
           background: rgba(240,23,122,0.08);
           color: var(--pink);
         }
-        html[data-theme="light"] .hamburger .bar {
-          background: var(--black);
-        }
+        html[data-theme="light"] .hamburger .bar { background: var(--black); }
         html[data-theme="light"] .mobile-drawer {
           background: rgba(255,255,255,0.98);
           border: 1px solid rgba(0,0,0,0.08);
           box-shadow: 0 8px 32px rgba(0,0,0,0.12);
         }
-        html[data-theme="light"] .drawer-title {
-          color: var(--black);
-        }
-        html[data-theme="light"] .drawer-link {
-          color: rgba(0,0,0,0.75);
-        }
+        html[data-theme="light"] .drawer-title { color: var(--black); }
+        html[data-theme="light"] .drawer-link { color: rgba(0,0,0,0.75); }
         html[data-theme="light"] .drawer-link:hover {
           color: var(--pink);
           background: rgba(240,23,122,0.06);
@@ -316,9 +298,7 @@ export default function SiteHeader() {
           color: var(--pink);
           background: rgba(240,23,122,0.1);
         }
-        html[data-theme="light"] .drawer-link-label {
-          color: inherit;
-        }
+        html[data-theme="light"] .drawer-link-label { color: inherit; }
         html[data-theme="light"] .drawer-close {
           color: rgba(0,0,0,0.6);
           border-color: rgba(0,0,0,0.15);
@@ -436,7 +416,8 @@ export default function SiteHeader() {
         .mobile-backdrop {
           position: fixed;
           inset: 0;
-          z-index: 90;
+          /* FIX: backdrop z-index musi być nad headerem (100) ale pod drawerem (105) */
+          z-index: 102;
           background: rgba(0,0,0,0.6);
           backdrop-filter: blur(4px);
           -webkit-backdrop-filter: blur(4px);
@@ -455,7 +436,8 @@ export default function SiteHeader() {
           top: 0;
           right: 0;
           bottom: 0;
-          z-index: 99;
+          /* FIX: z-index wyższy niż header (100) — to naprawia niedziałający X */
+          z-index: 105;
           width: min(340px, 88vw);
           background: #0c0a10;
           border-left: 1px solid rgba(240,23,122,0.15);
@@ -470,7 +452,6 @@ export default function SiteHeader() {
           transform: translateX(0);
         }
 
-        /* drawer glow strip */
         .mobile-drawer::before {
           content: '';
           position: absolute;
@@ -639,7 +620,7 @@ export default function SiteHeader() {
         .drawer-admin:hover { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
         .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--pink); flex-shrink: 0; }
 
-        /* ── DROPDOWN ── */
+        /* ── DESKTOP DROPDOWN ── */
         .nav-item-dropdown {
           position: relative;
         }
@@ -688,12 +669,8 @@ export default function SiteHeader() {
           background: rgba(240,23,122,0.1);
           color: #ff4fa3;
         }
-        html[data-theme="light"] .dropdown-link {
-          color: rgba(0,0,0,0.75);
-        }
-        html[data-theme="light"] .dropdown-link:hover {
-          color: var(--pink);
-        }
+        html[data-theme="light"] .dropdown-link { color: rgba(0,0,0,0.75); }
+        html[data-theme="light"] .dropdown-link:hover { color: var(--pink); }
         .dropdown-icon {
           width: 1.5rem;
           height: 1.5rem;
@@ -703,64 +680,95 @@ export default function SiteHeader() {
           flex-shrink: 0;
         }
 
-        /* ── MOBILE DROPDOWN ── */
-        .mobile-dropdown-toggle {
+        /* ── MOBILE OFERTA ROW ── */
+        /* FIX: Oferta row w mobile — jeden wiersz: [ikona] [tekst] [chevron] */
+        .oferta-row {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          padding: 0.875rem 1rem;
           border-radius: 0.75rem;
+          border: 1px solid transparent;
+          transition: all 150ms ease;
+          transform: translateX(20px);
+          opacity: 0;
+          animation: slideIn 200ms cubic-bezier(0.16,1,0.3,1) forwards;
+          overflow: hidden;
+        }
+        .oferta-row:has(.oferta-link.active),
+        .oferta-row.active-row {
+          background: rgba(240,23,122,0.12);
+          border-color: rgba(240,23,122,0.25);
+        }
+        .oferta-link {
+          display: flex;
+          align-items: center;
+          gap: 0.875rem;
+          padding: 0.875rem 0.75rem 0.875rem 1rem;
           text-decoration: none;
           font-size: 0.9rem;
           font-weight: 500;
           color: rgba(255,255,255,0.75);
-          border: 1px solid transparent;
-          transition: all 150ms ease;
-          background: transparent;
-          cursor: pointer;
+          flex: 1;
+          min-width: 0;
+          transition: color 150ms ease;
+          position: relative;
         }
-        .mobile-dropdown-toggle:hover {
-          background: rgba(255,255,255,0.07);
-          color: #fff;
-          border-color: rgba(255,255,255,0.08);
-        }
-        .mobile-dropdown-toggle.active {
-          background: rgba(240,23,122,0.12);
+        .oferta-link.active {
           color: #ff4fa3;
-          border-color: rgba(240,23,122,0.25);
           font-weight: 600;
         }
-        html[data-theme="light"] .mobile-dropdown-toggle {
-          color: rgba(0,0,0,0.75);
+        .oferta-link.active::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 3px;
+          height: 60%;
+          border-radius: 0 2px 2px 0;
+          background: var(--pink);
         }
-        html[data-theme="light"] .mobile-dropdown-toggle:hover {
-          color: var(--pink);
-          background: rgba(240,23,122,0.06);
-        }
-        html[data-theme="light"] .mobile-dropdown-toggle.active {
-          color: var(--pink);
-          background: rgba(240,23,122,0.1);
-        }
-        .mobile-dropdown-icon {
-          width: 2rem;
-          height: 2rem;
-          border-radius: 0.5rem;
-          background: rgba(255,255,255,0.06);
+        .oferta-link:hover { color: #fff; }
+        .oferta-link.active:hover { color: #ff4fa3; }
+        .oferta-chevron-btn {
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 2.5rem;
+          height: 100%;
+          min-height: 3rem;
           flex-shrink: 0;
+          background: transparent;
+          border: none;
+          border-left: 1px solid rgba(255,255,255,0.06);
+          cursor: pointer;
+          color: rgba(255,255,255,0.4);
+          transition: color 150ms ease, background 150ms ease;
+          padding: 0;
         }
-        .mobile-dropdown-toggle.active .mobile-dropdown-icon {
-          background: rgba(240,23,122,0.2);
+        .oferta-chevron-btn:hover {
+          color: #ff4fa3;
+          background: rgba(240,23,122,0.08);
         }
-        .mobile-dropdown-chevron {
+        .oferta-chevron-icon {
           transition: transform 200ms ease;
         }
-        .mobile-dropdown-chevron.open {
+        .oferta-chevron-icon.open {
           transform: rotate(180deg);
         }
+        html[data-theme="light"] .oferta-link {
+          color: rgba(0,0,0,0.75);
+        }
+        html[data-theme="light"] .oferta-link:hover { color: var(--pink); }
+        html[data-theme="light"] .oferta-chevron-btn {
+          border-left-color: rgba(0,0,0,0.08);
+          color: rgba(0,0,0,0.4);
+        }
+        html[data-theme="light"] .oferta-chevron-btn:hover {
+          color: var(--pink);
+          background: rgba(240,23,122,0.06);
+        }
+
+        /* ── MOBILE DROPDOWN SUBMENU ── */
         .mobile-dropdown-menu {
           max-height: 0;
           overflow: hidden;
@@ -786,12 +794,8 @@ export default function SiteHeader() {
           color: #ff4fa3;
           background: rgba(240,23,122,0.08);
         }
-        html[data-theme="light"] .mobile-dropdown-link {
-          color: rgba(0,0,0,0.6);
-        }
-        html[data-theme="light"] .mobile-dropdown-link:hover {
-          color: var(--pink);
-        }
+        html[data-theme="light"] .mobile-dropdown-link { color: rgba(0,0,0,0.6); }
+        html[data-theme="light"] .mobile-dropdown-link:hover { color: var(--pink); }
       `}</style>
 
       {/* Backdrop */}
@@ -810,46 +814,46 @@ export default function SiteHeader() {
         <nav className="drawer-nav">
           {STATIC_LINKS.map((item, i) => {
             const active = isActivePath(pathname, item.href);
-            
-            // Dropdown dla Oferta w mobile
+
             if ('hasDropdown' in item && item.hasDropdown) {
               return (
                 <div key={item.href} style={{ animationDelay: `${i * 50 + 60}ms` }}>
-                  <button
-                    onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
-                    className={`mobile-dropdown-toggle${active ? " active" : ""}`}
-                  >
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.875rem" }}>
-                      <span className="mobile-dropdown-icon">
-                        <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                      </span>
-                      <span>{item.label}</span>
-                    </div>
-                    <svg 
-                      width="12" 
-                      height="12" 
-                      viewBox="0 0 12 12" 
-                      fill="none" 
-                      className={`mobile-dropdown-chevron${mobileDropdownOpen ? " open" : ""}`}
-                    >
-                      <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                  <div className={`mobile-dropdown-menu${mobileDropdownOpen ? " open" : ""}`}>
+                  {/* FIX: jeden wiersz z linkiem i chevronem — brak duplikatu "Oferta" */}
+                  <div className={`oferta-row${active ? " active-row" : ""}`}>
                     <Link
-                      href="/oferta"
-                      className="mobile-dropdown-link"
-                      onClick={() => {
-                        setMobileDropdownOpen(false);
-                        setMobileOpen(false);
-                      }}
+                      href={item.href}
+                      className={`oferta-link${active ? " active" : ""}`}
+                      onClick={() => setMobileOpen(false)}
                     >
-                      Oferta
+                      <span className="drawer-icon" style={{ flexShrink: 0 }}>
+                        <img src="/Plyta_raster_lowres.png" alt="" />
+                      </span>
+                      <span style={{ flex: 1 }}>{item.label}</span>
                     </Link>
+                    <button
+                      className="oferta-chevron-btn"
+                      onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+                      aria-label="Rozwiń ofertę"
+                      aria-expanded={mobileDropdownOpen}
+                    >
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        className={`oferta-chevron-icon${mobileDropdownOpen ? " open" : ""}`}
+                      >
+                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  {/* Podmenu */}
+                  <div className={`mobile-dropdown-menu${mobileDropdownOpen ? " open" : ""}`}>
                     {offerSections.map((section) => (
                       <Link
                         key={section.key}
-                        href={`/oferta#${section.key}`}
+                        href={`/oferta/szczegoly#${section.key}`}
                         className="mobile-dropdown-link"
                         onClick={() => {
                           setMobileDropdownOpen(false);
@@ -863,7 +867,7 @@ export default function SiteHeader() {
                 </div>
               );
             }
-            
+
             return (
               <Link
                 key={item.href}
@@ -897,9 +901,9 @@ export default function SiteHeader() {
           {/* Logo */}
           <Link href="/" className="logo">
             <div className="logo-mark">
-              <img 
-                src="/Plyta_raster_lowres.png" 
-                alt="Pinky Party Logo" 
+              <img
+                src="/Plyta_raster_lowres.png"
+                alt="Pinky Party Logo"
                 style={{ width: "100%", height: "100%", objectFit: "cover", aspectRatio: "16/9" }}
               />
             </div>
@@ -913,36 +917,33 @@ export default function SiteHeader() {
           <nav className="desktop-nav">
             {STATIC_LINKS.map((item) => {
               const active = isActivePath(pathname, item.href);
-              
-              // Dropdown dla Oferta
+
               if ('hasDropdown' in item && item.hasDropdown) {
                 return (
                   <div key={item.href} className="nav-item-dropdown" ref={dropdownRef}>
-                    <button
-                      onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className={`nav-link${active ? " active" : ""}`}
-                      style={{ display: "flex", alignItems: "center", gap: "0.4rem", background: "transparent", cursor: "pointer" }}
-                    >
-                      {item.label}
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: dropdownOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 200ms" }}>
-                        <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </button>
-                    <div className={`dropdown-menu${dropdownOpen ? " open" : ""}`}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
                       <Link
-                        href="/oferta"
-                        className="dropdown-link"
-                        onClick={() => setDropdownOpen(false)}
+                        href={item.href}
+                        className={`nav-link${active ? " active" : ""}`}
+                        style={{ background: "transparent" }}
                       >
-                        <span className="dropdown-icon">
-                          <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        </span>
-                        Oferta
+                        {item.label}
                       </Link>
+                      <button
+                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                        className="nav-link"
+                        style={{ display: "flex", alignItems: "center", padding: "0.45rem 0.5rem", background: "transparent", cursor: "pointer" }}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: dropdownOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 200ms" }}>
+                          <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                    <div className={`dropdown-menu${dropdownOpen ? " open" : ""}`}>
                       {offerSections.map((section) => (
                         <Link
                           key={section.key}
-                          href={`/oferta#${section.key}`}
+                          href={`/oferta/szczegoly#${section.key}`}
                           className="dropdown-link"
                           onClick={() => setDropdownOpen(false)}
                         >
@@ -956,7 +957,7 @@ export default function SiteHeader() {
                   </div>
                 );
               }
-              
+
               return (
                 <Link
                   key={item.href}

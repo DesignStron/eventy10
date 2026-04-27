@@ -154,11 +154,11 @@ export default function AboutPage() {
         .hero-desc {
           color:rgba(255,255,255,0.55); font-size:clamp(0.95rem,1.35vw,1.05rem);
           line-height:1.85; width: 100%; max-width: 1200px;
-          text-align: center; margin: 0 auto 1rem; padding: 0 2rem;
+          text-align: left; margin: 0 0 1rem; padding: 0;
         }
         @media(max-width:768px){
           .hero-desc {
-            font-size: clamp(0.9rem,1.2vw,1rem); line-height: 1.75; padding: 0 1rem;
+            font-size: clamp(0.9rem,1.2vw,1rem); line-height: 1.75; padding: 0;
           }
         }
         html[data-theme="light"] .hero-desc { color:rgba(13,11,16,0.6); }
@@ -215,97 +215,7 @@ export default function AboutPage() {
           animation:lineExpand 1.2s cubic-bezier(0.16,1,0.3,1) both;
         }
 
-        /* ── STATS STRIP ── */
-        .stats-strip {
-          display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
-          border-radius:1.5rem; overflow:hidden;
-          border:1px solid rgba(255,255,255,0.07);
-          background:rgba(255,255,255,0.04);
-          backdrop-filter:blur(12px);
-        }
-        @media(min-width:768px){ .stats-strip { grid-template-columns:repeat(4,1fr); } }
-
-        html[data-theme="light"] .stats-strip {
-          border:1px solid rgba(240,23,122,0.15);
-          background:rgba(255,255,255,0.85);
-          box-shadow:0 8px 40px rgba(240,23,122,0.08), 0 2px 12px rgba(0,0,0,0.05);
-        }
-
-        .stat-tile {
-          padding:2.2rem 1.5rem; text-align:center; position:relative;
-          border-right:1px solid rgba(255,255,255,0.05);
-          border-bottom:1px solid rgba(255,255,255,0.05);
-          transition:background 240ms ease;
-          cursor:default;
-        }
-        .stat-tile:hover { background:rgba(240,23,122,0.06); }
-
-        html[data-theme="light"] .stat-tile {
-          border-right:1px solid rgba(240,23,122,0.1);
-          border-bottom:1px solid rgba(240,23,122,0.1);
-          background:transparent;
-        }
-        html[data-theme="light"] .stat-tile:hover { background:rgba(240,23,122,0.05); }
-
-        .stat-icon {
-          font-size:1.4rem; margin-bottom:0.6rem; display:block;
-          animation:floatY 6s ease-in-out infinite;
-        }
-        .stat-tile:nth-child(2) .stat-icon { animation-delay:1.5s; }
-        .stat-tile:nth-child(3) .stat-icon { animation-delay:3s; }
-        .stat-tile:nth-child(4) .stat-icon { animation-delay:4.5s; }
-
-        .stat-number {
-          font-family:var(--font-display);
-          font-size:clamp(2rem,3.5vw,2.8rem);
-          font-weight:700; line-height:1;
-          letter-spacing:-0.03em;
-          background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.8) 100%);
-          -webkit-background-clip:text; background-clip:text;
-          -webkit-text-fill-color:transparent;
-          animation:countUp 0.8s cubic-bezier(0.16,1,0.3,1) both;
-        }
-        html[data-theme="light"] .stat-number {
-          background:linear-gradient(135deg,#0d0b10 0%,var(--pink) 120%);
-          -webkit-background-clip:text; background-clip:text;
-          -webkit-text-fill-color:transparent;
-        }
-        .stat-label {
-          font-size:0.73rem; font-weight:600; letter-spacing:0.04em;
-          color:rgba(255,255,255,0.38); margin-top:0.4rem;
-          text-transform:uppercase;
-        }
-        html[data-theme="light"] .stat-label { color:rgba(13,11,16,0.5); }
-
-        /* ── SECTION HEADER ── */
-        .sec-eyebrow {
-          font-size:0.62rem; font-weight:800; letter-spacing:0.16em;
-          text-transform:uppercase; color:var(--pink);
-          margin-bottom:0.85rem; display:flex; align-items:center; gap:0.6rem;
-        }
-        .sec-eyebrow::before {
-          content:''; display:inline-block; width:24px; height:2px;
-          background:var(--pink); border-radius:2px; flex-shrink:0;
-        }
-        .sec-heading {
-          font-family:var(--font-display);
-          font-size:clamp(1.8rem,3.5vw,2.8rem);
-          font-weight:700; color:#fff; line-height:1.1;
-          letter-spacing:-0.02em; margin-bottom:1rem;
-        }
-        html[data-theme="light"] .sec-heading { color:#0d0b10; }
-
-        @media(min-width:901px){
-          .sec-heading--nowrap{ white-space:nowrap; }
-        }
-
-        .sec-body {
-          font-size:0.95rem; color:rgba(255,255,255,0.5);
-          line-height:1.85; max-width:42rem;
-        }
-        html[data-theme="light"] .sec-body { color:rgba(13,11,16,0.6); }
-
-        /* ── VALUE CARDS ── */
+        /* ── VALUES ── */
         .val-grid {
           display:grid; grid-template-columns:1fr; gap:1.5rem;
           margin-top:3rem;
@@ -645,50 +555,7 @@ export default function AboutPage() {
           `}</style>
         </section>
 
-        {/* ── STATS ── */}
-        <section className="ab-wrap fu d4" style={{ paddingBottom:"4rem" }}>
-          <div className="stats-strip">
-            {STATS.map((s, i) => (
-              <div key={s.label} className="stat-tile" style={{ animationDelay:`${0.1 + i * 0.1}s` }}>
-                <span className="stat-icon" style={{ animationDelay:`${i * 1.5}s` }}>{s.icon}</span>
-                <div className="stat-number" style={{ animationDelay:`${0.2 + i * 0.1}s` }}>{s.num}</div>
-                <div className="stat-label">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ── VALUES ── */}
-        <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
-          <div className="fl d1">
-            <p className="sec-eyebrow">Dlaczego Pinky Party?</p>
-            <h2 className="sec-heading sec-heading--nowrap">Tworzymy animacje nowej generacji</h2>
-            <p className="sec-body">
-              Bo róż to nie tylko kolor. Róż symbolizuje energię, emocje i pozytywną atmosferę, którą tworzymy na każdym wydarzeniu. Dbamy o każdy szczegół. Tworzymy animacje dopracowane w każdym detalu, pełne dobrej energii i komfortu, dzięki któremu każdy czuje się swobodnie.
-            </p>
-          </div>
-
-          <div className="val-grid">
-            {VALUES.map((v, i) => (
-              <div
-                key={v.title}
-                className="val-card fu"
-                style={{ animationDelay:`${0.1 + i * 0.12}s` }}
-              >
-                <div className="val-icon-wrap">{v.icon}</div>
-                <div className="val-title">{v.title}</div>
-                <div className="val-desc">{v.desc}</div>
-                <div className="val-watermark">0{i+1}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Divider */}
-        <div className="ab-wrap" style={{ paddingBottom:"4rem" }}>
-          <div className="fancy-divider"/>
-        </div>
-
+        
         {/* ── PROCESS ── */}
         <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
           <div className="fr d1">

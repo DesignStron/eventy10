@@ -190,8 +190,8 @@ export default async function OfferPage() {
           animation:pulseDot 2s ease-in-out infinite;
         }
         .op-hero-title {
-          font-family:var(--font-display); font-size:clamp(3rem,6vw,5.5rem);
-          font-weight:800; line-height:1.18; letter-spacing:-.04em; color:#fff;
+          font-family:var(--font-display); font-size:clamp(2.2rem,4.6vw,3.4rem);
+          font-weight:800; line-height:1.18; letter-spacing:-.04em; color:var(--pink);
           margin:0 0 1rem; overflow:visible; padding-bottom:.12em;
           animation:fadeUp .7s .08s cubic-bezier(.16,1,.3,1) both;
           white-space: nowrap;
@@ -216,18 +216,7 @@ export default async function OfferPage() {
         html[data-theme="light"] .op-hero-sub { color:rgba(13,11,16,.55); }
 
         /* ── NAV ── */
-        .op-nav { display:flex; flex-wrap:wrap; gap:.5rem; animation:fadeUp .7s .24s cubic-bezier(.16,1,.3,1) both; }
-        .op-nav-pill {
-          display:inline-flex; align-items:center; gap:.45rem; padding:.5rem 1.2rem;
-          border-radius:9999px; font-size:.82rem; font-weight:600; text-decoration:none;
-          border:1px solid rgba(255,255,255,.1); color:rgba(255,255,255,.65);
-          background:rgba(255,255,255,.04); transition:all 200ms ease; white-space:nowrap;
-        }
-        .op-nav-pill:hover { border-color:rgba(240,23,122,.4); background:rgba(240,23,122,.1); color:#ff6bb5; transform:translateY(-2px); }
-        .op-nav-pill--special { border-color:rgba(240,23,122,.3); background:rgba(240,23,122,.08); color:#ff6bb5; }
-        html[data-theme="light"] .op-nav-pill { color:rgba(13,11,16,.6); background:rgba(0,0,0,.04); border-color:rgba(0,0,0,.1); }
-        html[data-theme="light"] .op-nav-pill:hover,
-        html[data-theme="light"] .op-nav-pill--special { background:rgba(240,23,122,.08); border-color:rgba(240,23,122,.3); color:#c01060; }
+        .op-nav { display:none; }
 
         /* ── DIVIDER ── */
         .op-divider {
@@ -440,22 +429,6 @@ export default async function OfferPage() {
           .op-wrap { padding:5rem 1.1rem 7rem; }
           .op-hero-title { font-size:clamp(2.2rem,9vw,3rem); letter-spacing:-.03em; }
           .op-hero-sub { font-size:.95rem; max-width:100%; line-height:1.7; }
-          .op-nav { 
-            display: grid; 
-            grid-template-columns: repeat(2, minmax(0, 1fr)); 
-            gap: 0.5rem;
-            overflow-x: visible;
-          }
-          .op-nav-pill { 
-            width: 100%;
-            min-width: 0;
-            flex-shrink: 1; 
-            justify-content: center;
-            font-size: 0.8rem;
-            padding: 0.6rem 0.8rem;
-            white-space: normal;
-            text-align: center;
-          }
           .op-divider { margin:2.5rem 0 3rem; }
           .op-section-head { margin-bottom:2rem; }
           .op-section-title { font-size:1.25rem; }
@@ -502,41 +475,19 @@ export default async function OfferPage() {
         <div className="op-wrap">
 
           <div className="op-hero">
-            <h1 className="op-hero-title">
-Sprawdź naszą ofertę
-</h1>
+            <h1 className="op-hero-title">Sprawdź naszą ofertę</h1>
 
-<div className="op-hero-text">
-  <p className="op-hero-sub op-hero-sub--lead">
-    Poniżej znajdziesz standardową ofertę naszych usług. Realizujemy animacje, warsztaty oraz oprawę muzyczną dla dzieci i młodzieży, organizując wydarzenia dla klientów prywatnych, szkół i firm.
-  </p>
-
-  <p className="op-hero-sub">
-    W ofercie znajdują się m.in. urodziny, animacje weselne, komunijne, Mikołajki, bale karnawałowe, festyny i pikniki, a także wydarzenia szkolne i młodzieżowe, takie jak studniówki, bale 8-klasistów oraz dyskoteki.
-  </p>
-
-  <p className="op-hero-sub">
-    Ceny mogą się różnić w zależności od czasu trwania, lokalizacji oraz zakresu wydarzenia. Działamy na terenie Wrocławia i okolic. Dojazd do 20 km wliczony jest w cenę.
-  </p>
-
-  <p className="op-hero-sub">
-    Jeśli nie widzisz w ofercie dokładnie tego, czego potrzebujesz lub masz niestandardowe potrzeby lub pomysły — napisz do nas. Ustalimy najlepsze rozwiązanie dopasowane do Twojego wydarzenia.
-  </p>
-</div>
-            <nav className="op-nav" aria-label="Nawigacja oferty">
-              {getNavItems(sections).map((n) => (
-                <a key={n.key} href={n.href ?? `#${n.key}`} className={`op-nav-pill${n.href ? " op-nav-pill--special" : ""}`}>
-                  <span aria-hidden="true">{n.icon}</span>
-                  {n.label}
-                </a>
-              ))}
-            </nav>
+            <div className="op-hero-text">
+              <p className="op-hero-sub">
+                W ofercie znajdują się m.in. urodziny, animacje weselne, komunijne, Mikołajki, bale karnawałowe, festyny i pikniki, a także wydarzenia szkolne i młodzieżowe, takie jak studniówki, bale 8-klasistów oraz dyskoteki. Ceny mogą się różnić w zależności od czasu trwania, lokalizacji oraz zakresu wydarzenia. Działamy na terenie Wrocławia i okolic. Dojazd do 20 km wliczony jest w cenę. Jeśli nie widzisz w ofercie dokładnie tego, czego potrzebujesz lub masz niestandardowe potrzeby lub pomysły — napisz do nas. Ustalimy najlepsze rozwiązanie dopasowane do Twojego wydarzenia.
+              </p>
+            </div>
           </div>
 
           <div className="op-divider" role="separator" />
 
           {offerData.sections.length > 0 && (
-            <div className="op-section-head">
+            <div id="uslugi" className="op-section-head">
               <div>
                 <div className="op-eyebrow">Nasze usługi</div>
                 <h2 className="op-section-title">Wszystko, czego potrzebujesz</h2>
