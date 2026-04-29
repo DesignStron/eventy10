@@ -326,6 +326,7 @@ export default function AboutPage() {
         }
         .proc-step:last-child { border-right:none; }
         @media(max-width:767px) { .proc-step:last-child { border-bottom:none; } }
+        @media(max-width:767px) { .proc-step { border-right:none; } }
 
         .proc-step::before {
           content:''; position:absolute; inset:0;
@@ -555,16 +556,14 @@ export default function AboutPage() {
           `}</style>
         </section>
 
-        
         {/* ── PROCESS ── */}
         <section className="ab-wrap" style={{ paddingBottom:"5rem" }}>
           <div className="fr d1">
-            <p className="sec-eyebrow">Jak pracujemy</p>
-            <h2 className="sec-heading sec-heading--nowrap">Od pomysłu do realizacji</h2>
-            <p className="sec-body">
-              Nasz proces jest prosty i przejrzysty - żebyś wiedział/a dokładnie,
-              czego się spodziewać na każdym etapie.
-            </p>
+            <h2 className="hero-title" style={{ fontSize: "clamp(2rem, 4.5vw, 3.5rem)", marginBottom: 0 }}>
+              <span className="hero-accent">Jak pracujemy?</span>
+              <br />
+              Od pomysłu do realizacji
+            </h2>
           </div>
 
           <div className="proc-wrap fu d3">

@@ -61,7 +61,10 @@ export default function ContactPage() {
 
         .kt-hero-desc {
           color:rgba(255,255,255,0.52); font-size:clamp(1rem,1.8vw,1.12rem);
-          line-height:1.85; max-width:500px;
+          line-height:1.85; max-width:60ch;
+        }
+        @media(min-width:700px) {
+          .kt-hero-desc { white-space:nowrap; max-width:none; }
         }
         html[data-theme="light"] .kt-hero-desc { color:rgba(13,11,16,0.58); }
 
@@ -262,8 +265,7 @@ export default function ContactPage() {
           </div>
 
           <h1 className="kt-hero-title fu d1">
-            Zarezerwuj termin:<br/>
-            <span className="kt-hero-accent">napisz do nas</span>
+            Zarezerwuj termin
           </h1>
 
           <p className="kt-hero-desc fu d2">

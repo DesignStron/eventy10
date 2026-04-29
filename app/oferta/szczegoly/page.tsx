@@ -38,19 +38,35 @@ export default function OfferDetailsPage() {
   const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    const parts = hash.split('#');
-    const slug = parts[parts.length - 1];
+    const readSlugFromHash = () => {
+      const raw = window.location.hash.replace(/^#/, "");
+      const decoded = decodeURIComponent(raw || "").trim();
+      return decoded;
+    };
 
-    if (!slug) { setLoading(false); return; }
+    const fetchForSlug = async (slug: string) => {
+      if (!slug) {
+        setOffer(null);
+        setGalleryImages([]);
+        setActiveImg(0);
+        setLoading(false);
+        return;
+      }
 
-    const fetchData = async () => {
+      setLoading(true);
+      setOffer(null);
+      setGalleryImages([]);
+      setActiveImg(0);
+
       try {
         const { data: offerData, error: offerError } = await supabase
-          .from("offer").select("*").eq("key", slug).single();
+          .from("offer")
+          .select("*")
+          .eq("key", slug)
+          .single();
 
         if (offerError || !offerData) {
-          console.error('Offer not found:', { offerError, offerData, slug });
+          console.error("Offer not found:", { offerError, offerData, slug });
           setLoading(false);
           return;
         }
@@ -67,7 +83,9 @@ export default function OfferDetailsPage() {
         });
 
         const { data: galleryData, error: galleryError } = await supabase
-          .from("gallery").select("*").eq("category", slug)
+          .from("gallery")
+          .select("*")
+          .eq("category", slug)
           .order("created_at", { ascending: false });
 
         if (!galleryError && galleryData) setGalleryImages(galleryData);
@@ -78,7 +96,13 @@ export default function OfferDetailsPage() {
       }
     };
 
-    fetchData();
+    const handleHash = () => {
+      void fetchForSlug(readSlugFromHash());
+    };
+
+    handleHash();
+    window.addEventListener("hashchange", handleHash);
+    return () => window.removeEventListener("hashchange", handleHash);
   }, []);
 
   if (loading) {
@@ -162,7 +186,7 @@ export default function OfferDetailsPage() {
         /* ── HEADLINE ── */
         .od-h1 {
           font-family:var(--font-display);
-          font-size:clamp(3rem,5.5vw,5.2rem);
+          font-size:clamp(2.2rem,4.2vw,3.4rem);
           font-weight:700;
           line-height:1.06;
           letter-spacing:-.03em;

@@ -984,6 +984,7 @@ export default function SiteHeader() {
           <div className="header-right">
             <Link href="/kontakt" className="cta-btn">Skontaktuj się</Link>
             <button
+              type="button"
               className={`hamburger${mobileOpen ? " open" : ""}`}
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Otwórz menu"

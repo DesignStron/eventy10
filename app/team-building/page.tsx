@@ -91,7 +91,7 @@ export default function TeamBuildingPage() {
 
         .tb-sec-sub {
           font-size:0.95rem; color:rgba(255,255,255,0.5);
-          line-height:1.85; max-width:42rem; margin-bottom:3rem;
+          line-height:1.85; margin-bottom:3rem;
         }
         html[data-theme="light"] .tb-sec-sub { color:rgba(13,11,16,0.58); }
 
@@ -332,7 +332,7 @@ export default function TeamBuildingPage() {
 
             <div className="fu d2" style={{ width:"100%", maxWidth:"520px", justifySelf:"end" }}>
               <img
-                src="https://i.ibb.co/4ZVbcKyn/587427429-17968314104994196-7690202603380915638-n.jpg"
+                src="https://i.ibb.co/XZCB26Nz/608661166-17969682941994196-8948644509450138596-n.jpg"
                 alt=""
                 style={{
                   width: "100%",
@@ -379,7 +379,6 @@ export default function TeamBuildingPage() {
                 Prowadzimy praktyczne szkolenia z integracji, łącząc wiedzę z realnymi ćwiczeniami i zabawami. Uczestnicy testują je w praktyce, co ułatwia wdrożenie ich w pracy z klasą. Szkolenia stanowią wsparcie rad pedagogicznych i gotowe narzędzia do pracy z uczniami.
               </div>
               <div style={{ flex: 1 }}>
-
                 <div className="tb-feat">
                   <div className="tb-check"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
                   <span className="tb-feat-txt">Jak wspierać proces integracji</span>
@@ -417,32 +416,26 @@ export default function TeamBuildingPage() {
           </div>
 
           <div className="tb-loc-grid fu d2">
-
             <div className="tb-loc-item">
               <div className="tb-check"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
               Szkoły
             </div>
-
             <div className="tb-loc-item">
               <div className="tb-check"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
               Integracja na początku roku szkolnego
             </div>
-
             <div className="tb-loc-item">
               <div className="tb-check"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
               Wyjazdy szkolne i zielone szkoły
             </div>
-
             <div className="tb-loc-item">
               <div className="tb-check"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
               Kolonie i półkolonie
             </div>
-
             <div className="tb-loc-item">
               <div className="tb-check"><svg width="8" height="8" viewBox="0 0 10 10" fill="none"><path d="M1.5 5.5L4 8L8.5 2" stroke="#ff4fa3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg></div>
               Rady pedagogiczne i spotkania zespołów
             </div>
-
           </div>
         </section>
 
