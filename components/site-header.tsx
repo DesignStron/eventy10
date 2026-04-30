@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 
@@ -29,6 +29,7 @@ function isActivePath(pathname: string, href: string) {
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -38,6 +39,23 @@ export default function SiteHeader() {
   const [offerSections, setOfferSections] = useState<OfferSection[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const goToOfferDetails = (key: string) => {
+    const target = `/oferta/szczegoly#${key}`;
+
+    if (pathname?.startsWith("/oferta/szczegoly")) {
+      // Next Link nie zawsze odpala `hashchange` na tej samej stronie,
+      // więc ustawiamy hash bezpośrednio.
+      window.location.hash = key;
+      return;
+    }
+
+    router.push("/oferta/szczegoly");
+    // Ustaw hash po przejściu na stronę szczegółów.
+    window.setTimeout(() => {
+      window.location.hash = key;
+    }, 0);
+  };
 
   useEffect(() => {
     async function fetchOffers() {
@@ -855,7 +873,9 @@ export default function SiteHeader() {
                         key={section.key}
                         href={`/oferta/szczegoly#${section.key}`}
                         className="mobile-dropdown-link"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault();
+                          goToOfferDetails(section.key);
                           setMobileDropdownOpen(false);
                           setMobileOpen(false);
                         }}
@@ -945,7 +965,11 @@ export default function SiteHeader() {
                           key={section.key}
                           href={`/oferta/szczegoly#${section.key}`}
                           className="dropdown-link"
-                          onClick={() => setDropdownOpen(false)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            goToOfferDetails(section.key);
+                            setDropdownOpen(false);
+                          }}
                         >
                           <span className="dropdown-icon">
                             <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
