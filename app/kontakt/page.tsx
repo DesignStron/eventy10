@@ -315,7 +315,7 @@ export default function ContactPage() {
                 dopasowany do Twojego wydarzenia.
               </div>
             </div>
-            <a href="tel:+48000000000" className="kt-call-btn">
+            <a href="tel:+48792987499" className="kt-call-btn">
               Zadzwoń teraz →
             </a>
           </div>
