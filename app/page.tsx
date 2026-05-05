@@ -381,6 +381,11 @@ export default function Home() {
           letter-spacing: .03em;
           margin-bottom: 2.5rem;
         }
+        html[data-theme="light"] .location-chip {
+          background: rgba(0,0,0,.04);
+          border: 1px solid rgba(0,0,0,.12);
+          color: rgba(13,11,16,.62);
+        }
         .location-chip-icon {
           font-size: .9rem;
           opacity: .7;
@@ -479,7 +484,7 @@ export default function Home() {
               </div>
 
               <h1 className="h1 fu d1">
-                Tworzymy wydarzenia <em>od najmłodszych lat</em>
+                Tworzymy wspomnienia <em>od najmłodszych lat</em>
               </h1>
 
               <p className="fu d2" style={{
@@ -488,7 +493,7 @@ export default function Home() {
                 lineHeight:1.8,maxWidth:"55ch",marginBottom:"2rem",
                 fontWeight: 500,
               }}>
-                Pinky Party Animacje & Eventy organizuje animacje, warsztaty i oprawę muzyczną wydarzeń we Wrocławiu. Tworzymy wydarzenia na każdą okazję: od urodzin i wesel, przez festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
+                Pinky Party Animacje & Eventy organizuje animacje, warsztaty i oprawę muzyczną wydarzeń we Wrocławiu. Tworzymy wspomnienia na każdą okazję: od urodzin i wesel, przez festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
               </p>
 
               {/* ── SERVICE TAGS (zastąpienie dwóch osobnych <p>) ── */}

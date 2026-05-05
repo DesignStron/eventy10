@@ -40,21 +40,18 @@ export default function SiteHeader() {
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const goToOfferDetails = (key: string) => {
-    const target = `/oferta/szczegoly#${key}`;
+  const goToOfferDetails = (section: OfferSection) => {
+    const hash = section.key;
+    const target = `/oferta/szczegoly#${hash}`;
 
     if (pathname?.startsWith("/oferta/szczegoly")) {
       // Next Link nie zawsze odpala `hashchange` na tej samej stronie,
       // więc ustawiamy hash bezpośrednio.
-      window.location.hash = key;
+      window.location.hash = hash;
       return;
     }
 
-    router.push("/oferta/szczegoly");
-    // Ustaw hash po przejściu na stronę szczegółów.
-    window.setTimeout(() => {
-      window.location.hash = key;
-    }, 0);
+    router.push(target);
   };
 
   useEffect(() => {
@@ -875,7 +872,7 @@ export default function SiteHeader() {
                         className="mobile-dropdown-link"
                         onClick={(e) => {
                           e.preventDefault();
-                          goToOfferDetails(section.key);
+                          goToOfferDetails(section);
                           setMobileDropdownOpen(false);
                           setMobileOpen(false);
                         }}
@@ -967,7 +964,7 @@ export default function SiteHeader() {
                           className="dropdown-link"
                           onClick={(e) => {
                             e.preventDefault();
-                            goToOfferDetails(section.key);
+                            goToOfferDetails(section);
                             setDropdownOpen(false);
                           }}
                         >

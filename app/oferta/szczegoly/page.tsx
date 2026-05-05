@@ -100,6 +100,9 @@ export default function OfferDetailsPage() {
       void fetchForSlug(readSlugFromHash());
     };
 
+    if (!window.location.hash) {
+      window.location.hash = "urodziny";
+    }
     handleHash();
     window.addEventListener("hashchange", handleHash);
     return () => window.removeEventListener("hashchange", handleHash);
@@ -229,7 +232,7 @@ export default function OfferDetailsPage() {
           display:inline-flex;align-items:flex-end;gap:2rem;
           background:var(--surface-elevated);
           border:1px solid var(--border);
-          border-radius:1rem;
+          border-radius:1.25rem;
           padding:1.25rem 1.75rem;
           margin-bottom:2rem;
         }
@@ -249,6 +252,26 @@ export default function OfferDetailsPage() {
         }
         .od-price-note {
           font-size:.75rem;color:var(--text-muted);line-height:1.6;max-width:14ch;
+        }
+
+        @media(max-width:540px){
+          .od-price-box{
+            width:100%;
+            max-width:100%;
+            flex-wrap:wrap;
+            gap:1rem;
+            padding:1rem 1.1rem;
+          }
+          .od-price-sep{ display:none; }
+          .od-price-note{ max-width:100%; }
+          .od-price-num{ font-size:clamp(1.8rem,9vw,2.4rem); overflow-wrap:anywhere; }
+          .od-price-cur{ font-size:1.05rem; }
+
+          .od-btn-primary,
+          .od-btn-outline{
+            width:100%;
+            justify-content:center;
+          }
         }
 
         /* ── BULLETS ── */
@@ -522,7 +545,14 @@ export default function OfferDetailsPage() {
                   <div className="od-price-box">
                     <div>
                       <p className="od-price-from">Cena od</p>
-                      <div className="od-price-num">
+                      <div
+                        className="od-price-num"
+                        style={
+                          offer.category === "mikolajki"
+                            ? { fontSize: "2rem", lineHeight: 1.05, overflowWrap: "anywhere" }
+                            : undefined
+                        }
+                      >
                         {offer.price}
                         <span className="od-price-cur"> zł</span>
                       </div>
