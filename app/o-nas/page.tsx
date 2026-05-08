@@ -1,6 +1,25 @@
+import type { Metadata } from "next";
 import SiteFooter from "@/components/site-footer";
 
-export const metadata = { title: "O nas" };
+export const metadata: Metadata = {
+  title: "O nas",
+  description:
+    "Poznaj Pinky Party – animacje i eventy we Wrocławiu i okolicach. Doświadczenie, energia i dopasowanie programu do uczestników.",
+  alternates: {
+    canonical: "/o-nas",
+  },
+  openGraph: {
+    title: "O nas - Pinky Party",
+    description:
+      "Poznaj Pinky Party – animacje i eventy we Wrocławiu i okolicach. Doświadczenie, energia i dopasowanie programu do uczestników.",
+    url: "/o-nas",
+  },
+  twitter: {
+    title: "O nas - Pinky Party",
+    description:
+      "Poznaj Pinky Party – animacje i eventy we Wrocławiu i okolicach.",
+  },
+};
 
 const DiscIcon = ({ className = "" }: { className?: string }) => (
   <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

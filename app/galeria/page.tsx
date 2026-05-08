@@ -1,8 +1,27 @@
+import type { Metadata } from "next";
 import type { GalleryData, GalleryImage } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
 
-export const metadata = { title: "Galeria" };
+export const metadata: Metadata = {
+  title: "Galeria",
+  description:
+    "Galeria zdjęć Pinky Party – zobacz realizacje animacji, urodzin, eventów szkolnych, imprez firmowych i wielu innych wydarzeń.",
+  alternates: {
+    canonical: "/galeria",
+  },
+  openGraph: {
+    title: "Galeria - Pinky Party",
+    description:
+      "Galeria zdjęć Pinky Party – zobacz realizacje animacji, urodzin, eventów szkolnych, imprez firmowych i wielu innych wydarzeń.",
+    url: "/galeria",
+  },
+  twitter: {
+    title: "Galeria - Pinky Party",
+    description:
+      "Galeria zdjęć Pinky Party – realizacje animacji i eventów.",
+  },
+};
 
 const FALLBACK: GalleryData = { updatedAt: new Date().toISOString(), images: [] };
 

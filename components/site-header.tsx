@@ -905,10 +905,6 @@ export default function SiteHeader() {
 
         <div className="drawer-footer">
           <Link href="/kontakt" className="drawer-cta">Skontaktuj się</Link>
-          <Link href="/admin" className="drawer-admin">
-            <span className="dot" />
-            Panel Admina
-          </Link>
         </div>
       </div>
 

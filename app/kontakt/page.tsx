@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import ContactForm from "@/components/contact-form";
 import SiteFooter from "@/components/site-footer";
 
-export const metadata = { title: "Kontakt" };
+export const metadata: Metadata = {
+  title: "Kontakt",
+  description:
+    "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje, urodziny, event szkolny lub imprezę firmową we Wrocławiu i okolicach.",
+  alternates: {
+    canonical: "/kontakt",
+  },
+  openGraph: {
+    title: "Kontakt - Pinky Party",
+    description:
+      "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje, urodziny, event szkolny lub imprezę firmową we Wrocławiu i okolicach.",
+    url: "/kontakt",
+  },
+  twitter: {
+    title: "Kontakt - Pinky Party",
+    description:
+      "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje, urodziny, event szkolny lub imprezę firmową.",
+  },
+};
 
 const CONTACT_ITEMS = [
   { label: "Telefon",           value: "+48 792 987 499",              href: "tel:+48792987499",                       icon: "📞" },

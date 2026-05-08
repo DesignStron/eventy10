@@ -1,7 +1,26 @@
+import type { Metadata } from "next";
 import SiteFooter from "@/components/site-footer";
 import Link from "next/link";
 
-export const metadata = { title: "Team Building & Integracja" };
+export const metadata: Metadata = {
+  title: "Team Building & Integracja",
+  description:
+    "Team building i integracja firmowa z Pinky Party – scenariusze, animacje i prowadzenie wydarzeń dla zespołów we Wrocławiu i okolicach.",
+  alternates: {
+    canonical: "/team-building",
+  },
+  openGraph: {
+    title: "Team Building & Integracja - Pinky Party",
+    description:
+      "Team building i integracja firmowa z Pinky Party – scenariusze, animacje i prowadzenie wydarzeń dla zespołów we Wrocławiu i okolicach.",
+    url: "/team-building",
+  },
+  twitter: {
+    title: "Team Building & Integracja - Pinky Party",
+    description:
+      "Team building i integracja firmowa z Pinky Party.",
+  },
+};
 export const dynamic = 'force-dynamic';
 
 export default function TeamBuildingPage() {

@@ -32,6 +32,49 @@ export const metadata: Metadata = {
   },
   description:
     "Nowoczesna organizacja imprez: urodziny dla dzieci, eventy szkolne i imprezy firmowe. Profesjonalnie, dynamicznie i z energią.",
+  metadataBase: new URL("https://pinkyparty.pl"),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "pl_PL",
+    url: "https://pinkyparty.pl",
+    siteName: "Pinky Party",
+    title: "Pinky Party Animacje & Eventy",
+    description:
+      "Nowoczesna organizacja imprez: urodziny dla dzieci, eventy szkolne i imprezy firmowe. Profesjonalnie, dynamicznie i z energią.",
+    images: [
+      {
+        url: "/Logo_1_raster_lowres.png",
+        width: 1200,
+        height: 630,
+        alt: "Pinky Party Animacje & Eventy",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pinky Party Animacje & Eventy",
+    description:
+      "Nowoczesna organizacja imprez: urodziny dla dzieci, eventy szkolne i imprezy firmowe.",
+    images: ["/Logo_1_raster_lowres.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  icons: {
+    icon: "/Plyta_raster_lowres.png",
+    apple: "/Plyta_raster_lowres.png",
+  },
 };
 
 export default function RootLayout({

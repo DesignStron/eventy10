@@ -1,9 +1,28 @@
+import type { Metadata } from "next";
 import type { OfferData, OfferSection } from "@/lib/types";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
 
-export const metadata = { title: "Oferta" };
+export const metadata: Metadata = {
+  title: "Oferta",
+  description:
+    "Oferta Pinky Party: animacje na urodziny, bale, eventy szkolne, pikniki i imprezy firmowe. Sprawdź kategorie i zapytaj o wycenę.",
+  alternates: {
+    canonical: "/oferta",
+  },
+  openGraph: {
+    title: "Oferta - Pinky Party",
+    description:
+      "Oferta Pinky Party: animacje na urodziny, bale, eventy szkolne, pikniki i imprezy firmowe. Sprawdź kategorie i zapytaj o wycenę.",
+    url: "/oferta",
+  },
+  twitter: {
+    title: "Oferta - Pinky Party",
+    description:
+      "Oferta Pinky Party: animacje na urodziny, bale, eventy szkolne, pikniki i imprezy firmowe.",
+  },
+};
 export const dynamic = "force-dynamic";
 
 const CAT_LABELS: Record<string, string> = {
