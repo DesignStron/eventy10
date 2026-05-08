@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { ContactData, ContactMessage } from '@/lib/types'
+import { sendEmail, createContactEmailHTML } from '@/lib/email'
 
 export async function GET() {
   try {
@@ -67,6 +68,38 @@ export async function POST(request: NextRequest) {
     if (error) {
       console.error('Contact POST error:', error)
       return NextResponse.json({ error: 'Failed to save message' }, { status: 500 })
+    }
+
+    // Send email notification
+    try {
+      const gmailEmail = process.env.GMAIL_EMAIL
+      const contactEmail = process.env.CONTACT_EMAIL
+      if (gmailEmail && contactEmail && gmailEmail !== 'your_email@gmail.com') {
+        const emailHTML = createContactEmailHTML({
+          name: payload.name,
+          email: payload.email,
+          phone: payload.phone || '',
+          message: payload.message
+        })
+
+        const emailSent = await sendEmail({
+          to: contactEmail,
+          subject: `📬 Nowa wiadomość z formularza - ${payload.name}`,
+          html: emailHTML,
+          text: `Nowa wiadomość od ${payload.name} (${payload.email}):\n\n${payload.message}`
+        })
+
+        if (emailSent) {
+          console.log('Email notification sent successfully')
+        } else {
+          console.error('Failed to send email notification')
+        }
+      } else {
+        console.log('Gmail email not configured, skipping email notification')
+      }
+    } catch (emailError) {
+      console.error('Email sending error:', emailError)
+      // Don't fail the request if email fails
     }
 
     return NextResponse.json({ 
