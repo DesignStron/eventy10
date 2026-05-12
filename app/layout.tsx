@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/Plyta_raster_lowres.png",
+    icon: "/icon.png",
     apple: "/Plyta_raster_lowres.png",
   },
 };
