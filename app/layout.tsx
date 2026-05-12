@@ -27,11 +27,79 @@ const dmMono = DM_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Pinky Party Animacje & Eventy",
-    template: "%s - Pinky Party",
+    default: "Pinky Party Animacje & Eventy - Animacje dla dzieci Wrocław | Animator na urodziny, wesela, eventy",
+    template: "%s - Pinky Party Animacje & Eventy",
   },
   description:
-    "Nowoczesna organizacja imprez: urodziny dla dzieci, eventy szkolne i imprezy firmowe. Profesjonalnie, dynamicznie i z energią.",
+    "Pinky Party Animacje & Eventy - profesjonalny animator dla dzieci Wrocław. Organizujemy urodziny dla dzieci, animacje na wesela, komunie, Mikołajki, bale karnawałowe, festyny rodzinne, eventy firmowe i team building we Wrocławiu oraz Dolnym Śląsku. DJ, konferansjer, warsztaty kreatywne.",
+  keywords: [
+    "animacje dla dzieci Wrocław",
+    "animator dla dzieci Wrocław",
+    "animatorka dla dzieci Wrocław",
+    "animator na urodziny Wrocław",
+    "animacje na urodziny Wrocław",
+    "urodziny dla dzieci Wrocław",
+    "organizacja urodzin dla dzieci Wrocław",
+    "atrakcje na urodziny dla dzieci Wrocław",
+    "animacje dla dzieci na weselu Wrocław",
+    "animacje na wesele Wrocław",
+    "animator na wesele Wrocław",
+    "atrakcje dla dzieci na weselu Wrocław",
+    "animacje komunijne Wrocław",
+    "animator na komunię Wrocław",
+    "atrakcje na komunię Wrocław",
+    "animacje na chrzciny Wrocław",
+    "animator na chrzciny Wrocław",
+    "animacje halloween Wrocław",
+    "animator na Halloween Wrocław",
+    "animacje mikołajkowe Wrocław",
+    "Mikołajki dla dzieci Wrocław",
+    "Mikołajki dla szkół Wrocław",
+    "Mikołajki dla przedszkoli Wrocław",
+    "bale karnawałowe dla dzieci Wrocław",
+    "bal karnawałowy Wrocław",
+    "dzień dziecka Wrocław",
+    "atrakcje na dzień dziecka Wrocław",
+    "festyny rodzinne Wrocław",
+    "animator na festyn Wrocław",
+    "atrakcje na festyn Wrocław",
+    "pikniki firmowe Wrocław",
+    "atrakcje na piknik firmowy Wrocław",
+    "eventy dla dzieci Wrocław",
+    "eventy rodzinne Wrocław",
+    "eventy firmowe Wrocław",
+    "animacje dla firm Wrocław",
+    "warsztaty dla dzieci Wrocław",
+    "warsztaty kreatywne dla dzieci Wrocław",
+    "organizacja imprez dla dzieci Wrocław",
+    "atrakcje dla dzieci Wrocław",
+    "rozrywka dla dzieci Wrocław",
+    "zabawy dla dzieci Wrocław",
+    "animator dla przedszkola Wrocław",
+    "animator dla szkoły Wrocław",
+    "animacje dla przedszkoli Wrocław",
+    "animacje dla szkół Wrocław",
+    "oprawa muzyczna imprez Wrocław",
+    "DJ na studniówkę Wrocław",
+    "DJ na imprezę Wrocław",
+    "DJ na event Wrocław",
+    "prowadzenie imprez Wrocław",
+    "konferansjer Wrocław",
+    "team building Wrocław",
+    "integracja firmowa Wrocław",
+    "organizacja eventów Wrocław",
+    "organizacja imprez firmowych Wrocław",
+    "animator dla dzieci Dolny Śląsk",
+    "animacje dla dzieci Dolny Śląsk",
+    "animator dla dzieci Oleśnica",
+    "animator dla dzieci Oława",
+    "animator dla dzieci Trzebnica",
+    "animator dla dzieci Legnica",
+    "animator dla dzieci Lubin",
+    "Pinky Party",
+    "Pinky Party Wrocław",
+    "Pinky Party Animacje i Eventy",
+  ],
   metadataBase: new URL("https://pinkyparty.pl"),
   alternates: {
     canonical: "/",
@@ -72,7 +140,7 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/Plyta_raster_lowres.png",
+    icon: "/icon.png",
     apple: "/Plyta_raster_lowres.png",
   },
 };
@@ -100,6 +168,109 @@ export default function RootLayout({
                 document.documentElement.classList.toggle('theme-dark', theme === 'dark');
               })();
             `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "LocalBusiness",
+              "name": "Pinky Party Animacje & Eventy",
+              "description": "Profesjonalny animator dla dzieci Wrocław. Organizujemy urodziny dla dzieci, animacje na wesela, komunie, Mikołajki, bale karnawałowe, festyny rodzinne, eventy firmowe i team building we Wrocławiu oraz Dolnym Śląsku.",
+              "url": "https://pinkyparty.pl",
+              "telephone": "+48 XXX XXX XXX",
+              "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Wrocław",
+                "addressRegion": "Dolny Śląsk",
+                "addressCountry": "PL"
+              },
+              "areaServed": [
+                "Wrocław",
+                "Oleśnica",
+                "Oława",
+                "Trzebnica",
+                "Legnica",
+                "Lubin",
+                "Dolny Śląsk"
+              ],
+              "priceRange": "$$",
+              "openingHours": "Mo-Su 00:00-23:59",
+              "sameAs": [
+                "https://www.instagram.com/pinkyparty.eventy"
+              ],
+              "hasOfferCatalog": {
+                "@type": "OfferCatalog",
+                "name": "Usługi animacji i eventów",
+                "itemListElement": [
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Animacje dla dzieci Wrocław",
+                      "description": "Profesjonalne animacje dla dzieci we Wrocławiu i okolicach"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Animator na urodziny Wrocław",
+                      "description": "Animator na urodziny dla dzieci we Wrocławiu"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Animacje na wesela Wrocław",
+                      "description": "Animacje dla dzieci na weselach we Wrocławiu"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Animacje komunijne Wrocław",
+                      "description": "Atrakcje komunijne dla dzieci we Wrocławiu"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Mikołajki dla dzieci Wrocław",
+                      "description": "Animacje mikołajkowe dla szkół i przedszkoli"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Eventy firmowe Wrocław",
+                      "description": "Organizacja eventów firmowych i integracji"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "DJ na imprezę Wrocław",
+                      "description": "Oprawa muzyczna imprez i eventów"
+                    }
+                  },
+                  {
+                    "@type": "Offer",
+                    "itemOffered": {
+                      "@type": "Service",
+                      "name": "Team building Wrocław",
+                      "description": "Integracja firmowa i team building"
+                    }
+                  }
+                ]
+              }
+            }),
           }}
         />
       </head>
