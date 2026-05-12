@@ -521,7 +521,7 @@ export default function Home() {
               </div>
 
               <div className="fu d4">
-                <Link href="/oferta" className="btn-hero">
+                <Link href="/oferta" className="btn-hero" aria-label="Zobacz ofertę animacji dla dzieci Wrocław - urodziny, wesela, eventy firmowe">
                   Zobacz ofertę <span className="ar">→</span>
                 </Link>
               </div>
@@ -548,10 +548,10 @@ export default function Home() {
                     ✦ Nasze realizacje
                   </span>
                   <div style={{display:"flex",gap:".6rem",flexWrap:"wrap"}}>
-                    <Link href="/galeria" className="btn-img-w">
+                    <Link href="/galeria" className="btn-img-w" aria-label="Zobacz galerię realizacji animacji dla dzieci Wrocław">
                       Zobacz galerię <span className="ar">→</span>
                     </Link>
-                    <Link href="/oferta" className="btn-img-g">
+                    <Link href="/oferta" className="btn-img-g" aria-label="Oferta animatora dla dzieci Wrocław - urodziny, wesela, eventy">
                       Oferta <span className="ar">→</span>
                     </Link>
                   </div>
@@ -593,7 +593,7 @@ export default function Home() {
                 sprawnie wrócić z odpowiedzią.
               </p>
 
-              <Link href="/kontakt" className="bnr-btn">
+              <Link href="/kontakt" className="bnr-btn" aria-label="Skontaktuj się z animatorem dla dzieci Wrocław - organizacja urodzin, wesel, eventów">
                 Skontaktuj się <span className="ar">→</span>
               </Link>
 
