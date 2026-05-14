@@ -102,7 +102,7 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL("https://pinkyparty.pl"),
   alternates: {
-    canonical: "/",
+    canonical: "./",
   },
   openGraph: {
     type: "website",
