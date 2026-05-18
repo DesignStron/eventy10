@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import Image from "next/image";
 
 type OfferSection = {
   key: string;
@@ -359,7 +360,7 @@ export default function OfferDetailsPage() {
           width:52px;height:40px;border-radius:.5rem;overflow:hidden;cursor:pointer;
           border:1.5px solid transparent;opacity:.5;
           transition:opacity 200ms,border-color 200ms,transform 200ms;
-          flex-shrink:0;background:none;padding:0;
+          flex-shrink:0;background:none;padding:0;position:relative;
         }
         .od-thumb.active{opacity:1;border-color:var(--pink);}
         .od-thumb:hover{opacity:.8;transform:scale(1.06);}
@@ -410,7 +411,7 @@ export default function OfferDetailsPage() {
         /* Zdjęcie zachowuje ORYGINALNE PROPORCJE – brak stałej wysokości */
         .od-gi img {
           width: 100%;
-          height: auto;      /* naturalne proporcje */
+          height: auto !important;      /* naturalne proporcje */
           display: block;
           transition: transform 500ms cubic-bezier(.16,1,.3,1);
         }
@@ -597,10 +598,13 @@ export default function OfferDetailsPage() {
               <div className="od-img-glow"/>
               <div className="od-img-card" style={{ position: "relative", zIndex: 1 }}>
                 {images[activeImg] ? (
-                  <img
+                  <Image
                     src={images[activeImg]}
                     alt={offer.title}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 50vw"
+                    style={{ objectFit: "cover", display: "block" }}
+                    priority
                   />
                 ) : (
                   <div style={{
@@ -645,7 +649,7 @@ export default function OfferDetailsPage() {
                           onClick={() => setActiveImg(i)}
                           aria-label={`Zdjęcie ${i + 1}`}
                         >
-                          <img src={img} alt=""/>
+                          <Image src={img} alt="" fill sizes="100px" style={{ objectFit: "cover", display: "block" }} />
                         </button>
                       ))}
                     </div>
@@ -679,7 +683,7 @@ export default function OfferDetailsPage() {
               <div className="od-gallery-masonry">
                 {galleryImages.map((image) => (
                   <div key={image.id} className="od-gi">
-                    <img src={image.url} alt={image.title} loading="lazy"/>
+                    <Image src={image.url} alt={image.title} width={800} height={800} sizes="(max-width: 540px) 100vw, (max-width: 900px) 50vw, 33vw" />
                     <div className="od-gi-overlay">
                       <span className="od-gi-label">{image.title}</span>
                     </div>

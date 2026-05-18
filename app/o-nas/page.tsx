@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SiteFooter from "@/components/site-footer";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "O nas",
@@ -545,7 +546,7 @@ export default function AboutPage() {
 
             {/* Prawa kolumna - grafika */}
             <div className="hero-img-wrap fr d2" style={{ aspectRatio:"2 / 3", maxWidth:"400px", justifySelf:"end" }}>
-              <img src="/onas.jpg" alt="Pinky Party - O nas" className="hero-img" />
+              <Image src="/onas.jpg" alt="Pinky Party - O nas" className="hero-img" fill sizes="(max-width: 900px) 100vw, 400px" priority />
               <div className="hero-img-glow" />
               <div className="hero-img-frame" />
             </div>

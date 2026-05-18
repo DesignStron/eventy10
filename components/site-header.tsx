@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 interface OfferSection {
   key: string;
@@ -841,7 +842,7 @@ export default function SiteHeader() {
                       onClick={() => setMobileOpen(false)}
                     >
                       <span className="drawer-icon" style={{ flexShrink: 0 }}>
-                        <img src="/Plyta_raster_lowres.png" alt="" />
+                        <Image src="/Plyta_raster_lowres.png" alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                       </span>
                       <span style={{ flex: 1 }}>{item.label}</span>
                     </Link>
@@ -894,7 +895,7 @@ export default function SiteHeader() {
                 onClick={() => setMobileOpen(false)}
               >
                 <span className="drawer-icon">
-                  <img src="/Plyta_raster_lowres.png" alt="" />
+                  <Image src="/Plyta_raster_lowres.png" alt="" width={32} height={32} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </span>
                 <span className="drawer-link-label">{item.label}</span>
                 <span className="drawer-arrow">›</span>
@@ -914,9 +915,11 @@ export default function SiteHeader() {
           {/* Logo */}
           <Link href="/" className="logo">
             <div className="logo-mark">
-              <img
+              <Image
                 src="/Plyta_raster_lowres.png"
                 alt="Pinky Party Logo"
+                width={100}
+                height={100}
                 style={{ width: "100%", height: "100%", objectFit: "cover", aspectRatio: "16/9" }}
               />
             </div>
@@ -965,7 +968,7 @@ export default function SiteHeader() {
                           }}
                         >
                           <span className="dropdown-icon">
-                            <img src="/Plyta_raster_lowres.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                            <Image src="/Plyta_raster_lowres.png" alt="" width={24} height={24} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                           </span>
                           {section.title || section.categoryLabel || section.category}
                         </Link>

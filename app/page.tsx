@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import SiteFooter from "@/components/site-footer";
 
 function useCounter(target: number, duration = 1800) {
@@ -158,10 +159,13 @@ function ImageCarousel() {
             zIndex: index === currentIndex ? 1 : 0,
           }}
         >
-          <img
+          <Image
             src={img}
             alt={`Realizacja ${index + 1}`}
-            style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
+            fill
+            sizes="(max-width: 900px) 100vw, 50vw"
+            style={{ objectFit: "cover" }}
+            priority={index === 0}
           />
         </div>
       ))}

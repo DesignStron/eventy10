@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { GalleryData, GalleryImage } from "@/lib/types";
 import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Galeria",
@@ -40,14 +41,16 @@ function ImageCard({ img, index }: { img: GalleryImage; index: number }) {
   return (
     <div className="gal-item" style={{ animationDelay: `${0.04 + (index % 12) * 0.055}s` }}>
       <div className="gal-img-wrap">
-        {/* Używamy zwykłego <img> zamiast Next Image, żeby zachować naturalne proporcje */}
-        <img
+        {/* Używamy Next Image z width/height dla optymalizacji, css załatwi auto height */}
+        <Image
           src={img.url}
           alt={img.title}
           className="gal-img"
-          loading={index < 6 ? "eager" : "lazy"}
-          fetchPriority={index < 2 ? "high" : "auto"}
-          decoding="async"
+          width={800}
+          height={800}
+          sizes="(max-width: 540px) 100vw, (max-width: 900px) 50vw, (max-width: 1200px) 33vw, 25vw"
+          style={{ width: "100%", height: "auto" }}
+          priority={index < 6}
         />
 
         {/* Overlay */}

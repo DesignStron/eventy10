@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
+import Image from "next/image";
 
 export const metadata = { title: "Oprawa muzyczna" };
 export const dynamic = 'force-dynamic';
@@ -499,9 +500,11 @@ export default async function MusicPage() {
                 <div className="mu-card-hd">
                   <div className="mu-card-icon" style={{ animationDelay:`${i * 1.2}s` }}>
                     {service.image ? (
-                      <img 
+                      <Image 
                         src={service.image} 
                         alt={service.title}
+                        width={100}
+                        height={100}
                         style={{ 
                           width: "100%", 
                           height: "100%", 

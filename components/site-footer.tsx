@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import CookieSettingsLink from "@/components/cookie-settings-link";
 
 const NAV = [
@@ -180,7 +181,7 @@ export default function SiteFooter() {
           <div className="ft-brand-left">
             <div className="ft-brand-top">
               <Link href="/" className="ft-logo-wrap">
-                <img src="/Logo_1_raster_lowres.png" alt="Pinky Party Logo" className="ft-logo-img" />
+                <Image src="/Logo_1_raster_lowres.png" alt="Pinky Party Logo" width={200} height={124} className="ft-logo-img" style={{ width: "auto" }} />
               </Link>
             </div>
 

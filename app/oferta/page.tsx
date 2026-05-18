@@ -3,6 +3,7 @@ import type { OfferData, OfferSection } from "@/lib/types";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import SiteFooter from "@/components/site-footer";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Oferta",
@@ -58,13 +59,13 @@ function SectionCard({ s, index }: { s: OfferSection; index: number }) {
       {hasImages ? (
         <div className="sc-img-panel">
           <div className="sc-img-main-wrap">
-            <img src={s.images[0]} alt={s.title} className="sc-img-main" />
+            <Image src={s.images[0]} alt={s.title} className="sc-img-main" fill sizes="(max-width: 768px) 100vw, 360px" style={{ objectFit: "cover", objectPosition: "center top" }} priority={index < 2} />
           </div>
           {s.images.length > 1 && (
             <div className="sc-img-thumbs">
               {s.images.slice(1, 3).map((src: string, i: number) => (
                 <div key={i} className="sc-img-thumb">
-                  <img src={src} alt={`${s.title} ${i + 2}`} />
+                  <Image src={src} alt={`${s.title} ${i + 2}`} fill sizes="180px" style={{ objectFit: "cover" }} />
                 </div>
               ))}
               {s.images.length > 3 && (
@@ -292,6 +293,7 @@ export default async function OfferPage() {
         .sc-img-main-wrap {
           flex:1;
           overflow:hidden;
+          position:relative;
         }
         .sc-img-main {
           display:block;
