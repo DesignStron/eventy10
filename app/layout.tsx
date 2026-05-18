@@ -100,14 +100,11 @@ export const metadata: Metadata = {
     "Pinky Party Wrocław",
     "Pinky Party Animacje i Eventy",
   ],
-  metadataBase: new URL("https://pinkyparty.pl"),
-  alternates: {
-    canonical: "./",
-  },
+  metadataBase: new URL("https://www.pinkyparty.pl"),
   openGraph: {
     type: "website",
     locale: "pl_PL",
-    url: "https://pinkyparty.pl",
+    url: "https://www.pinkyparty.pl",
     siteName: "Pinky Party",
     title: "Pinky Party Animacje & Eventy",
     description:
