@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.pinkyparty.pl/sitemap.xml
+
+# Force HTTPS and www
+Host: https://www.pinkyparty.pl

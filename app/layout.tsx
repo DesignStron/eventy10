@@ -175,8 +175,8 @@ export default function RootLayout({
               "@type": "LocalBusiness",
               "name": "Pinky Party Animacje & Eventy",
               "description": "Profesjonalny animator dla dzieci Wrocław. Organizujemy urodziny dla dzieci, animacje na wesela, komunie, Mikołajki, bale karnawałowe, festyny rodzinne, eventy firmowe i team building we Wrocławiu oraz Dolnym Śląsku.",
-              "url": "https://pinkyparty.pl",
-              "telephone": "+48 XXX XXX XXX",
+              "url": "https://www.pinkyparty.pl",
+              "telephone": "+48 792 987 499",
               "address": {
                 "@type": "PostalAddress",
                 "addressLocality": "Wrocław",

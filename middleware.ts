@@ -4,6 +4,23 @@ import { isAdminAuthenticated } from '@/lib/admin-auth'
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const hostname = request.nextUrl.hostname
+  const protocol = request.nextUrl.protocol
+
+  // SEO: Redirect non-www to www and HTTP to HTTPS
+  const url = request.nextUrl.clone()
+  
+  // Force HTTPS
+  if (protocol === 'http:') {
+    url.protocol = 'https:'
+    return NextResponse.redirect(url, 301)
+  }
+  
+  // Force www
+  if (!hostname.startsWith('www.')) {
+    url.hostname = 'www.' + hostname
+    return NextResponse.redirect(url, 301)
+  }
 
   // Protect admin routes
   if (pathname.startsWith('/admin')) {
@@ -24,5 +41,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*']
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
 }
