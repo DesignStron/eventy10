@@ -4,22 +4,22 @@ import SiteFooter from "@/components/site-footer";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Oprawa muzyczna - Pinky Party",
+  title: "Oprawa muzyczna Wrocław – DJ, studniówki, wesela | Pinky Party",
   description:
-    "Profesjonalna oprawa muzyczna na wesela, studniówki, eventy firmowe i imprezy okolicznościowe. DJ, nagłośnienie, oświetlenie - kompleksowa obsługa muzyczna we Wrocławiu i okolicach.",
+    "Profesjonalna oprawa muzyczna i DJ we Wrocławiu i okolicach. Studniówki, wesela, eventy firmowe, imprezy okolicznościowe. Nagłośnienie, oświetlenie, konferansjer – kompleksowa obsługa. Pinky Party.",
   alternates: {
     canonical: "/oprawa-muzyczna",
   },
   openGraph: {
-    title: "Oprawa muzyczna - Pinky Party",
+    title: "Oprawa muzyczna Wrocław – DJ | Pinky Party",
     description:
-      "Profesjonalna oprawa muzyczna na wesela, studniówki, eventy firmowe i imprezy okolicznościowe. DJ, nagłośnienie, oświetlenie.",
+      "DJ, nagłośnienie i oprawa muzyczna na studniówki, wesela i eventy firmowe we Wrocławiu i okolicach. Pinky Party.",
     url: "/oprawa-muzyczna",
   },
   twitter: {
-    title: "Oprawa muzyczna - Pinky Party",
+    title: "Oprawa muzyczna Wrocław – Pinky Party",
     description:
-      "Profesjonalna oprawa muzyczna na wesela, studniówki, eventy firmowe i imprezy okolicznościowe.",
+      "DJ i oprawa muzyczna na studniówki, wesela i eventy firmowe we Wrocławiu.",
   },
 };
 export const dynamic = 'force-dynamic';

@@ -24,28 +24,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/oferta/szczegoly`,
-      lastModified,
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    },
-    {
       url: `${baseUrl}/team-building`,
       lastModified,
       changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/galeria`,
-      lastModified,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/kontakt`,
-      lastModified,
-      changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/oprawa-muzyczna`,
@@ -54,10 +36,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.75,
     },
     {
-      url: `${baseUrl}/polityka-prywatnosci`,
+      url: `${baseUrl}/galeria`,
       lastModified,
-      changeFrequency: 'yearly',
-      priority: 0.2,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/opinie`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/kontakt`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.6,
     },
   ]
 }

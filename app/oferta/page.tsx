@@ -6,22 +6,22 @@ import SiteFooter from "@/components/site-footer";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "Oferta",
+  title: "Oferta – Animacje i eventy dla dzieci Wrocław | Pinky Party",
   description:
-    "Oferta Pinky Party: animacje na urodziny, bale, eventy szkolne, pikniki i imprezy firmowe. Sprawdź kategorie i zapytaj o wycenę.",
+    "Pełna oferta Pinky Party: animacje na urodziny, wesela, komunie, bale karnawałowe, Mikołajki, festyny, eventy szkolne i firmowe we Wrocławiu i okolicach. Sprawdź kategorie.",
   alternates: {
     canonical: "/oferta",
   },
   openGraph: {
-    title: "Oferta - Pinky Party",
+    title: "Oferta – Pinky Party Animacje & Eventy",
     description:
-      "Oferta Pinky Party: animacje na urodziny, bale, eventy szkolne, pikniki i imprezy firmowe. Sprawdź kategorie i zapytaj o wycenę.",
+      "Animacje na urodziny, wesela, komunie, bale, Mikołajki, festyny i eventy firmowe. Wrocław i okolice – sprawdź pełną ofertę Pinky Party.",
     url: "/oferta",
   },
   twitter: {
-    title: "Oferta - Pinky Party",
+    title: "Oferta – Pinky Party Animacje & Eventy",
     description:
-      "Oferta Pinky Party: animacje na urodziny, bale, eventy szkolne, pikniki i imprezy firmowe.",
+      "Pełna oferta Pinky Party: animacje i eventy we Wrocławiu i okolicach.",
   },
 };
 export const dynamic = "force-dynamic";

@@ -3,22 +3,22 @@ import SiteFooter from "@/components/site-footer";
 import Image from "next/image";
 
 export const metadata: Metadata = {
-  title: "O nas",
+  title: "O nas – Poznaj Pinky Party | Animacje dla dzieci Wrocław",
   description:
-    "Poznaj Pinky Party – animacje i eventy we Wrocławiu i okolicach. Doświadczenie, energia i dopasowanie programu do uczestników.",
+    "Pinky Party to profesjonalne animacje dla dzieci i organizacja eventów we Wrocławiu. Poznaj Magdę – animatorkę z wykształceniem pedagogicznym i psychologicznym, z pasją do pracy z dziećmi i ponad 250 zrealizowanymi wydarzeniami.",
   alternates: {
     canonical: "/o-nas",
   },
   openGraph: {
-    title: "O nas - Pinky Party",
+    title: "O nas – Pinky Party Animacje & Eventy",
     description:
-      "Poznaj Pinky Party – animacje i eventy we Wrocławiu i okolicach. Doświadczenie, energia i dopasowanie programu do uczestników.",
+      "Poznaj Pinky Party i Magdę – animatorkę z pasją. Profesjonalne animacje dla dzieci we Wrocławiu i okolicach: urodziny, wesela, festyny, eventy firmowe.",
     url: "/o-nas",
   },
   twitter: {
-    title: "O nas - Pinky Party",
+    title: "O nas – Pinky Party Animacje & Eventy",
     description:
-      "Poznaj Pinky Party – animacje i eventy we Wrocławiu i okolicach.",
+      "Poznaj Pinky Party – animacje dla dzieci we Wrocławiu i okolicach.",
   },
 };
 
@@ -599,10 +599,31 @@ export default function AboutPage() {
           </div>
         </section>
 
+        {/* ── OPINIE KLIENTÓW ZWIASTUN ── */}
+        <section className="ab-wrap" style={{ paddingBottom: "5rem" }}>
+          <div className="cta-wrap fu d1" style={{ background: "rgba(255,255,255,0.015)", border: "1px solid rgba(255,255,255,0.06)", alignItems: "center" }}>
+            <div style={{ position: "relative", zIndex: 1, textAlign: "left", flex: 1 }}>
+              <h2 className="hero-title" style={{ fontSize: "clamp(1.5rem, 3vw, 2.2rem)", marginBottom: "0.5rem" }}>
+                Co mówią o nas <span className="hero-accent">klienci?</span>
+              </h2>
+              <p className="hero-desc" style={{ maxWidth: "40rem", margin: 0, fontSize: "0.95rem" }}>
+                Sprawdź, dlaczego rodzice i organizatorzy eventów zaufali właśnie nam. Przeczytaj <strong>prawdziwe opinie</strong> o animacjach Pinky Party zostawione na Facebooku.
+              </p>
+            </div>
+            
+            <div style={{ display: "flex", gap: "0.875rem", flexWrap: "wrap", flexShrink: 0, position: "relative", zIndex: 1, marginLeft: "auto" }}>
+              <a href="/opinie" className="btn-p" style={{ background: "#1877F2", boxShadow: "0 6px 24px rgba(24,119,242,0.3)" }}>
+                Przeczytaj opinie 💬
+              </a>
+            </div>
+          </div>
+        </section>
+
         {/* Divider */}
-        <div className="ab-wrap" style={{ paddingBottom:"4rem" }}>
+        <div className="ab-wrap" style={{ paddingBottom: "4rem" }}>
           <div className="fancy-divider"/>
         </div>
+
 
         {/* ── CTA ── */}
         <section className="ab-wrap" style={{ paddingBottom:"8rem" }}>

@@ -1,6 +1,18 @@
+import type { Metadata } from "next";
 import SiteFooter from "@/components/site-footer";
 
-export const metadata = { title: "Polityka prywatności" };
+export const metadata: Metadata = {
+  title: "Polityka prywatności i plików cookies",
+  description:
+    "Polityka prywatności i plików cookies serwisu www.pinkyparty.pl – zasady przetwarzania danych osobowych przez Pinky Party Magdalena Gałkowska.",
+  alternates: {
+    canonical: "/polityka-prywatnosci",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function PrivacyPolicyPage() {
   return (

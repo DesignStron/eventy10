@@ -3,22 +3,22 @@ import ContactForm from "@/components/contact-form";
 import SiteFooter from "@/components/site-footer";
 
 export const metadata: Metadata = {
-  title: "Kontakt",
+  title: "Kontakt – Zarezerwuj animacje we Wrocławiu | Pinky Party",
   description:
-    "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje, urodziny, event szkolny lub imprezę firmową we Wrocławiu i okolicach.",
+    "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje dla dzieci, urodziny, event szkolny lub imprezę firmową we Wrocławiu i okolicach. Telefon: +48 792 987 499.",
   alternates: {
     canonical: "/kontakt",
   },
   openGraph: {
-    title: "Kontakt - Pinky Party",
+    title: "Kontakt – Pinky Party Animacje & Eventy",
     description:
-      "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje, urodziny, event szkolny lub imprezę firmową we Wrocławiu i okolicach.",
+      "Zarezerwuj animacje we Wrocławiu i okolicach. Telefon: +48 792 987 499. Pinky Party odpowiada w ciągu 24h.",
     url: "/kontakt",
   },
   twitter: {
-    title: "Kontakt - Pinky Party",
+    title: "Kontakt – Pinky Party Animacje & Eventy",
     description:
-      "Skontaktuj się z Pinky Party i zarezerwuj termin na animacje, urodziny, event szkolny lub imprezę firmową.",
+      "Zarezerwuj animacje we Wrocławiu. Pinky Party – szybki kontakt i odpowiedź w 24h.",
   },
 };
 

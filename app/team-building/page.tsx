@@ -3,22 +3,22 @@ import SiteFooter from "@/components/site-footer";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Team Building & Integracja",
+  title: "Team Building Wrocław – Integracja firmowa | Pinky Party",
   description:
-    "Team building i integracja firmowa z Pinky Party – scenariusze, animacje i prowadzenie wydarzeń dla zespołów we Wrocławiu i okolicach.",
+    "Profesjonalny team building i integracja firmowa we Wrocławiu i okolicach. Pinky Party organizuje eventy integracyjne, pikniki firmowe i warsztaty dla zespołów – kreatywnie i angażująco.",
   alternates: {
     canonical: "/team-building",
   },
   openGraph: {
-    title: "Team Building & Integracja - Pinky Party",
+    title: "Team Building Wrocław – Pinky Party",
     description:
-      "Team building i integracja firmowa z Pinky Party – scenariusze, animacje i prowadzenie wydarzeń dla zespołów we Wrocławiu i okolicach.",
+      "Team building i integracja firmowa we Wrocławiu: eventy integracyjne, pikniki, warsztaty dla zespołów. Pinky Party.",
     url: "/team-building",
   },
   twitter: {
-    title: "Team Building & Integracja - Pinky Party",
+    title: "Team Building Wrocław – Pinky Party",
     description:
-      "Team building i integracja firmowa z Pinky Party.",
+      "Team building i integracja firmowa we Wrocławiu – Pinky Party.",
   },
 };
 export const dynamic = 'force-dynamic';
