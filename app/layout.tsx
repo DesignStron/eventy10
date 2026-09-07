@@ -99,6 +99,7 @@ export default function RootLayout({
             `,
           }}
         />
+        <link rel="dns-prefetch" href="https://qbcjyecssttdmvmtswcy.supabase.co" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

@@ -49,8 +49,33 @@ export default function CookieConsent() {
 
     const stored = safeParse(window.localStorage.getItem(STORAGE_KEY));
     if (!stored) {
-      setOpen(true);
-      return;
+      // Uruchamiamy baner w bezczynności przeglądarki lub po pierwszej interakcji,
+      // aby przeglądarka ustaliła właściwe LCP na główną treść strony (H1 / Obrazek w hero)
+      const showConsent = () => setOpen(true);
+
+      const onInteract = () => {
+        showConsent();
+        window.removeEventListener("scroll", onInteract);
+        window.removeEventListener("pointerdown", onInteract);
+      };
+      window.addEventListener("scroll", onInteract, { passive: true, once: true });
+      window.addEventListener("pointerdown", onInteract, { passive: true, once: true });
+
+      if ("requestIdleCallback" in window) {
+        const handle = (window as any).requestIdleCallback(showConsent, { timeout: 2500 });
+        return () => {
+          if ("cancelIdleCallback" in window) (window as any).cancelIdleCallback(handle);
+          window.removeEventListener("scroll", onInteract);
+          window.removeEventListener("pointerdown", onInteract);
+        };
+      } else {
+        const timer = setTimeout(showConsent, 2000);
+        return () => {
+          clearTimeout(timer);
+          window.removeEventListener("scroll", onInteract);
+          window.removeEventListener("pointerdown", onInteract);
+        };
+      }
     }
 
     if (stored.mode === "custom") {

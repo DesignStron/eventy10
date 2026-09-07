@@ -206,11 +206,14 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
           >
             <span style={{
               display: "block",
-              width: index === currentIndex ? "1.5rem" : "0.5rem",
+              width: "0.5rem",
               height: "0.5rem",
               borderRadius: "9999px",
               background: index === currentIndex ? "var(--pink)" : "rgba(255,255,255,.4)",
-              transition: "all 300ms ease",
+              transform: index === currentIndex ? "scaleX(3)" : "scaleX(1)",
+              transformOrigin: "center",
+              transition: "transform 300ms ease, background 300ms ease",
+              willChange: "transform",
             }} />
           </button>
         ))}
