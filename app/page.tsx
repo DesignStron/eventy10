@@ -55,7 +55,7 @@ export default async function Home() {
   return (
     <>
       <style>{`
-        @keyframes fadeUp   { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp   { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
         @keyframes fadeIn   { from{opacity:0} to{opacity:1} }
         @keyframes dot      { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.75)} }
         @keyframes lineGrow { from{transform:scaleX(0);opacity:0} to{transform:scaleX(1);opacity:1} }
@@ -71,7 +71,7 @@ export default async function Home() {
           50%     { opacity: 1; }
         }
 
-        .fu{animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both}
+        .fu{animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both;will-change:transform,opacity}
         .fi{animation:fadeIn .7s ease both}
         .d1{animation-delay:.08s}.d2{animation-delay:.2s}.d3{animation-delay:.34s}
         .d4{animation-delay:.5s}.d5{animation-delay:.65s}
