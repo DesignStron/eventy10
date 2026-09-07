@@ -182,17 +182,30 @@ function ImageCarousel() {
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}
+            aria-label={`Przejdź do slajdu ${index + 1}`}
             style={{
+              width: "44px",
+              height: "44px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "9999px",
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+              padding: 0,
+              pointerEvents: "auto",
+            }}
+          >
+            <span style={{
+              display: "block",
               width: index === currentIndex ? "1.5rem" : "0.5rem",
               height: "0.5rem",
               borderRadius: "9999px",
-              border: "none",
               background: index === currentIndex ? "var(--pink)" : "rgba(255,255,255,.4)",
-              cursor: "pointer",
               transition: "all 300ms ease",
-              pointerEvents: "auto",
-            }}
-          />
+            }} />
+          </button>
         ))}
       </div>
     </div>
@@ -209,14 +222,14 @@ export default function Home() {
         @keyframes lineGrow { from{transform:scaleX(0);opacity:0} to{transform:scaleX(1);opacity:1} }
         @keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes shimBar  { 0%{background-position:-200% center} 100%{background-position:200% center} }
-        @keyframes shine    { 0%{background-position:200% center} 100%{background-position:-200% center} }
+        @keyframes shine    { 0%{transform:translateX(-200%)} 100%{transform:translateX(200%)} }
         @keyframes borderGlow {
-          0%,100% { box-shadow: 0 0 0 1px rgba(240,23,122,0.15), 0 32px 80px rgba(0,0,0,0.5); }
-          50%     { box-shadow: 0 0 0 1px rgba(240,23,122,0.4),  0 32px 80px rgba(0,0,0,0.5), 0 0 40px rgba(240,23,122,0.08); }
+          0%,100% { opacity: 0.6; }
+          50%     { opacity: 1; }
         }
         @keyframes tagPulse {
-          0%,100% { border-color: rgba(240,23,122,0.3); }
-          50%     { border-color: rgba(240,23,122,0.7); }
+          0%,100% { opacity: 0.6; }
+          50%     { opacity: 1; }
         }
 
         .fu{animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both}
@@ -448,6 +461,7 @@ export default function Home() {
           -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
           -webkit-mask-composite:xor;
           padding:1px;
+          will-change: transform;
         }
         .bnr>*{position:relative;z-index:1}
         .bnr-btn{

@@ -16,7 +16,7 @@ export default function robots(): MetadataRoute.Robots {
         ],
       },
     ],
-    sitemap: 'https://www.pinkyparty.pl/sitemap.xml',
-    host: 'https://www.pinkyparty.pl',
+    sitemap: 'https://pinkyparty.pl/sitemap.xml',
+    host: 'https://pinkyparty.pl',
   }
 }

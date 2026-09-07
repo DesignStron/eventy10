@@ -949,6 +949,8 @@ export default function SiteHeader() {
                       <button
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                         className="nav-link"
+                        aria-label={dropdownOpen ? "Zwiń podmenu oferty" : "Rozwiń podmenu oferty"}
+                        aria-expanded={dropdownOpen}
                         style={{ display: "flex", alignItems: "center", padding: "0.45rem 0.5rem", background: "transparent", cursor: "pointer" }}
                       >
                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: dropdownOpen ? "rotate(180deg)" : "rotate(0)", transition: "transform 200ms" }}>
