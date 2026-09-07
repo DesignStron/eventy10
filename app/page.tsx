@@ -45,6 +45,10 @@ async function getCarouselImages(): Promise<string[]> {
   }
 }
 
+// ISR (Incremental Static Regeneration) - Cache'uje stronę na krawędzi (Edge) na 60 sekund.
+// Dzięki temu wejście na stronę nie czeka na bazę danych (Supabase), a serwer zwraca gotowy HTML natychmiast.
+export const revalidate = 60;
+
 export default async function Home() {
   const carouselImages = await getCarouselImages();
 
