@@ -545,7 +545,7 @@ export default function AboutPage() {
             </div>
 
             {/* Prawa kolumna - grafika */}
-            <div className="hero-img-wrap fr d2" style={{ aspectRatio:"2 / 3", maxWidth:"400px", justifySelf:"end" }}>
+            <div className="hero-img-wrap fr d2" style={{ width: "100%", aspectRatio: "2 / 3", maxWidth: "400px", justifySelf: "end" }}>
               <Image src="/onas.jpg" alt="Pinky Party - O nas" className="hero-img" fill sizes="(max-width: 900px) 100vw, 400px" priority />
               <div className="hero-img-glow" />
               <div className="hero-img-frame" />
