@@ -1,218 +1,53 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { supabase } from "@/lib/supabase";
+import type { GalleryImage } from "@/lib/types";
+import ImageCarousel from "@/components/image-carousel";
 import SiteFooter from "@/components/site-footer";
 
-function useCounter(target: number, duration = 1800) {
-  const [val, setVal] = useState(0);
-  const [started, setStarted] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => {
-      if (!e.isIntersecting || started) return;
-      setStarted(true);
-      obs.disconnect();
-      let t: number | null = null;
-      const step = (ts: number) => {
-        if (!t) t = ts;
-        const p = Math.min((ts - t) / duration, 1);
-        setVal(Math.round((1 - Math.pow(1 - p, 4)) * target));
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    }, { threshold: 0.2 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [target, duration, started]);
-  return { val, ref };
-}
+// Funkcja pomocnicza do przygotowania listy zdjęć (ta sama logika co w API)
+async function getCarouselImages(): Promise<string[]> {
+  try {
+    const { data, error } = await supabase
+      .from("gallery")
+      .select("url, category")
+      .order("created_at", { ascending: false });
 
-function ImageCarousel() {
-  const [images, setImages] = useState<string[]>([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+    if (error || !data || data.length === 0) return [];
 
-  const minSwipeDistance = 50;
+    const byCategory: Record<string, GalleryImage[]> = {};
+    data.forEach((img: any) => {
+      const cat = (img.category || "").toString().trim();
+      if (!cat || cat.toLowerCase() === "inne") return;
+      if (!byCategory[cat]) byCategory[cat] = [];
+      byCategory[cat].push(img);
+    });
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const res = await fetch("/api/galeria");
-        const data = await res.json();
-        if (data.images && data.images.length > 0) {
-          const byCategory: Record<string, any[]> = {};
-          data.images.forEach((img: any) => {
-            const cat = (img.category || "").toString().trim();
-            if (!cat) return;
-            if (cat.toLowerCase() === "inne") return;
-            if (!byCategory[cat]) byCategory[cat] = [];
-            byCategory[cat].push(img);
-          });
+    const categories = Object.keys(byCategory);
+    const maxPerCategory = 3;
+    const categoryImages = categories.map((cat) => byCategory[cat].slice(0, maxPerCategory));
 
-          const categories = Object.keys(byCategory);
-          const maxPerCategory = 3;
-          const categoryImages: any[][] = categories.map((cat) =>
-            byCategory[cat].slice(0, maxPerCategory)
-          );
-
-          const interleaved: string[] = [];
-          let index = 0;
-          let hasMore = true;
-
-          while (hasMore) {
-            hasMore = false;
-            for (let i = 0; i < categoryImages.length; i++) {
-              if (index < categoryImages[i].length) {
-                interleaved.push(categoryImages[i][index].url);
-                hasMore = true;
-              }
-            }
-            index++;
-          }
-
-          setImages(interleaved);
+    const interleaved: string[] = [];
+    let index = 0;
+    let hasMore = true;
+    while (hasMore) {
+      hasMore = false;
+      for (let i = 0; i < categoryImages.length; i++) {
+        if (index < categoryImages[i].length) {
+          interleaved.push(categoryImages[i][index].url);
+          hasMore = true;
         }
-      } catch (e) {
-        console.error("Failed to fetch gallery images:", e);
-      } finally {
-        setIsLoading(false);
       }
-    };
-    fetchImages();
-  }, []);
-
-  useEffect(() => {
-    if (images.length <= 1) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [images.length]);
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-    if (isLeftSwipe && images.length > 0) {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      index++;
     }
-    if (isRightSwipe && images.length > 0) {
-      setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div style={{
-        width:"100%",height:"100%",
-        background:"linear-gradient(135deg,rgba(240,23,122,.08) 0%,rgba(240,23,122,.02) 100%)",
-        display:"flex",alignItems:"center",justifyContent:"center",
-      }}>
-        <span style={{fontSize:"4rem",animation:"dot 1.5s ease-in-out infinite"}}>✦</span>
-      </div>
-    );
+    return interleaved;
+  } catch {
+    return [];
   }
-
-  if (images.length === 0) {
-    return (
-      <div style={{
-        width:"100%",height:"100%",
-        background:"linear-gradient(135deg,rgba(240,23,122,.08) 0%,rgba(240,23,122,.02) 100%)",
-        display:"flex",alignItems:"center",justifyContent:"center",
-      }}>
-        <span style={{fontSize:"4rem",color:"rgba(240,23,122,.3)"}}>✦</span>
-      </div>
-    );
-  }
-
-  return (
-    <div
-      style={{ position: "relative", width: "100%", height: "100%" }}
-      onTouchStart={onTouchStart}
-      onTouchMove={onTouchMove}
-      onTouchEnd={onTouchEnd}
-    >
-      {images.map((img, index) => (
-        <div
-          key={index}
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: index === currentIndex ? 1 : 0,
-            transition: "opacity 800ms ease-in-out",
-            zIndex: index === currentIndex ? 1 : 0,
-          }}
-        >
-          <Image
-            src={img}
-            alt={`Realizacja ${index + 1}`}
-            fill
-            sizes="(max-width: 480px) 100vw, (max-width: 900px) 50vw, 33vw"
-            style={{ objectFit: "cover" }}
-            priority={index === 0}
-          />
-        </div>
-      ))}
-      <div style={{
-        position:"absolute",inset:0,
-        background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
-        zIndex: 2,
-      }}/>
-      <div style={{
-        position:"absolute",bottom:"0.5rem",left:"50%",transform:"translateX(-50%)",
-        display:"flex",gap:0,zIndex:10,padding:"0.25rem 0",
-      }}>
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            aria-label={`Przejdź do slajdu ${index + 1}`}
-            style={{
-              width: "24px",
-              height: "24px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "none",
-              background: "transparent",
-              cursor: "pointer",
-              padding: 0,
-              pointerEvents: "auto",
-              flexShrink: 0,
-            }}
-          >
-            <span style={{
-              display: "block",
-              width: index === currentIndex ? "1.5rem" : "0.5rem",
-              height: "0.5rem",
-              borderRadius: "9999px",
-              background: index === currentIndex ? "var(--pink)" : "rgba(255,255,255,.4)",
-              transition: "all 300ms ease",
-            }} />
-          </button>
-        ))}
-      </div>
-    </div>
-  );
 }
 
-export default function Home() {
+export default async function Home() {
+  const carouselImages = await getCarouselImages();
+
   return (
     <>
       <style>{`
@@ -408,34 +243,6 @@ export default function Home() {
           opacity: .7;
         }
 
-        /* ── STATS ── */
-        .stats-wrap{
-          display:flex;flex-wrap:wrap;
-          gap:0;
-          border:1px solid rgba(255,255,255,.07);
-          border-radius:1rem;
-          overflow:hidden;
-          margin:2.25rem auto 0;
-          max-width:34rem;
-        }
-        .stat-cell{
-          flex:1;min-width:100px;
-          padding:1.5rem 1.25rem;
-          border-right:1px solid rgba(255,255,255,.07);
-          text-align:center;
-          transition:background 200ms;
-        }
-        .stat-cell:last-child{border-right:none}
-        .stat-cell:hover{background:rgba(255,255,255,.03)}
-        .stat-n{
-          font-family:var(--font-display);
-          font-size:clamp(2rem,3.5vw,2.8rem);
-          font-weight:700;line-height:1;letter-spacing:-.02em;
-        }
-        .stat-l{
-          font-size:.75rem;font-weight:500;margin-top:.4rem;line-height:1.4;
-        }
-
         /* ── BANNER ── */
         .bnr{
           border-radius:1.5rem;
@@ -511,10 +318,10 @@ export default function Home() {
                 lineHeight:1.8,maxWidth:"55ch",marginBottom:"2rem",
                 fontWeight: 500,
               }}>
-                Pinky Party Animacje & Eventy organizuje animacje, warsztaty i oprawę muzyczną wydarzeń we Wrocławiu. Tworzymy wspomnienia na każdą okazję: od urodzin i wesel, przez festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
+                Pinky Party Animacje &amp; Eventy organizuje animacje, warsztaty i oprawę muzyczną wydarzeń we Wrocławiu. Tworzymy wspomnienia na każdą okazję: od urodzin i wesel, przez festyny, Mikołajki, bale karnawałowe, aż po eventy szkolne i firmowe.
               </p>
 
-              {/* ── SERVICE TAGS (zastąpienie dwóch osobnych <p>) ── */}
+              {/* ── SERVICE TAGS ── */}
               <div className="service-tags fu d3">
                 <span className="service-tag">
                   <span className="service-tag-dot"/>Animacje
@@ -550,7 +357,7 @@ export default function Home() {
             <div className="hg-img fu d5" style={{position:"relative"}}>
               <div className="img-glow"/>
               <div className="img-card" style={{position:"relative",zIndex:1}}>
-                <ImageCarousel />
+                <ImageCarousel initialImages={carouselImages} />
                 <div style={{
                   position:"absolute",left:"1.4rem",right:"1.4rem",bottom:"4.5rem",
                   display:"flex",flexDirection:"column",gap:".75rem",zIndex:5,
@@ -622,16 +429,5 @@ export default function Home() {
       </div>{/* end .page-bg */}
       <SiteFooter />
     </>
-  );
-}
-
-/* ── stat cell with counter ── */
-function StatCell({ num, suffix, label, delay }: { num:number; suffix:string; label:string; delay:string }) {
-  const { val, ref } = useCounter(num);
-  return (
-    <div ref={ref} className="stat-cell" style={{animationDelay:delay}}>
-      <div className="home-stat-num stat-n">{val}{suffix}</div>
-      <div className="home-stat-lbl stat-l">{label}</div>
-    </div>
   );
 }

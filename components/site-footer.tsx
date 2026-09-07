@@ -181,7 +181,7 @@ export default function SiteFooter() {
           <div className="ft-brand-left">
             <div className="ft-brand-top">
               <Link href="/" className="ft-logo-wrap">
-                <Image src="/Logo_1_raster_lowres.png" alt="Pinky Party Logo" width={200} height={124} className="ft-logo-img" style={{ width: "auto" }} />
+                <Image src="/Logo_1_raster_lowres.png" alt="Pinky Party Logo" width={200} height={124} className="ft-logo-img" style={{ width: "auto" }} sizes="64px" quality={80} />
               </Link>
             </div>
 
