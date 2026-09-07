@@ -99,7 +99,6 @@ export default function RootLayout({
             `,
           }}
         />
-      <link rel="preconnect" href="https://qbcjyecssttdmvmtswcy.supabase.co" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

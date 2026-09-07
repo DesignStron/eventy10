@@ -65,10 +65,21 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
     fetchImages();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const [loadedIndices, setLoadedIndices] = useState<number[]>([0, 1]);
+
   useEffect(() => {
     if (images.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      setCurrentIndex((prev) => {
+        const next = (prev + 1) % images.length;
+        const upcoming = (next + 1) % images.length;
+        setLoadedIndices((current) => {
+          if (current.includes(next) && current.includes(upcoming)) return current;
+          const nextSet = new Set([...current, next, upcoming]);
+          return Array.from(nextSet);
+        });
+        return next;
+      });
     }, 4000);
     return () => clearInterval(interval);
   }, [images.length]);
@@ -82,16 +93,25 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
+  const goToSlide = (targetIndex: number) => {
+    setCurrentIndex(targetIndex);
+    const upcoming = (targetIndex + 1) % images.length;
+    setLoadedIndices((current) => {
+      if (current.includes(targetIndex) && current.includes(upcoming)) return current;
+      return Array.from(new Set([...current, targetIndex, upcoming]));
+    });
+  };
+
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
     if (isLeftSwipe && images.length > 0) {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      goToSlide((currentIndex + 1) % images.length);
     }
     if (isRightSwipe && images.length > 0) {
-      setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+      goToSlide((currentIndex - 1 + images.length) % images.length);
     }
   };
 
@@ -126,28 +146,36 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      {images.map((img, index) => (
-        <div
-          key={index}
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: index === currentIndex ? 1 : 0,
-            transition: "opacity 800ms ease-in-out",
-            zIndex: index === currentIndex ? 1 : 0,
-          }}
-        >
-          <Image
-            src={img}
-            alt={`Realizacja ${index + 1}`}
-            fill
-            sizes="(max-width: 480px) 100vw, (max-width: 900px) 50vw, 33vw"
-            style={{ objectFit: "cover" }}
-            priority={index === 0}
-            fetchPriority={index === 0 ? "high" : "low"}
-          />
-        </div>
-      ))}
+      {images.map((img, index) => {
+        const isLoaded = loadedIndices.includes(index);
+        const isActive = index === currentIndex;
+
+        return (
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: isActive ? 1 : 0,
+              transition: "opacity 800ms ease-in-out",
+              zIndex: isActive ? 1 : 0,
+            }}
+          >
+            {isLoaded && (
+              <Image
+                src={img}
+                alt={`Realizacja ${index + 1}`}
+                fill
+                sizes="(max-width: 600px) calc(100vw - 3rem), (max-width: 900px) 50vw, 550px"
+                style={{ objectFit: "cover" }}
+                priority={index === 0}
+                fetchPriority={index === 0 ? "high" : "low"}
+                loading={index === 0 ? "eager" : "lazy"}
+              />
+            )}
+          </div>
+        );
+      })}
       <div style={{
         position:"absolute",inset:0,
         background:"linear-gradient(to top,rgba(6,5,8,.9) 0%,rgba(6,5,8,.3) 42%,rgba(6,5,8,.04) 100%)",
@@ -160,7 +188,7 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
         {images.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => goToSlide(index)}
             aria-label={`Przejdź do slajdu ${index + 1}`}
             style={{
               width: "24px",
