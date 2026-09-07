@@ -120,7 +120,7 @@ export default function SiteFooter() {
         }
         .ft-link {
           display:block; color:var(--text-secondary); text-decoration:none;
-          font-size:0.78rem; font-weight:500; padding:0.18rem 0;
+          font-size:0.78rem; font-weight:500; padding:0.35rem 0.25rem;
           transition:color 150ms ease; line-height:1.4;
         }
         .ft-link:hover { color:var(--pink); }

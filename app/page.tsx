@@ -163,7 +163,7 @@ function ImageCarousel() {
             src={img}
             alt={`Realizacja ${index + 1}`}
             fill
-            sizes="(max-width: 900px) 100vw, 50vw"
+            sizes="(max-width: 480px) 100vw, (max-width: 900px) 50vw, 33vw"
             style={{ objectFit: "cover" }}
             priority={index === 0}
           />
@@ -175,8 +175,8 @@ function ImageCarousel() {
         zIndex: 2,
       }}/>
       <div style={{
-        position:"absolute",bottom:"1rem",left:"50%",transform:"translateX(-50%)",
-        display:"flex",gap:"0.5rem",zIndex:10,padding:"0.5rem",
+        position:"absolute",bottom:"0.5rem",left:"50%",transform:"translateX(-50%)",
+        display:"flex",gap:0,zIndex:10,padding:"0.25rem 0",
       }}>
         {images.map((_, index) => (
           <button
@@ -184,17 +184,17 @@ function ImageCarousel() {
             onClick={() => setCurrentIndex(index)}
             aria-label={`Przejdź do slajdu ${index + 1}`}
             style={{
-              width: "44px",
-              height: "44px",
+              width: "24px",
+              height: "24px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              borderRadius: "9999px",
               border: "none",
               background: "transparent",
               cursor: "pointer",
               padding: 0,
               pointerEvents: "auto",
+              flexShrink: 0,
             }}
           >
             <span style={{
