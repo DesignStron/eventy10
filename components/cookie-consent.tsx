@@ -49,33 +49,29 @@ export default function CookieConsent() {
 
     const stored = safeParse(window.localStorage.getItem(STORAGE_KEY));
     if (!stored) {
-      // Uruchamiamy baner w bezczynności przeglądarki lub po pierwszej interakcji,
-      // aby przeglądarka ustaliła właściwe LCP na główną treść strony (H1 / Obrazek w hero)
-      const showConsent = () => setOpen(true);
-
-      const onInteract = () => {
-        showConsent();
-        window.removeEventListener("scroll", onInteract);
-        window.removeEventListener("pointerdown", onInteract);
+      // Uruchamiamy baner po pierwszej interakcji użytkownika (scroll, dotyk, kliknięcie)
+      // lub po 6 sekundach bezczynności, aby nie zaburzać pomiaru LCP głównej treści strony
+      const showConsent = () => {
+        setOpen(true);
+        cleanup();
       };
-      window.addEventListener("scroll", onInteract, { passive: true, once: true });
-      window.addEventListener("pointerdown", onInteract, { passive: true, once: true });
 
-      if ("requestIdleCallback" in window) {
-        const handle = (window as any).requestIdleCallback(showConsent, { timeout: 2500 });
-        return () => {
-          if ("cancelIdleCallback" in window) (window as any).cancelIdleCallback(handle);
-          window.removeEventListener("scroll", onInteract);
-          window.removeEventListener("pointerdown", onInteract);
-        };
-      } else {
-        const timer = setTimeout(showConsent, 2000);
-        return () => {
-          clearTimeout(timer);
-          window.removeEventListener("scroll", onInteract);
-          window.removeEventListener("pointerdown", onInteract);
-        };
-      }
+      const cleanup = () => {
+        window.removeEventListener("scroll", showConsent);
+        window.removeEventListener("pointerdown", showConsent);
+        window.removeEventListener("touchstart", showConsent);
+        window.removeEventListener("keydown", showConsent);
+        clearTimeout(timer);
+      };
+
+      window.addEventListener("scroll", showConsent, { passive: true, once: true });
+      window.addEventListener("pointerdown", showConsent, { passive: true, once: true });
+      window.addEventListener("touchstart", showConsent, { passive: true, once: true });
+      window.addEventListener("keydown", showConsent, { passive: true, once: true });
+
+      const timer = setTimeout(showConsent, 6000);
+
+      return cleanup;
     }
 
     if (stored.mode === "custom") {
@@ -119,7 +115,11 @@ export default function CookieConsent() {
   return (
     <>
       <style>{`
-        .cc-wrap{position:fixed;right:1rem;bottom:1rem;z-index:9999;width:min(420px,calc(100vw - 2rem))}
+        @keyframes ccFadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .cc-wrap{position:fixed;right:1rem;bottom:1rem;z-index:9999;width:min(420px,calc(100vw - 2rem));animation:ccFadeUp 240ms cubic-bezier(.16,1,.3,1) both;will-change:transform,opacity}
         .cc-card{border-radius:1.25rem;overflow:hidden;position:relative}
         .cc-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 90% at 20% 0%,rgba(240,23,122,.16) 0%,transparent 55%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));pointer-events:none}
         .cc-card{background:rgba(10,8,12,.78);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 18px 60px rgba(0,0,0,.55)}

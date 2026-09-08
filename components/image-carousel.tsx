@@ -65,10 +65,16 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
     fetchImages();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [loadedIndices, setLoadedIndices] = useState<number[]>([0, 1]);
+  const [loadedIndices, setLoadedIndices] = useState<number[]>([0]);
 
   useEffect(() => {
     if (images.length <= 1) return;
+
+    // Dograj kolejny slajd w tle po 2.5s, aby nie obciążać krytycznej ścieżki renderowania
+    const preloadTimer = setTimeout(() => {
+      setLoadedIndices((current) => current.includes(1) ? current : [...current, 1]);
+    }, 2500);
+
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
         const next = (prev + 1) % images.length;
@@ -81,7 +87,10 @@ export default function ImageCarousel({ initialImages = [] }: ImageCarouselProps
         return next;
       });
     }, 4000);
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(preloadTimer);
+      clearInterval(interval);
+    };
   }, [images.length]);
 
   const onTouchStart = (e: React.TouchEvent) => {

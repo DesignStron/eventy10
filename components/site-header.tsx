@@ -230,6 +230,7 @@ export default function SiteHeader() {
         @media (min-width: 860px) {
           .desktop-nav { display: flex; }
           .mobile-btn { display: none; }
+          .mobile-drawer, .mobile-backdrop { display: none !important; }
         }
 
         .theme-btn {
