@@ -29,6 +29,16 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+const DEFAULT_OFFER_SECTIONS: OfferSection[] = [
+  { key: "urodziny", category: "urodziny", title: "Animacje urodzinowe", categoryLabel: "Animacje urodzinowe" },
+  { key: "komunie", category: "komunie", title: "Animacje komunijne/weselne", categoryLabel: "Animacje komunijne/weselne" },
+  { key: "bale", category: "bale", title: "Bale karnawałowe", categoryLabel: "Bale karnawałowe" },
+  { key: "festyny", category: "festyny", title: "Festyny i pikniki", categoryLabel: "Festyny i pikniki" },
+  { key: "warsztaty", category: "warsztaty", title: "Warsztaty kreatywne", categoryLabel: "Warsztaty kreatywne" },
+  { key: "szkolne", category: "szkolne", title: "Eventy szkolne i przedszkolne", categoryLabel: "Eventy szkolne i przedszkolne" },
+  { key: "firmowe", category: "firmowe", title: "Imprezy firmowe", categoryLabel: "Imprezy firmowe" },
+];
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -38,7 +48,8 @@ export default function SiteHeader() {
   const [theme, setTheme] = useState<"dark" | "light">("dark");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
-  const [offerSections, setOfferSections] = useState<OfferSection[]>([]);
+  const [offerSections, setOfferSections] = useState<OfferSection[]>(DEFAULT_OFFER_SECTIONS);
+  const fetchedOffersRef = useRef(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -56,28 +67,38 @@ export default function SiteHeader() {
     router.push(target);
   };
 
+  // Pobieraj świeże oferty z Supabase tylko po otwarciu menu rozwijanego,
+  // aby nie obciążać krytycznej ścieżki ładowania strony i wątku głównego
   useEffect(() => {
-    async function fetchOffers() {
-      const { data, error } = await supabase
-        .from("offer")
-        .select("key, category, title, category_label")
-        .order("created_at", { ascending: true });
+    if (!dropdownOpen && !mobileDropdownOpen) return;
+    if (fetchedOffersRef.current) return;
+    fetchedOffersRef.current = true;
 
-      if (data) {
-        const mapped = data.map((item: any) => ({
-          key: item.key,
-          category: item.category || item.key,
-          title: item.title,
-          categoryLabel: item.category_label,
-        }));
-        setOfferSections(mapped);
-      }
-      if (error) {
-        console.error("Błąd pobierania ofert:", error);
+    async function fetchOffers() {
+      try {
+        const { data, error } = await supabase
+          .from("offer")
+          .select("key, category, title, category_label")
+          .order("created_at", { ascending: true });
+
+        if (data && data.length > 0) {
+          const mapped = data.map((item: any) => ({
+            key: item.key,
+            category: item.category || item.key,
+            title: item.title,
+            categoryLabel: item.category_label,
+          }));
+          setOfferSections(mapped);
+        }
+        if (error) {
+          console.error("Błąd pobierania ofert:", error);
+        }
+      } catch (err) {
+        console.error("Failed to fetch offer categories:", err);
       }
     }
     fetchOffers();
-  }, []);
+  }, [dropdownOpen, mobileDropdownOpen]);
 
   const applyTheme = (next: "dark" | "light") => {
     const root = document.documentElement;
