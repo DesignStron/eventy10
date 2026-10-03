@@ -33,11 +33,14 @@ export const metadata: Metadata = {
   },
   description:
     "Profesjonalne animacje dla dzieci i organizacja eventów we Wrocławiu i okolicach. Urodziny, wesela, komunie, Mikołajki, bale karnawałowe, festyny, eventy firmowe i team building. Pinky Party.",
-  metadataBase: new URL("https://pinkyparty.pl"),
+  metadataBase: new URL("https://www.pinkyparty.pl"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
     locale: "pl_PL",
-    url: "https://pinkyparty.pl",
+    url: "https://www.pinkyparty.pl",
     siteName: "Pinky Party",
     title: "Pinky Party Animacje & Eventy",
     description:
@@ -109,10 +112,10 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "LocalBusiness",
-                "@id": "https://pinkyparty.pl/#localbusiness",
+                "@id": "https://www.pinkyparty.pl/#localbusiness",
                 "name": "Pinky Party Animacje & Eventy",
                 "description": "Profesjonalne animacje dla dzieci i organizacja eventów we Wrocławiu i okolicach. Urodziny, wesela, komunie, Mikołajki, bale karnawałowe, festyny rodzinne, eventy firmowe i team building.",
-                "url": "https://pinkyparty.pl",
+                "url": "https://www.pinkyparty.pl",
                 "telephone": "+48792987499",
                 "email": "pinkyparty.eventy@gmail.com",
                 "address": {
@@ -209,25 +212,25 @@ export default function RootLayout({
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "@id": "https://pinkyparty.pl/#website",
-                "url": "https://pinkyparty.pl",
+                "@id": "https://www.pinkyparty.pl/#website",
+                "url": "https://www.pinkyparty.pl",
                 "name": "Pinky Party Animacje & Eventy",
                 "description": "Profesjonalne animacje dla dzieci i organizacja eventów we Wrocławiu i okolicach",
                 "inLanguage": "pl-PL",
                 "publisher": {
-                  "@id": "https://pinkyparty.pl/#localbusiness"
+                  "@id": "https://www.pinkyparty.pl/#localbusiness"
                 }
               },
               {
                 "@context": "https://schema.org",
                 "@type": "Person",
-                "@id": "https://pinkyparty.pl/#magdalena",
+                "@id": "https://www.pinkyparty.pl/#magdalena",
                 "name": "Magdalena Gałkowska",
                 "jobTitle": "Animatorka i organizatorka eventów",
                 "worksFor": {
-                  "@id": "https://pinkyparty.pl/#localbusiness"
+                  "@id": "https://www.pinkyparty.pl/#localbusiness"
                 },
-                "url": "https://pinkyparty.pl/o-nas",
+                "url": "https://www.pinkyparty.pl/o-nas",
                 "sameAs": [
                   "https://www.facebook.com/pinkyparty.eventy",
                   "https://www.instagram.com/pinkyparty.eventy"

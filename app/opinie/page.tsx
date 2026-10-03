@@ -50,9 +50,40 @@ const REVIEWS = [
   },
 ];
 
+const reviewsSchema = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "Pinky Party Animacje & Eventy",
+  "url": "https://www.pinkyparty.pl",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": REVIEWS.length.toString(),
+    "bestRating": "5",
+    "worstRating": "1",
+  },
+  "review": REVIEWS.map((r) => ({
+    "@type": "Review",
+    "author": {
+      "@type": "Person",
+      "name": r.author,
+    },
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": "5",
+      "bestRating": "5",
+    },
+    "reviewBody": r.text,
+  })),
+};
+
 export default function OpiniePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewsSchema) }}
+      />
       <style>{`
         @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
         @keyframes shimBar{0%{background-position:-200% center}100%{background-position:200% center}}
