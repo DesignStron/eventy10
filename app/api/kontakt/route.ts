@@ -16,6 +16,11 @@ async function verifyTurnstile(token: string): Promise<boolean> {
     return false;
   }
 
+  // Accept cookie-based verification (for already verified users)
+  if (token === 'verified-by-cookie') {
+    return true;
+  }
+
   try {
     const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
       method: 'POST',

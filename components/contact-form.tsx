@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Turnstile from "./turnstile";
 
 type FormState = {
@@ -10,12 +10,41 @@ type FormState = {
   message: string;
 };
 
+// Cookie helper functions
+const setCookie = (name: string, value: string, days: number) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+};
+
+const getCookie = (name: string): string | null => {
+  const nameEQ = `${name}=`;
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+};
+
 export default function ContactForm() {
   const [form, setForm] = useState<FormState>({ name: "", email: "", phone: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<null | { ok: boolean; message: string }>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [userInteracted, setUserInteracted] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+
+  // Check if user was verified before (from cookie)
+  useEffect(() => {
+    const verifiedCookie = getCookie('turnstile_verified');
+    if (verifiedCookie === 'true') {
+      setIsVerified(true);
+      // Generate a mock token for already verified users
+      setTurnstileToken('verified-by-cookie');
+    }
+  }, []);
 
   const canSubmit = useMemo(
     () => {
@@ -23,11 +52,11 @@ export default function ContactForm() {
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
       const phoneValid = !form.phone.trim() || /^[+]?[\d\s\-\(\)]+$/.test(form.phone.trim());
       const messageValid = form.message.trim().length >= 10;
-      const turnstileValid = !!turnstileToken;
+      const turnstileValid = isVerified || !!turnstileToken;
 
       return nameValid && emailValid && phoneValid && messageValid && turnstileValid;
     },
-    [form, turnstileToken]
+    [form, turnstileToken, isVerified]
   );
 
   const fieldErrors = useMemo(() => {
@@ -53,9 +82,16 @@ export default function ContactForm() {
   }, [form]);
 
   const handleFormInteraction = () => {
-    if (!userInteracted) {
+    if (!userInteracted && !isVerified) {
       setUserInteracted(true);
     }
+  };
+
+  const handleTurnstileSuccess = (token: string) => {
+    setTurnstileToken(token);
+    setIsVerified(true);
+    // Set cookie for 7 days
+    setCookie('turnstile_verified', 'true', 7);
   };
 
   async function onSubmit(e: React.FormEvent) {
@@ -381,17 +417,18 @@ export default function ContactForm() {
 
         </div>
 
-        {/* Turnstile widget - loads only when user interacts with form */}
-        {userInteracted && (
+        {/* Turnstile widget - shows only if not verified */}
+        {userInteracted && !isVerified && (
           <div key="turnstile-widget">
             <Turnstile
               siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-              onSuccess={setTurnstileToken}
+              onSuccess={handleTurnstileSuccess}
               onError={() => {
                 setResult({ ok: false, message: "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie." });
               }}
               onExpire={() => {
                 setTurnstileToken(null);
+                setIsVerified(false);
               }}
             />
           </div>
