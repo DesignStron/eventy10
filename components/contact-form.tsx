@@ -383,16 +383,18 @@ export default function ContactForm() {
 
         {/* Turnstile widget - loads only when user interacts with form */}
         {userInteracted && (
-          <Turnstile
-            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
-            onSuccess={setTurnstileToken}
-            onError={() => {
-              setResult({ ok: false, message: "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie." });
-            }}
-            onExpire={() => {
-              setTurnstileToken(null);
-            }}
-          />
+          <div key="turnstile-widget">
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+              onSuccess={setTurnstileToken}
+              onError={() => {
+                setResult({ ok: false, message: "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie." });
+              }}
+              onExpire={() => {
+                setTurnstileToken(null);
+              }}
+            />
+          </div>
         )}
 
         {/* Result */}
