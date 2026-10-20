@@ -61,7 +61,16 @@ export default function Turnstile({ siteKey, onSuccess, onError, onExpire }: Tur
     }
   }, [isLoaded, siteKey, onSuccess, onError, onExpire]);
 
-  return <div ref={containerRef} style={{ display: "none" }} />;
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        marginTop: "1rem",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    />
+  );
 }
 
 // Extend window type for Turnstile
