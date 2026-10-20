@@ -53,7 +53,7 @@ export default function Turnstile({ siteKey, onSuccess, onError, onExpire }: Tur
       widgetId.current = id;
 
       return () => {
-        if (widgetId.current) {
+        if (widgetId.current && window.turnstile) {
           window.turnstile.remove(widgetId.current);
           widgetId.current = null;
         }
