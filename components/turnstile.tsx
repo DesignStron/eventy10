@@ -34,29 +34,31 @@ export default function Turnstile({ siteKey, onSuccess, onError, onExpire }: Tur
     if (!isLoaded || !containerRef.current || widgetId.current) return;
 
     // Render Turnstile widget
-    const id = window.turnstile.render(containerRef.current, {
-      sitekey: siteKey,
-      callback: (token: string) => {
-        onSuccess(token);
-      },
-      "error-callback": () => {
-        onError?.();
-      },
-      "expired-callback": () => {
-        onExpire?.();
-      },
-      theme: "auto",
-      size: "normal",
-    });
+    if (window.turnstile) {
+      const id = window.turnstile.render(containerRef.current, {
+        sitekey: siteKey,
+        callback: (token: string) => {
+          onSuccess(token);
+        },
+        "error-callback": () => {
+          onError?.();
+        },
+        "expired-callback": () => {
+          onExpire?.();
+        },
+        theme: "auto",
+        size: "normal",
+      });
 
-    widgetId.current = id;
+      widgetId.current = id;
 
-    return () => {
-      if (widgetId.current) {
-        window.turnstile.remove(widgetId.current);
-        widgetId.current = null;
-      }
-    };
+      return () => {
+        if (widgetId.current) {
+          window.turnstile.remove(widgetId.current);
+          widgetId.current = null;
+        }
+      };
+    }
   }, [isLoaded, siteKey, onSuccess, onError, onExpire]);
 
   return <div ref={containerRef} style={{ display: "none" }} />;
