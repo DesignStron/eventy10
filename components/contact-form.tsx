@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Turnstile from "./turnstile";
 
 type FormState = {
   name: string;
@@ -13,6 +14,8 @@ export default function ContactForm() {
   const [form, setForm] = useState<FormState>({ name: "", email: "", phone: "", message: "" });
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<null | { ok: boolean; message: string }>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [userInteracted, setUserInteracted] = useState(false);
 
   const canSubmit = useMemo(
     () => {
@@ -20,10 +23,11 @@ export default function ContactForm() {
       const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
       const phoneValid = !form.phone.trim() || /^[+]?[\d\s\-\(\)]+$/.test(form.phone.trim());
       const messageValid = form.message.trim().length >= 10;
-      
-      return nameValid && emailValid && phoneValid && messageValid;
+      const turnstileValid = !!turnstileToken;
+
+      return nameValid && emailValid && phoneValid && messageValid && turnstileValid;
     },
-    [form]
+    [form, turnstileToken]
   );
 
   const fieldErrors = useMemo(() => {
@@ -48,12 +52,22 @@ export default function ContactForm() {
     return errors;
   }, [form]);
 
+  const handleFormInteraction = () => {
+    if (!userInteracted) {
+      setUserInteracted(true);
+    }
+  };
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setResult(null);
 
     if (!canSubmit) {
       const errorMessages = Object.values(fieldErrors);
+      if (!turnstileToken) {
+        setResult({ ok: false, message: "Weryfikacja bezpieczeństwa w toku... Proszę czekać." });
+        return;
+      }
       setResult({ ok: false, message: errorMessages[0] || "Uzupełnij wymagane pola: imię, email i wiadomość." });
       return;
     }
@@ -63,7 +77,10 @@ export default function ContactForm() {
       const res  = await fetch("/api/kontakt", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          turnstileToken,
+        }),
       });
       const data = (await res.json()) as { error?: string };
 
@@ -74,6 +91,8 @@ export default function ContactForm() {
 
       setResult({ ok: true, message: "Dziękujemy! Odezwiemy się najszybciej jak to możliwe." });
       setForm({ name: "", email: "", phone: "", message: "" });
+      setTurnstileToken(null);
+      setUserInteracted(false);
     } catch {
       setResult({ ok: false, message: "Nie udało się wysłać formularza." });
     } finally {
@@ -292,7 +311,11 @@ export default function ContactForm() {
             <input
               className={`cf-input ${fieldErrors.name ? 'cf-input-error' : ''}`}
               value={form.name}
-              onChange={(e) => setForm((s) => ({ ...s, name: e.target.value }))}
+              onChange={(e) => {
+                setForm((s) => ({ ...s, name: e.target.value }));
+                handleFormInteraction();
+              }}
+              onFocus={handleFormInteraction}
               placeholder="np. Anna Kowalska"
               autoComplete="name"
             />
@@ -307,7 +330,11 @@ export default function ContactForm() {
               className={`cf-input ${fieldErrors.email ? 'cf-input-error' : ''}`}
               type="email"
               value={form.email}
-              onChange={(e) => setForm((s) => ({ ...s, email: e.target.value }))}
+              onChange={(e) => {
+                setForm((s) => ({ ...s, email: e.target.value }));
+                handleFormInteraction();
+              }}
+              onFocus={handleFormInteraction}
               placeholder="anna@firma.pl"
               autoComplete="email"
             />
@@ -322,7 +349,11 @@ export default function ContactForm() {
               className={`cf-input ${fieldErrors.phone ? 'cf-input-error' : ''}`}
               type="tel"
               value={form.phone}
-              onChange={(e) => setForm((s) => ({ ...s, phone: e.target.value }))}
+              onChange={(e) => {
+                setForm((s) => ({ ...s, phone: e.target.value }));
+                handleFormInteraction();
+              }}
+              onFocus={handleFormInteraction}
               placeholder="+48 600 000 000"
               autoComplete="tel"
             />
@@ -336,7 +367,11 @@ export default function ContactForm() {
             <textarea
               className={`cf-textarea ${fieldErrors.message ? 'cf-input-error' : ''}`}
               value={form.message}
-              onChange={(e) => setForm((s) => ({ ...s, message: e.target.value }))}
+              onChange={(e) => {
+                setForm((s) => ({ ...s, message: e.target.value }));
+                handleFormInteraction();
+              }}
+              onFocus={handleFormInteraction}
               placeholder="Opisz event: termin, liczba osób, miejsce, oczekiwania…"
             />
             {fieldErrors.message && (
@@ -345,6 +380,20 @@ export default function ContactForm() {
           </label>
 
         </div>
+
+        {/* Turnstile widget - loads only when user interacts with form */}
+        {userInteracted && (
+          <Turnstile
+            siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ""}
+            onSuccess={setTurnstileToken}
+            onError={() => {
+              setResult({ ok: false, message: "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie." });
+            }}
+            onExpire={() => {
+              setTurnstileToken(null);
+            }}
+          />
+        )}
 
         {/* Result */}
         {result && (

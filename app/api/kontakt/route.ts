@@ -3,6 +3,39 @@ import { supabase } from '@/lib/supabase'
 import { ContactData, ContactMessage } from '@/lib/types'
 import { sendEmail, createContactEmailHTML } from '@/lib/email'
 
+async function verifyTurnstile(token: string): Promise<boolean> {
+  const secretKey = process.env.TURNSTILE_SECRET_KEY;
+
+  if (!secretKey) {
+    console.error('TURNSTILE_SECRET_KEY not configured');
+    return false;
+  }
+
+  if (!token) {
+    console.error('No Turnstile token provided');
+    return false;
+  }
+
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        secret: secretKey,
+        response: token,
+      }),
+    });
+
+    const result = await response.json();
+    return result.success === true;
+  } catch (error) {
+    console.error('Turnstile verification error:', error);
+    return false;
+  }
+}
+
 export async function GET() {
   try {
     const { data, error } = await supabase
@@ -39,6 +72,7 @@ type ContactCreatePayload = {
   email: string;
   phone: string;
   message: string;
+  turnstileToken: string;
 };
 
 export async function POST(request: NextRequest) {
@@ -49,6 +83,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "Uzupełnij wymagane pola: imię, email, wiadomość." },
         { status: 400 },
+      );
+    }
+
+    // Verify Turnstile token
+    const isValid = await verifyTurnstile(payload.turnstileToken);
+    if (!isValid) {
+      return NextResponse.json(
+        { error: "Weryfikacja bezpieczeństwa nie powiodła się. Spróbuj ponownie." },
+        { status: 403 },
       );
     }
 
